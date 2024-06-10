@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="MAIN" Id="{34528779-84b6-44e4-a437-083f290810e9}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+VAR
+		
+	sSrvNetID		: T_AmsNetID	:= '';
+	bScannerEnable	: BOOL 			:= TRUE;
+	bLaserEnable	: BOOL 			:= TRUE;
+	bLog			: BOOL			:= FALSE;
+	fbClient_ABC 	: FB_Client 	:= ( sRemoteHost := '127.0.0.1',
+										 nRemotePort := 8500,
+										 sPrefix := '' );
+										
+	fbCloseAll		: FB_SocketCloseAll;
+	bInitialize		: BOOL := TRUE;
+	data_send_flag  : BOOL;
+	Msg			: STRING := '';
+	Send_msg		: STRING := '';
+	Received_msg	: STRING := '';
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+	fbCloseAll( sSrvNetID := sSrvNetID, bExecute:= bInitialize );
+	IF fbCloseAll.bBusy OR fbCloseAll.bError THEN
+		RETURN;
+	END_IF
+	
+	bInitialize := FALSE;
+	fbClient_ABC	( sSrvNetId := sSrvNetID, bEnable := bScannerEnable	, bLog := bLog );
+	
+	IF data_send_flag THEN
+		Send_msg := CONCAT(Msg, '$R');
+		fbClient_ABC.fbTx.AddTail( sPut := Send_msg); //$R = Carriage Return [CR]
+		data_send_flag := false;
+	END_IF
+	
+	Received_msg := fbClient_ABC.fbRx.sPut;]]></ST>
+    </Implementation>
+    <LineIds Name="MAIN">
+      <LineId Id="6" Count="14" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
