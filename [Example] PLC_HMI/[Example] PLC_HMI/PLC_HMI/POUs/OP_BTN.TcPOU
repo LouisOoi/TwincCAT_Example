@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="OP_BTN" Id="{6774c3e2-553e-4c84-a2e4-62f74f30ccd9}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM OP_BTN
+VAR
+	Start_btn	: BOOL;
+	Start_lamp	: BOOL;
+	Reset_btn	: BOOL;
+	Reset_lamp	: BOOL;
+	Estop_btn	: BOOL;
+	Estop_lamp	: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Lamp Operation 
+
+Start_lamp := Start_btn AND NOT Reset_btn AND NOT Estop_btn;
+
+Reset_lamp := Reset_btn;
+
+Estop_lamp := Estop_btn AND NOT Reset_btn;
+
+
+// Lamp Reset
+IF Reset_btn THEN
+	Start_btn := Estop_btn := FALSE;
+END_IF
+
+IF Estop_btn THEN
+	Start_btn := Reset_btn := FALSE;
+END_IF
+]]></ST>
+    </Implementation>
+    <LineIds Name="OP_BTN">
+      <LineId Id="32" Count="1" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="15" Count="1" />
+      <LineId Id="30" Count="1" />
+      <LineId Id="26" Count="3" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="14" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
