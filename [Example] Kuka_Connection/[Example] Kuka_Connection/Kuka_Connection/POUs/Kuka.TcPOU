@@ -1,0 +1,190 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="Kuka" Id="{13c9358a-325a-48a9-ab41-c40cff7f9d48}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM Kuka
+VAR
+	//Output
+	PLC_O_D1 AT %Q* : USINT;
+	PLC_O_D2 AT %Q* : USINT;
+	PLC_O_D3 AT %Q* : USINT;
+	PLC_O_D4 AT %Q* : USINT;
+	PLC_O_D5 AT %Q* : USINT;
+	PLC_O_D6 AT %Q* : USINT;
+	
+	//Input
+	PLC_I_D1 AT %I* : USINT;
+	PLC_I_D2 AT %I* : USINT;
+	PLC_I_D3 AT %I* : USINT;
+	PLC_I_D4 AT %I* : USINT;
+	PLC_I_D5 AT %I* : USINT;
+	PLC_I_D6 AT %I* : USINT;
+	
+	KR1_Estop		: BOOL;
+	Idle			: BOOL;
+	Motion_Disable	: BOOL;
+	KROnline		: BOOL;
+	KR_ProgReady	: BOOL;
+	
+	bOutBit : ARRAY [1..6,0..7] OF BOOL;
+	bInBit  : ARRAY [1..6,0..7] OF BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[	//If Soft EStop is pressed, turn off 1027 ~ 1034
+	IF KR1_Estop THEN		
+		bOutBit[1,0]:=bOutBit[1,1]:=bOutBit[1,2]:=bOutBit[1,3]:=
+		bOutBit[1,4]:=bOutBit[1,5]:=bOutBit[1,6]:=bOutBit[1,7]:=FALSE;
+	END_IF
+
+	//Idle 	
+	IF PLC_I_D3 = 1 AND PLC_I_D4 = 0 AND PLC_I_D5 = 0 AND PLC_I_D6 = 0 THEN
+		Idle := TRUE;
+	ELSE
+		Idle := FALSE;
+	END_IF
+	
+	//Online
+	IF bInBit[1,0] OR bInBit[1,3] THEN
+		KROnline := TRUE;
+	ELSE
+		KROnline := FALSE;
+	END_IF
+
+	//Program Ready
+	IF bInBit[1,6] AND bInBit[2,4] THEN
+		KR_ProgReady := TRUE;
+	ELSE
+		KR_ProgReady := FALSE;
+	END_IF
+	
+	
+	//================================ Function IO
+	PLC_O_D1.0 := bOutBit[1,0]; //1027 motion enable (on to start motor)
+	PLC_O_D1.1 := bOutBit[1,1]; //1028 Drives off (inverse) (on to start motor)
+	PLC_O_D1.2 := bOutBit[1,2]; //1029 Activate interface (on to start motor)
+	PLC_O_D1.3 := bOutBit[1,3]; //1030 Prog Start
+	PLC_O_D1.4 := bOutBit[1,4]; //1031 Acknowledge error msg
+	PLC_O_D1.5 := bOutBit[1,5]; //1032 Drives on
+	PLC_O_D1.6 := bOutBit[1,6]; //1033
+	PLC_O_D1.7 := bOutBit[1,7]; //1034
+	
+	PLC_O_D2.0 := bOutBit[2,0]; //1035
+	PLC_O_D2.1 := bOutBit[2,1]; //1036
+	PLC_O_D2.2 := bOutBit[2,2]; //1037
+	PLC_O_D2.3 := bOutBit[2,3]; //1038
+	PLC_O_D2.4 := bOutBit[2,4]; //1039
+	PLC_O_D2.5 := bOutBit[2,5]; //1040
+	PLC_O_D2.6 := bOutBit[2,6]; //1041
+	PLC_O_D2.7 := bOutBit[2,7]; //1042
+	
+	bInBit[1,0] := PLC_I_D1.0; //993
+	bInBit[1,1] := PLC_I_D1.1; //994
+	bInBit[1,2] := PLC_I_D1.2; //995
+	bInBit[1,3] := PLC_I_D1.3; //996
+	bInBit[1,4] := PLC_I_D1.4; //997
+	bInBit[1,5] := PLC_I_D1.5; //998
+	bInBit[1,6] := PLC_I_D1.6; //999
+	bInBit[1,7] := PLC_I_D1.7; //1000
+	
+	bInBit[2,0] := PLC_I_D2.0; //1001
+	bInBit[2,1] := PLC_I_D2.1; //1002
+	bInBit[2,2] := PLC_I_D2.2; //1003
+	bInBit[2,3] := PLC_I_D2.3; //1004
+	bInBit[2,4] := PLC_I_D2.4; //1005
+	bInBit[2,5] := PLC_I_D2.5; //1006
+	bInBit[2,6] := PLC_I_D2.6; //1007
+	bInBit[2,7] := PLC_I_D2.7; //1008
+	
+	//================================ Motion IO
+	IF Motion_Disable THEN
+		RETURN;
+	END_IF
+	
+	PLC_O_D3.0 := bOutBit[3,0]; //200
+	PLC_O_D3.1 := bOutBit[3,1]; //201
+	PLC_O_D3.2 := bOutBit[3,2]; //202
+	PLC_O_D3.3 := bOutBit[3,3]; //203
+	PLC_O_D3.4 := bOutBit[3,4]; //204
+	PLC_O_D3.5 := bOutBit[3,5]; //205
+	PLC_O_D3.6 := bOutBit[3,6]; //206
+	PLC_O_D3.7 := bOutBit[3,7]; //207
+	
+	PLC_O_D4.0 := bOutBit[4,0]; //208
+	PLC_O_D4.1 := bOutBit[4,1]; //209
+	PLC_O_D4.2 := bOutBit[4,2]; //210
+	PLC_O_D4.3 := bOutBit[4,3]; //211
+	PLC_O_D4.4 := bOutBit[4,4]; //212
+	PLC_O_D4.5 := bOutBit[4,5]; //213
+	PLC_O_D4.6 := bOutBit[4,6]; //214
+	PLC_O_D4.7 := bOutBit[4,7]; //215
+	
+	PLC_O_D5.0 := bOutBit[5,0]; //216
+	PLC_O_D5.1 := bOutBit[5,1]; //217
+	PLC_O_D5.2 := bOutBit[5,2]; //218
+	PLC_O_D5.3 := bOutBit[5,3]; //219
+	PLC_O_D5.4 := bOutBit[5,4]; //220
+	PLC_O_D5.5 := bOutBit[5,5]; //221
+	PLC_O_D5.6 := bOutBit[5,6]; //222
+	PLC_O_D5.7 := bOutBit[5,7]; //223
+
+	PLC_O_D6.0 := bOutBit[6,0]; //224
+	PLC_O_D6.1 := bOutBit[6,1]; //225
+	PLC_O_D6.2 := bOutBit[6,2]; //226
+	PLC_O_D6.3 := bOutBit[6,3]; //227
+	PLC_O_D6.4 := bOutBit[6,4]; //228
+	PLC_O_D6.5 := bOutBit[6,5]; //229
+	PLC_O_D6.6 := bOutBit[6,6]; //230
+	PLC_O_D6.7 := bOutBit[6,7]; //231
+
+	bInBit[3,0] := PLC_I_D3.0; //200
+	bInBit[3,1] := PLC_I_D3.1; //201
+	bInBit[3,2] := PLC_I_D3.2; //202
+	bInBit[3,3] := PLC_I_D3.3; //203
+	bInBit[3,4] := PLC_I_D3.4; //204
+	bInBit[3,5] := PLC_I_D3.5; //205
+	bInBit[3,6] := PLC_I_D3.6; //206
+	bInBit[3,7] := PLC_I_D3.7; //207
+	
+	bInBit[4,0] := PLC_I_D4.0; //208
+	bInBit[4,1] := PLC_I_D4.1; //209
+	bInBit[4,2] := PLC_I_D4.2; //210
+	bInBit[4,3] := PLC_I_D4.3; //211
+	bInBit[4,4] := PLC_I_D4.4; //212
+	bInBit[4,5] := PLC_I_D4.5; //213
+	bInBit[4,6] := PLC_I_D4.6; //214
+	bInBit[4,7] := PLC_I_D4.7; //215
+	
+	bInBit[5,0] := PLC_I_D5.0; //216
+	bInBit[5,1] := PLC_I_D5.1; //217
+	bInBit[5,2] := PLC_I_D5.2; //218
+	bInBit[5,3] := PLC_I_D5.3; //219
+	bInBit[5,4] := PLC_I_D5.4; //220
+	bInBit[5,5] := PLC_I_D5.5; //221
+	bInBit[5,6] := PLC_I_D5.6; //222
+	bInBit[5,7] := PLC_I_D5.7; //223
+	
+	bInBit[6,0] := PLC_I_D6.0; //224
+	bInBit[6,1] := PLC_I_D6.1; //225
+	bInBit[6,2] := PLC_I_D6.2; //226
+	bInBit[6,3] := PLC_I_D6.3; //227
+	bInBit[6,4] := PLC_I_D6.4; //228
+	bInBit[6,5] := PLC_I_D6.5; //229
+	bInBit[6,6] := PLC_I_D6.6; //230
+	bInBit[6,7] := PLC_I_D6.7; //231
+	
+	//================================ Motion IO
+	]]></ST>
+    </Implementation>
+    <LineIds Name="Kuka">
+      <LineId Id="32" Count="4" />
+      <LineId Id="241" Count="5" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="52" Count="13" />
+      <LineId Id="247" Count="1" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="68" Count="36" />
+      <LineId Id="106" Count="76" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

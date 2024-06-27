@@ -1,0 +1,267 @@
+<?xml version="1.0"?>
+<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4024.55">
+	<DataTypes>
+		<DataType>
+			<Name GUID="{18071995-0000-0000-0000-00200000000C}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..11] OF BIT</Name>
+			<BitSize>12</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
+			<ArrayInfo>
+				<LBound>0</LBound>
+				<Elements>12</Elements>
+			</ArrayInfo>
+		</DataType>
+		<DataType>
+			<Name GUID="{18071995-0000-0000-0000-002000000001}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..0] OF BIT</Name>
+			<BitSize>1</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
+			<ArrayInfo>
+				<LBound>0</LBound>
+				<Elements>1</Elements>
+			</ArrayInfo>
+		</DataType>
+		<DataType>
+			<Name GUID="{18071995-0000-0000-0000-00200000000A}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..9] OF BIT</Name>
+			<BitSize>10</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
+			<ArrayInfo>
+				<LBound>0</LBound>
+				<Elements>10</Elements>
+			</ArrayInfo>
+		</DataType>
+	</DataTypes>
+	<ImageDatas>
+		<ImageData Id="1000">424de6000000000000007600000028000000100000000e000000010004000000000070000000120b0000120b0000100000001000000000000000000080000080000000808000800000008000800080800000c0c0c000808080000000ff0000ff000000ffff00ff000000ff00ff00ffff0000ffffff00dddd88888888dddddddd77777778d9dddddd77888778d99ddddd778889999999dddd77888778d99dddd977777778d9ddddd997888778dddd999999888778ddddddd997888778ddddddd977777778dddddddd777a7778dddddddd777a7778dddddddd777a7778dddddddd77777778dddd</ImageData>
+	</ImageDatas>
+	<Project ProjectGUID="{796E6E18-84DA-4DD6-8D68-728D4B5A80FD}" Target64Bit="true" ShowHideConfigurations="#x6">
+		<System>
+			<Tasks>
+				<Task Id="3" Priority="20" CycleTime="100000" AmsPort="350" AdtTasks="true">
+					<Name>PlcTask</Name>
+				</Task>
+			</Tasks>
+		</System>
+		<Plc>
+			<Project GUID="{E0953849-D329-4E87-909B-465D7094D4CE}" Name="Kuka_Connection" PrjFilePath="Kuka_Connection\Kuka_Connection.plcproj" TmcFilePath="Kuka_Connection\Kuka_Connection.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{C26FCF12-958E-52A5-DF11-1436C0A7430D}">
+					<Name>Kuka_Connection Instance</Name>
+					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
+					<Vars VarGrpType="1">
+						<Name>PlcTask Inputs</Name>
+						<Var>
+							<Name>Kuka.PLC_I_D1</Name>
+							<Comment><![CDATA[Input]]></Comment>
+							<Type>USINT</Type>
+						</Var>
+						<Var>
+							<Name>Kuka.PLC_I_D2</Name>
+							<Type>USINT</Type>
+						</Var>
+						<Var>
+							<Name>Kuka.PLC_I_D3</Name>
+							<Type>USINT</Type>
+						</Var>
+						<Var>
+							<Name>Kuka.PLC_I_D4</Name>
+							<Type>USINT</Type>
+						</Var>
+						<Var>
+							<Name>Kuka.PLC_I_D5</Name>
+							<Type>USINT</Type>
+						</Var>
+						<Var>
+							<Name>Kuka.PLC_I_D6</Name>
+							<Type>USINT</Type>
+						</Var>
+					</Vars>
+					<Vars VarGrpType="2" AreaNo="1">
+						<Name>PlcTask Outputs</Name>
+						<Var>
+							<Name>Kuka.PLC_O_D1</Name>
+							<Comment><![CDATA[Output]]></Comment>
+							<Type>USINT</Type>
+						</Var>
+						<Var>
+							<Name>Kuka.PLC_O_D2</Name>
+							<Type>USINT</Type>
+						</Var>
+						<Var>
+							<Name>Kuka.PLC_O_D3</Name>
+							<Type>USINT</Type>
+						</Var>
+						<Var>
+							<Name>Kuka.PLC_O_D4</Name>
+							<Type>USINT</Type>
+						</Var>
+						<Var>
+							<Name>Kuka.PLC_O_D5</Name>
+							<Type>USINT</Type>
+						</Var>
+						<Var>
+							<Name>Kuka.PLC_O_D6</Name>
+							<Type>USINT</Type>
+						</Var>
+					</Vars>
+					<Contexts>
+						<Context>
+							<Id>0</Id>
+							<Name>PlcTask</Name>
+							<ManualConfig>
+								<OTCID>#x02010030</OTCID>
+							</ManualConfig>
+							<Priority>20</Priority>
+							<CycleTime>10000000</CycleTime>
+						</Context>
+					</Contexts>
+					<TaskPouOids>
+						<TaskPouOid Prio="20" OTCID="#x08502001"/>
+					</TaskPouOids>
+				</Instance>
+			</Project>
+		</Plc>
+		<Io>
+			<Device Id="1" DevType="111" DevFlags="#x0003" AmsPort="28673" AmsNetId="192.168.1.132.2.1" RemoteName="Device 1 (EtherCAT)" InfoImageId="2">
+				<Name>Device 1 (EtherCAT)</Name>
+				<AddressInfo>
+					<Pnp>
+						<DeviceDesc></DeviceDesc>
+						<DeviceName></DeviceName>
+						<DeviceData>000000000000</DeviceData>
+					</Pnp>
+				</AddressInfo>
+				<Image Id="1" AddrType="9" ImageType="3">
+					<Name>Image</Name>
+				</Image>
+				<Box Id="2" BoxType="9099" BoxFlags="#x00000020">
+					<Name>Box 2 (EL6695-0002)</Name>
+					<ImageId>1000</ImageId>
+					<EtherCAT SlaveType="3" AdsServerAddress="c0a801840203e903" PdiType="#x0008" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="63" EoeType="1" FoeType="1" VendorId="#x00000002" ProductCode="#x1a273052" RevisionNo="#x00060002" InfoDataAddr="true" InfoDataNetId="true" TimeoutMailbox2="2000" GenerateOwnNetId="true" CheckRevisionNoType="3" PortPhys="17" DcTimeLoopControlOnly="true" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL6695 EtherCAT Bridge terminal (Secondary)" Desc="EL6695-0002" PortABoxInfo="#x00ffffff">
+						<SyncMan>0010000426000100010000008000da050004001026010000</SyncMan>
+						<SyncMan>0016000422000100020000008000da050004001622010000</SyncMan>
+						<SyncMan>001c00006400000003000000000000000000001c64010000</SyncMan>
+						<SyncMan>008e02002000010004000000000000000200008e20010000</SyncMan>
+						<Fmmu>0000000000000000000000020000000001000000000000000000000000000000</Fmmu>
+						<Fmmu>0000000000000000008e00010100000002000000000000000000000000000000</Fmmu>
+						<Fmmu>00000000000000000d0800010100000003000000000000000000000000000000</Fmmu>
+						<SwitchPortData>00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000</SwitchPortData>
+						<BootStrapData>0010140200141402</BootStrapData>
+						<DcMode>4672656552756e0000000000000000004672656552756e00000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000</DcMode>
+						<DcMode>4443000000000000000000000000000044432d53796e6368726f6e000000000000000000000000000000000000000000000000000000000000000000000020030100000000000000000000000000000000000000000000000000000000000000</DcMode>
+						<Pdo Name="SYNC Inputs" Index="#x1a01" Flags="#x0010" SyncMan="3">
+							<ExcludePdo>#x1a02</ExcludePdo>
+							<ExcludePdo>#x1a03</ExcludePdo>
+							<Entry>
+								<Type GUID="{18071995-0000-0000-0000-00200000000C}">ARRAY [0..11] OF BIT</Type>
+							</Entry>
+							<Entry Name="TxPDO toggle" Index="#x1801" Sub="#x09">
+								<Type>BIT</Type>
+								<Comment><![CDATA[Bit toggles when new data from other side received]]></Comment>
+							</Entry>
+							<Entry Name="TxPDO state" Index="#x1801" Sub="#x07">
+								<Type>BIT</Type>
+								<Comment><![CDATA[0: Other side is in OP state
+>0: Error]]></Comment>
+							</Entry>
+							<Entry>
+								<Type GUID="{18071995-0000-0000-0000-002000000001}">ARRAY [0..0] OF BIT</Type>
+							</Entry>
+							<Entry Name="External device not connected" Index="#x10f4" Sub="#x10">
+								<Type>BIT</Type>
+								<Comment><![CDATA[0: External device connected
+1: External device not connected]]></Comment>
+							</Entry>
+						</Pdo>
+						<Pdo Name="SYNC Inputs" Index="#x1a02" Flags="#x0010">
+							<ExcludePdo>#x1a01</ExcludePdo>
+							<ExcludePdo>#x1a03</ExcludePdo>
+							<Entry Name="Sync Mode" Index="#x10f4" Sub="#x02">
+								<Type>BIT2</Type>
+								<Comment><![CDATA[0: no Syncronisation
+1: Secondary side is Sync Master
+2: Primary side is Sync Master]]></Comment>
+							</Entry>
+							<Entry>
+								<Type GUID="{18071995-0000-0000-0000-00200000000A}">ARRAY [0..9] OF BIT</Type>
+							</Entry>
+							<Entry Name="TxPDO toggle" Index="#x1802" Sub="#x09">
+								<Type>BIT</Type>
+								<Comment><![CDATA[Bit toggles when new data from other side received]]></Comment>
+							</Entry>
+							<Entry Name="TxPDO state" Index="#x1802" Sub="#x07">
+								<Type>BIT</Type>
+								<Comment><![CDATA[0: Other side is in OP state
+>0: Error]]></Comment>
+							</Entry>
+							<Entry Name="Timestamp update toggle" Index="#x10f4" Sub="#x0f">
+								<Type>BIT</Type>
+								<Comment><![CDATA[Bit toggles when new timestamp data available]]></Comment>
+							</Entry>
+							<Entry Name="External device not connected" Index="#x10f4" Sub="#x10">
+								<Type>BIT</Type>
+								<Comment><![CDATA[0: External device connected
+1: External device not connected]]></Comment>
+							</Entry>
+							<Entry Name="Internal time stamp" Index="#x10f4" Sub="#x11">
+								<Type>ULINT</Type>
+							</Entry>
+							<Entry Name="External time stamp" Index="#x10f4" Sub="#x12">
+								<Type>ULINT</Type>
+							</Entry>
+							<Entry>
+								<Type>UDINT</Type>
+							</Entry>
+						</Pdo>
+						<Pdo Name="SYNC Inputs" Index="#x1a03" Flags="#x0010">
+							<ExcludePdo>#x1a01</ExcludePdo>
+							<ExcludePdo>#x1a02</ExcludePdo>
+							<Entry Name="Sync Mode" Index="#x10f4" Sub="#x02">
+								<Type>BIT2</Type>
+								<Comment><![CDATA[0: no Syncronisation
+1: Secondary side is Sync Master
+2: Primary side is Sync Master]]></Comment>
+							</Entry>
+							<Entry>
+								<Type GUID="{18071995-0000-0000-0000-00200000000A}">ARRAY [0..9] OF BIT</Type>
+							</Entry>
+							<Entry Name="TxPDO toggle" Index="#x1803" Sub="#x09">
+								<Type>BIT</Type>
+								<Comment><![CDATA[Bit toggles when new data from other side received]]></Comment>
+							</Entry>
+							<Entry Name="TxPDO state" Index="#x1803" Sub="#x07">
+								<Type>BIT</Type>
+								<Comment><![CDATA[0: Other side is in OP state
+>0: Error]]></Comment>
+							</Entry>
+							<Entry Name="Timestamp update toggle" Index="#x10f4" Sub="#x0f">
+								<Type>BIT</Type>
+								<Comment><![CDATA[Bit toggles when new timestamp data available]]></Comment>
+							</Entry>
+							<Entry Name="External device not connected" Index="#x10f4" Sub="#x10">
+								<Type>BIT</Type>
+								<Comment><![CDATA[0: External device connected
+1: External device not connected]]></Comment>
+							</Entry>
+							<Entry Name="Internal time stamp" Index="#x10f4" Sub="#x11">
+								<Type>UDINT</Type>
+							</Entry>
+							<Entry Name="External time stamp" Index="#x10f4" Sub="#x12">
+								<Type>UDINT</Type>
+							</Entry>
+							<Entry>
+								<Type>UDINT</Type>
+							</Entry>
+						</Pdo>
+						<Pdo Name="FOE Info" Index="#x1a05" Flags="#x0020">
+							<Entry Name="Data Bytes Pending" Index="#xf650" Sub="#x01">
+								<Type>UINT</Type>
+							</Entry>
+						</Pdo>
+						<Pdo Name="IO Inputs" Index="#x1a08" Flags="#x0020" SyncMan="3"/>
+						<Pdo Name="IO Outputs" Index="#x1608" InOut="1" Flags="#x0020" SyncMan="2"/>
+						<CoeProfile ProfileNo="5001"/>
+					</EtherCAT>
+				</Box>
+				<EtherCAT EnableVirtualSwitch="true" MaxSwitchPorts="3" MaxSwitchFrames="140"/>
+			</Device>
+		</Io>
+	</Project>
+</TcSmProject>
