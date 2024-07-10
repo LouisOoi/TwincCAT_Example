@@ -10,15 +10,23 @@
 		</System>
 		<Plc>
 			<Project GUID="{E759FE3C-4CD4-4B1A-9490-8F76588D4EE6}" Name="TCPIP_Client" PrjFilePath="TCPIP_Client\TCPIP_Client.plcproj" TmcFilePath="TCPIP_Client\TCPIP_Client.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="TCPIP_Client\TCPIP_Client.tmc" TmcHash="{A8E3E4BD-47CD-0552-E944-B424BCF3703B}">
 					<Name>TCPIP_Client Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Contexts>
 						<Context>
-							<Id>1</Id>
-							<Name>Default</Name>
+							<Id>0</Id>
+							<Name>PlcTask</Name>
+							<ManualConfig>
+								<OTCID>#x02010030</OTCID>
+							</ManualConfig>
+							<Priority>20</Priority>
+							<CycleTime>10000000</CycleTime>
 						</Context>
 					</Contexts>
+					<TaskPouOids>
+						<TaskPouOid Prio="20" OTCID="#x08502001"/>
+					</TaskPouOids>
 				</Instance>
 			</Project>
 		</Plc>

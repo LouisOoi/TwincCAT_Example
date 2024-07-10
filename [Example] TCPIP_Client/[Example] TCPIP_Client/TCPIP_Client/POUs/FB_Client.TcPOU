@@ -14,6 +14,7 @@ VAR_INPUT
 END_VAR
 VAR_OUTPUT
 	bConnected	: BOOL 			:= FALSE;			(* TCP/IP connection state *)
+	RxText		: String[255];
 END_VAR
 VAR
 	fbConnection	: FB_ClientConnection;			(* Client connection/data exchange control function block *)
@@ -24,7 +25,7 @@ END_VAR
       <ST><![CDATA[(*-------------------------- Trigger data exchange -----------------------------------------------*)
 fbConnection( 	sSrvNetID := sSrvNetID, fbTx := fbTx, fbRx := fbRx, fbLog := fbLog, 
 				bEnable := bEnable, sRemoteHost := sRemoteHost, nRemotePort := nRemotePort,  
-				bLog := bLog, sPrefix := sPrefix, bConnected=>bConnected );
+				bLog := bLog, sPrefix := sPrefix, bConnected=>bConnected, RxText => RxText );
 				
 ]]></ST>
     </Implementation>

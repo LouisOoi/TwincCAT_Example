@@ -14,6 +14,8 @@ VAR
 										
 	fbCloseAll		: FB_SocketCloseAll;
 	bInitialize		: BOOL := TRUE;
+	bConnected		: BOOL;
+	nErrId			: UDINT;
 	data_send_flag  : BOOL;
 	Msg			: STRING := '';
 	Send_msg		: STRING := '';
@@ -24,11 +26,12 @@ END_VAR
       <ST><![CDATA[
 	fbCloseAll( sSrvNetID := sSrvNetID, bExecute:= bInitialize );
 	IF fbCloseAll.bBusy OR fbCloseAll.bError THEN
+		nErrId := fbCloseAll.nErrId;
 		RETURN;
 	END_IF
 	
 	bInitialize := FALSE;
-	fbClient_ABC	( sSrvNetId := sSrvNetID, bEnable := bScannerEnable	, bLog := bLog );
+	fbClient_ABC	( sSrvNetId := sSrvNetID, bEnable := bScannerEnable	, bLog := bLog, bConnected => bConnected );
 	
 	IF data_send_flag THEN
 		Send_msg := CONCAT(Msg, '$R');
@@ -36,10 +39,12 @@ END_VAR
 		data_send_flag := false;
 	END_IF
 	
-	Received_msg := fbClient_ABC.fbRx.sPut;]]></ST>
+	Received_msg := fbClient_ABC.RxText;]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
-      <LineId Id="6" Count="14" />
+      <LineId Id="6" Count="2" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="9" Count="11" />
       <LineId Id="2" Count="0" />
     </LineIds>
   </POU>
