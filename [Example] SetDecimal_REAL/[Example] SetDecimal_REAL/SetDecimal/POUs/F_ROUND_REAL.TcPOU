@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="F_ROUND_REAL" Id="{53dd5f7f-7929-4181-b7a5-b63ad7af92f7}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_ROUND_REAL : REAL
+VAR_INPUT
+  rInput 			: REAL;
+  iDecimalPlaces 	: INT;
+END_VAR
+VAR
+  rOutput 			: real;
+  rLeftPart 		: REAL;
+  Value				: dint;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+rOutput := rInput * EXPT(10,iDecimalPlaces);
+//rLeftPart := rOutput - TRUNC(rOutput);
+
+//IF rLeftPart >= 0.5 THEN
+//  rOutput := rOutput + 1;
+//ElSIF rLeftPart <= -0.5 THEN
+//  rOutput := rOutput - 1;
+//ELSE
+//  rOutput := rOutput;
+//END_IF
+
+Value := REAL_TO_DINT(rOutput);
+rOutput := Value / EXPT(10,iDecimalPlaces);
+F_ROUND_REAL := rOutput;]]></ST>
+    </Implementation>
+    <LineIds Name="F_ROUND_REAL">
+      <LineId Id="29" Count="10" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="40" Count="1" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
