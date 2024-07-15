@@ -3,14 +3,19 @@
   <POU Name="MAIN" Id="{bd6446df-a555-4a9a-9801-8a139cc9f785}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
-	rRoundedValue : REAL;
+	rRoundedValue 	: ARRAY[1..6] OF REAL;
+	rRawValue		: ARRAY[1..6] OF REAL := [1.111,2.222,3.666,4.888,5.555,6.159];
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[rRoundedValue := F_ROUND_REAL(10.655555, 3);]]></ST>
+      <ST><![CDATA[rRoundedValue := F_ROUND_REAL(rRawValue, 1);
+GVL.rRoundedValue := F_ROUND_REAL_GLOBAL(1);
+]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
       <LineId Id="2" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="22" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

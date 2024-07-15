@@ -1,9 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
-  <POU Name="F_ROUND_REAL" Id="{53dd5f7f-7929-4181-b7a5-b63ad7af92f7}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION F_ROUND_REAL : ARRAY[1..6] OF REAL
+  <POU Name="F_ROUND_REAL_GLOBAL" Id="{967fe789-c289-4fa6-aeef-63816f5b0f8e}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_ROUND_REAL_GLOBAL : ARRAY[1..6] OF REAL
 VAR_INPUT
-  rInput 			: ARRAY[1..6] OF REAL;
   iDecimalPlaces 	: INT;
 END_VAR
 VAR
@@ -13,14 +12,14 @@ VAR
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[FOR X := 1 TO 6 BY 1 DO
-	rOutput[X] := LREAL_TO_REAL(rInput[X] * EXPT(10,iDecimalPlaces));
+	rOutput[X] := LREAL_TO_REAL(GVL.rRawValue[X] * EXPT(10,iDecimalPlaces));
 	Value[X] := REAL_TO_DINT(rOutput[X]);
 	rOutput[X] := LREAL_to_real(Value[X] / EXPT(10,iDecimalPlaces));
 END_FOR
 
-F_ROUND_REAL := rOutput;]]></ST>
+F_ROUND_REAL_GLOBAL := rOutput;]]></ST>
     </Implementation>
-    <LineIds Name="F_ROUND_REAL">
+    <LineIds Name="F_ROUND_REAL_GLOBAL">
       <LineId Id="29" Count="1" />
       <LineId Id="40" Count="1" />
       <LineId Id="51" Count="0" />

@@ -10,7 +10,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{B2B21C34-1FAB-4BE7-9AF3-B08872836B42}" Name="SetDecimal" PrjFilePath="SetDecimal\SetDecimal.plcproj" TmcFilePath="SetDecimal\SetDecimal.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{3884771B-9A92-C8E8-C782-DC60C1F76344}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="SetDecimal\SetDecimal.tmc" TmcHash="{7450D9EA-79A5-B25F-27A7-EDCB54BEA9B5}">
 					<Name>SetDecimal Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Contexts>

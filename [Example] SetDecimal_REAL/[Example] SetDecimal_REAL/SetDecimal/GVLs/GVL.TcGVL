@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <GVL Name="GVL" Id="{289bb725-65e0-4adb-95bd-5f336d610bd9}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	rRoundedValue 	: ARRAY[1..6] OF REAL;
+	rRawValue		: ARRAY[1..6] OF REAL := [1.111,2.222,3.666,4.888,5.555,6.159];
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>
