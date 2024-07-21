@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="MAIN" Id="{41d800dd-6c26-40c4-8b1f-d3de318c5d3b}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+VAR
+	IPAdress		: STRING 	:= '192.168.1.168';
+	Port			: UINT		:= 8080;
+	UpdatePeriod	: TIME		:= T#60s;
+	fbHttpProcess	: FB_IotHttpClient :=(	sHostName			:= IPAdress,
+								  			bKeepAlive			:= TRUE, 
+											tConnectionTimeout	:= T#10S);
+	fbProcessPost	: FB_EventHTTP_Post;
+	
+	HttpSend		: BOOL := FALSE;
+	
+	API_Msg			: STRING[255] := '';
+	bSuccess		: BOOL;
+	bError			: BOOL;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+IF NOT fbHttpProcess.bConfigured THEN 
+	fbHttpProcess.nHostPort 				:= Port;
+	fbHttpProcess.stTLS.bNoServerCertCheck 	:= TRUE;
+END_IF
+
+IF fbHttpProcess.bConfigured THEN 
+	fbProcessPost( 	bSend		:= HttpSend, 
+				 	fbClient	:= fbHttpProcess, 
+					API_URI		:= '/Workcell_Logging',
+				 	API_Msg 	:= API_Msg,
+					bSuccess 	=> bSuccess,
+					bError		=> bError );
+END_IF 
+fbHttpProcess.Execute();]]></ST>
+    </Implementation>
+    <LineIds Name="MAIN">
+      <LineId Id="27" Count="0" />
+      <LineId Id="33" Count="3" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="37" Count="2" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="82" Count="0" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
