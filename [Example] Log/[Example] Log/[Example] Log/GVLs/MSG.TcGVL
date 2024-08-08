@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <GVL Name="MSG" Id="{7c848be1-8a2f-402d-bfd9-c902bb0b5135}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	// EVENT
+	EVENT_BTN				: STRING := '[BTN] ';
+	EVENT_HMI				: STRING := '[HMI] ';
+	EVENT_PROCESS			: STRING := '[PROCESS] ';
+	
+	// COMPONENT
+	COMP_CYLINDER_1			: STRING := '|CYL 1|';
+	COMP_CYLINDER_2			: STRING := '|CYL 2|';
+	
+	// ACTION
+	ACTION_EXTEND 			: STRING := 'CYL Extend';
+	ACTION_RETRACT 			: STRING := 'CYL Retract';
+	
+	//STATUS
+	STATUS_RUN				: STRING := '(Run)';
+	STATUS_ACK				: STRING := '(Ack)';
+	STATUS_DONE				: STRING := '(Done)';
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

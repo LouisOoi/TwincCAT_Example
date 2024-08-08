@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <GVL Name="GVL" Id="{3536f781-1aba-490f-bf6b-e5c225871912}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	// Create this Folder to store log
+	Log_Directory : STRING := 'C:\Users\celli\OneDrive\Desktop\TEST_LOG\PROCESS\';
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

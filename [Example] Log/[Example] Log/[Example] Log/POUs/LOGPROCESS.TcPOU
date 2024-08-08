@@ -1,0 +1,248 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="LOGPROCESS" Id="{22f5787e-8e16-45ab-bb8c-d41b9eca7ff5}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM LOGPROCESS
+VAR_INPUT
+	sLogEvent		: STRING;
+	sLogComp		: STRING;
+	sLogAction		: STRING;
+	sLogStatus		: STRING;
+	blogFlag		: BOOL;
+END_VAR
+VAR_OUTPUT
+	blog_complete 	: BOOL := FALSE;
+	blog_error	 	: BOOL := FALSE;
+END_VAR
+VAR
+	fb_TimeStamp : FB_UpdateTimeStamp ();
+	fbCreateDir	 : FB_CreateDir;
+	fbFileOpen	 : FB_FileOpen;
+	fbFileWrite	 : FB_FilePuts;
+	fbFileClose	 : FB_FileClose;
+	ilog_state	 : ( INIT, 
+					 CREATE_DIR, 
+					 FILE_OPEN,
+					 WRITE_TITLE,
+					 WRITE_LOG, 
+					 FILE_CLOSE,
+					 CLEAR, 
+					 ERROR);
+	
+	sTextLog	 	: STRING;		
+	sFolderName	 	: STRING;
+	sLastFolderName	: STRING;
+	sFileName		: STRING;
+	sLastFileName 	: STRING;	
+		
+	sWritepLog	 : STRING[255];
+	sWriteTitle	 : STRING;
+	
+	sInLogEvent	: STRING;
+	sInLogComp	: STRING;
+	sInLogAction	: STRING;
+	sInLogStatus	: STRING;
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF sLogComp<>sInLogComp OR sLogAction<>sInLogAction OR sLogStatus<>sInLogStatus THEN
+	sInLogEvent		:= sLogEvent;
+	sInLogComp		:= sLogComp;
+	sInLogAction	:= sLogAction;
+	sInLogStatus	:= sLogStatus;
+ELSE
+	RETURN;
+END_IF
+
+sTextLog := str_concat(sInLogEvent, sInLogComp,sInLogAction,sInLogStatus);
+
+WHILE blogFlag DO
+	CASE ilog_state OF
+		// INIT -------------------------------------------------------------------
+		INIT:
+			blog_complete	:= FALSE;
+			blog_error		:= FALSE;
+			ilog_state 		:= CREATE_DIR;
+			fbCreateDir(bExecute:= FALSE);
+	
+		// CREATE_DIR -------------------------------------------------------------			
+		CREATE_DIR:	
+			sFolderName := CONCAT(GVL.Log_Directory, MAIN.fb_TimeStamp.SystemDate);
+
+			IF sFolderName = sLastFolderName THEN
+				ilog_state := FILE_OPEN;
+				fbCreateDir(bExecute := FALSE);
+				fbFileOpen(bExecute := FALSE);
+			ELSE
+				fbCreateDir( sPathName:= sFolderName, bExecute:= TRUE );
+				IF NOT fbCreateDir.bBusy THEN
+					ilog_state := FILE_OPEN;
+					fbCreateDir(bExecute := FALSE);
+					fbFileOpen(bExecute := FALSE);
+					sLastFolderName := sFolderName;
+				END_IF
+			END_IF
+			
+		// FILE_OPEN -------------------------------------------------------------
+		FILE_OPEN:
+			sFileName := CONCAT(sFolderName,'\');
+			sFileName := CONCAT(sFileName, MAIN.fb_TimeStamp.SystemHour);
+			sFileName := CONCAT(sFileName,'.csv');
+				
+			fbFileOpen( sPathName	:= sFileName, 
+						nMode		:= FOPEN_MODEAPPEND, 
+						bExecute	:= TRUE, 
+						hFile=>);
+			IF fbFileOpen.bError THEN
+				ilog_state := ERROR;
+				fbFileOpen(bExecute := FALSE);
+				fbFileWrite(bExecute := FALSE);
+			ELSIF NOT fbFileOpen.bBusy THEN
+				ilog_state := WRITE_TITLE;
+				fbFileOpen(bExecute := FALSE);
+				fbFileWrite(bExecute := FALSE);
+			END_IF
+			
+		// WRITE_TITLE -------------------------------------------------------------
+		WRITE_TITLE:
+			IF sLastFileName <> sFileName THEN	
+				sWriteTitle := CONCAT('$n','Time Stamp');
+				sWriteTitle := CONCAT(sWriteTitle,',');
+				sWriteTitle := CONCAT(sWriteTitle,'Event');
+				sWriteTitle := CONCAT(sWriteTitle,',');
+				sWriteTitle := CONCAT(sWriteTitle,'Component');
+				sWriteTitle := CONCAT(sWriteTitle,',');
+				sWriteTitle := CONCAT(sWriteTitle,'Action');
+				sWriteTitle := CONCAT(sWriteTitle,',');
+				sWriteTitle := CONCAT(sWriteTitle,'Status');
+				
+				fbFileWrite ( hFile:=fbFileOpen.hFile,
+								sLine:=sWriteTitle,
+								bExecute:=TRUE);
+				IF fbFileWrite.bError THEN
+					ilog_state := ERROR;
+					fbFileWrite(bExecute := FALSE);
+					fbFileClose(bExecute := FALSE);
+				ELSIF NOT fbFileWrite.bBusy THEN
+					ilog_state := WRITE_LOG;
+					fbFileWrite(bExecute := FALSE);
+					fbFileClose(bExecute := FALSE);
+					sLastFileName := sFileName;
+				END_IF
+			ELSE
+				ilog_state := WRITE_LOG;
+			END_IF
+
+		// WRITE_LOG -------------------------------------------------------------
+		WRITE_LOG:	
+			sWritepLog := sTextLog;
+			
+			fbFileWrite ( 	hFile		:=fbFileOpen.hFile,
+							sLine		:=sWritepLog,
+							bExecute	:=TRUE);
+			IF fbFileWrite.bError THEN
+				ilog_state := ERROR;
+				fbFileWrite(bExecute := FALSE);
+				fbFileClose(bExecute := FALSE);
+			ELSIF NOT fbFileWrite.bBusy THEN
+				ilog_state := FILE_CLOSE;
+				fbFileWrite(bExecute := FALSE);
+				fbFileClose(bExecute := FALSE);
+			END_IF
+			
+		// FILE_CLOSE -------------------------------------------------------------
+		FILE_CLOSE:			
+			fbFileClose( hFile		:=fbFileOpen.hFile,
+						 bExecute	:=TRUE);
+			IF fbFileClose.bError THEN
+				ilog_state := ERROR;
+				fbFileClose(bExecute := FALSE);
+			ELSIF NOT fbFileClose.bBusy THEN
+				ilog_state := CLEAR;
+				fbFileClose(bExecute := FALSE);
+			END_IF
+			
+		// CLEAR -------------------------------------------------------------	
+		CLEAR:
+			blog_complete	:= TRUE;
+			blogFlag		:= FALSE;
+			ilog_state 		:= INIT;
+				
+		// ERROR -------------------------------------------------------------	
+		ERROR:
+			blog_error		:= TRUE;
+			blogFlag		:= FALSE;
+			ilog_state 		:= INIT;
+	END_CASE
+END_WHILE]]></ST>
+    </Implementation>
+    <Method Name="str_concat" Id="{e94d434c-09ac-414a-9d91-a0fda7e24031}">
+      <Declaration><![CDATA[METHOD str_concat : STRING
+VAR_INPUT
+	text1	: STRING;
+	text2	: STRING;
+	text3	: STRING;
+	text4	: STRING;
+END_VAR
+VAR
+	Con_String : String;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Con_String := CONCAT('$n', MAIN.fb_TimeStamp.FullSystemTime);
+Con_String := CONCAT(Con_String, ' , ');
+Con_String := CONCAT(Con_String, text1);
+Con_String := CONCAT(Con_String, ' , ');
+Con_String := CONCAT(Con_String, text2);
+Con_String := CONCAT(Con_String, ' , ');
+Con_String := CONCAT(Con_String, text3);
+Con_String := CONCAT(Con_String, ' , ');
+Con_String := CONCAT(Con_String, text4);
+
+str_concat := Con_String;]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="LOGPROCESS">
+      <LineId Id="286" Count="0" />
+      <LineId Id="308" Count="3" />
+      <LineId Id="303" Count="0" />
+      <LineId Id="312" Count="0" />
+      <LineId Id="300" Count="0" />
+      <LineId Id="285" Count="0" />
+      <LineId Id="175" Count="0" />
+      <LineId Id="15" Count="11" />
+      <LineId Id="284" Count="0" />
+      <LineId Id="393" Count="12" />
+      <LineId Id="33" Count="20" />
+      <LineId Id="228" Count="0" />
+      <LineId Id="213" Count="1" />
+      <LineId Id="242" Count="0" />
+      <LineId Id="455" Count="1" />
+      <LineId Id="215" Count="0" />
+      <LineId Id="237" Count="0" />
+      <LineId Id="232" Count="0" />
+      <LineId Id="239" Count="0" />
+      <LineId Id="233" Count="0" />
+      <LineId Id="238" Count="0" />
+      <LineId Id="235" Count="0" />
+      <LineId Id="216" Count="11" />
+      <LineId Id="246" Count="0" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="243" Count="2" />
+      <LineId Id="229" Count="0" />
+      <LineId Id="55" Count="1" />
+      <LineId Id="58" Count="38" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="LOGPROCESS.str_concat">
+      <LineId Id="6" Count="2" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="49" Count="1" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
