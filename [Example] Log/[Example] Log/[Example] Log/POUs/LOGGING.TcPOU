@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
-  <POU Name="LOGPROCESS" Id="{22f5787e-8e16-45ab-bb8c-d41b9eca7ff5}" SpecialFunc="None">
-    <Declaration><![CDATA[PROGRAM LOGPROCESS
+  <POU Name="LOGGING" Id="{dd1fbfce-80da-40e0-844a-c9ae4087a814}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK LOGGING
+
 VAR_INPUT
 	sLogEvent		: STRING;
 	sLogComp		: STRING;
@@ -54,7 +55,7 @@ ELSE
 	RETURN;
 END_IF
 
-sTextLog := str_concat(sInLogEvent, sInLogComp,sInLogAction,sInLogStatus);
+sTextLog := string_concat(sInLogEvent, sInLogComp,sInLogAction,sInLogStatus);
 
 WHILE blogFlag DO
 	CASE ilog_state OF
@@ -176,8 +177,8 @@ WHILE blogFlag DO
 	END_CASE
 END_WHILE]]></ST>
     </Implementation>
-    <Method Name="str_concat" Id="{e94d434c-09ac-414a-9d91-a0fda7e24031}">
-      <Declaration><![CDATA[METHOD str_concat : STRING
+    <Method Name="string_concat" Id="{3e5915c3-d41d-4397-ae8e-5b3ff8478036}">
+      <Declaration><![CDATA[METHOD string_concat : String
 VAR_INPUT
 	text1	: STRING;
 	text2	: STRING;
@@ -187,6 +188,7 @@ END_VAR
 VAR
 	Con_String : String;
 END_VAR
+
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[Con_String := CONCAT('$n', MAIN.fb_TimeStamp.FullSystemTime);
@@ -199,49 +201,15 @@ Con_String := CONCAT(Con_String, text3);
 Con_String := CONCAT(Con_String, ' , ');
 Con_String := CONCAT(Con_String, text4);
 
-str_concat := Con_String;]]></ST>
+string_concat := Con_String;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="LOGPROCESS">
-      <LineId Id="286" Count="0" />
-      <LineId Id="308" Count="3" />
-      <LineId Id="303" Count="0" />
-      <LineId Id="312" Count="0" />
-      <LineId Id="300" Count="0" />
-      <LineId Id="285" Count="0" />
-      <LineId Id="175" Count="0" />
-      <LineId Id="15" Count="11" />
-      <LineId Id="284" Count="0" />
-      <LineId Id="393" Count="12" />
-      <LineId Id="33" Count="20" />
-      <LineId Id="228" Count="0" />
-      <LineId Id="213" Count="1" />
-      <LineId Id="242" Count="0" />
-      <LineId Id="455" Count="1" />
-      <LineId Id="215" Count="0" />
-      <LineId Id="237" Count="0" />
-      <LineId Id="232" Count="0" />
-      <LineId Id="239" Count="0" />
-      <LineId Id="233" Count="0" />
-      <LineId Id="238" Count="0" />
-      <LineId Id="235" Count="0" />
-      <LineId Id="216" Count="11" />
-      <LineId Id="246" Count="0" />
-      <LineId Id="54" Count="0" />
-      <LineId Id="243" Count="2" />
-      <LineId Id="229" Count="0" />
-      <LineId Id="55" Count="1" />
-      <LineId Id="58" Count="38" />
-      <LineId Id="5" Count="0" />
+    <LineIds Name="LOGGING">
+      <LineId Id="224" Count="128" />
+      <LineId Id="9" Count="0" />
     </LineIds>
-    <LineIds Name="LOGPROCESS.str_concat">
-      <LineId Id="6" Count="2" />
-      <LineId Id="35" Count="0" />
-      <LineId Id="10" Count="0" />
-      <LineId Id="37" Count="0" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="49" Count="1" />
-      <LineId Id="13" Count="0" />
+    <LineIds Name="LOGGING.string_concat">
+      <LineId Id="15" Count="9" />
       <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
