@@ -11,10 +11,12 @@ VAR_GLOBAL
 	// COMPONENT
 	COMP_CYLINDER_1			: STRING := '|CYL 1|';
 	COMP_CYLINDER_2			: STRING := '|CYL 2|';
+	COMP_CONV_MOTOR_1		: STRING := '|Conveyor Motor|';
 	
 	// ACTION
 	ACTION_EXTEND 			: STRING := 'CYL Extend';
 	ACTION_RETRACT 			: STRING := 'CYL Retract';
+	ACTION_MOTOR_RUN 		: STRING := 'Motor Run Forward';
 	
 	//STATUS
 	STATUS_RUN				: STRING := '(Run)';

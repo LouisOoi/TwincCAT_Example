@@ -32,9 +32,6 @@
     <Compile Include="POUs\FB_UpdateTimeStamp.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\LOGPROCESS.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="POUs\MAIN.TcPOU">
       <SubType>Code</SubType>
     </Compile>

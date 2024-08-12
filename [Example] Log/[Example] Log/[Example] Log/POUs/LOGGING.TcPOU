@@ -29,13 +29,13 @@ VAR
 					 CLEAR, 
 					 ERROR);
 	
-	sTextLog	 	: STRING;		
+	sTextLog	 	: STRING[300];		
 	sFolderName	 	: STRING;
 	sLastFolderName	: STRING;
 	sFileName		: STRING;
 	sLastFileName 	: STRING;	
 		
-	sWritepLog	 : STRING[255];
+	sWritepLog	 : STRING[300];
 	sWriteTitle	 : STRING;
 	
 	sInLogEvent	: STRING;
@@ -178,7 +178,7 @@ WHILE blogFlag DO
 END_WHILE]]></ST>
     </Implementation>
     <Method Name="string_concat" Id="{3e5915c3-d41d-4397-ae8e-5b3ff8478036}">
-      <Declaration><![CDATA[METHOD string_concat : String
+      <Declaration><![CDATA[METHOD string_concat : STRING(300)
 VAR_INPUT
 	text1	: STRING;
 	text2	: STRING;
@@ -186,7 +186,7 @@ VAR_INPUT
 	text4	: STRING;
 END_VAR
 VAR
-	Con_String : String;
+	Con_String : String(300);
 END_VAR
 
 ]]></Declaration>

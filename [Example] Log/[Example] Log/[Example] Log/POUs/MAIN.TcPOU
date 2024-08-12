@@ -3,9 +3,11 @@
   <POU Name="MAIN" Id="{adb1c04d-0f03-4f01-b08b-c18b8d85a7bd}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
+	LogProcess		: LOGGING;
 	fb_TimeStamp 	: FB_UpdateTimeStamp ();
+	
 	bLog_Flag		: BOOL;
-	LogProcess		: LOGGINg;
+	bLog_Flag1		: BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -13,12 +15,23 @@ END_VAR
 
 IF bLog_Flag THEN
 	LogProcess( sLogEvent	 := MSG.EVENT_PROCESS, 
-	 			sLogComp	 := MSG.COMP_CYLINDER_1, 
-	 			sLogAction	 := MSG.ACTION_EXTEND, 
+	 			sLogComp	 := MSG.COMP_CONV_MOTOR_1, 
+	 			sLogAction	 := MSG.ACTION_MOTOR_RUN, 
 	 			sLogStatus	 := MSG.STATUS_DONE,
 	 		 	blogFlag	 := TRUE);
 	IF LogProcess.blog_complete OR LogProcess.blog_error THEN
 		bLog_Flag 			:= FALSE;
+	END_IF
+END_IF
+
+IF bLog_Flag1 THEN
+	LogProcess( sLogEvent	 := MSG.EVENT_PROCESS, 
+	 			sLogComp	 := MSG.COMP_CYLINDER_1, 
+	 			sLogAction	 := MSG.ACTION_MOTOR_RUN, 
+	 			sLogStatus	 := MSG.STATUS_DONE,
+	 		 	blogFlag	 := TRUE);
+	IF LogProcess.blog_complete OR LogProcess.blog_error THEN
+		bLog_Flag1 			:= FALSE;
 	END_IF
 END_IF
 ]]></ST>
@@ -33,6 +46,7 @@ END_IF
       <LineId Id="22" Count="1" />
       <LineId Id="25" Count="0" />
       <LineId Id="9" Count="1" />
+      <LineId Id="38" Count="10" />
       <LineId Id="21" Count="0" />
     </LineIds>
   </POU>
