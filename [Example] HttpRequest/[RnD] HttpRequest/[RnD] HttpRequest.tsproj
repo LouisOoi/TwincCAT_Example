@@ -10,7 +10,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{F12F76D1-D3D4-4695-A435-CD29FAF7318A}" Name="HttpRequest" PrjFilePath="HttpRequest\HttpRequest.plcproj" TmcFilePath="HttpRequest\HttpRequest.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="HttpRequest\HttpRequest.tmc" TmcHash="{3E5EBA26-8D04-4AEA-6C51-6909D5ABD62F}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="HttpRequest\HttpRequest.tmc" TmcHash="{990A9FE4-2137-A628-F30F-79C3B60A47AD}">
 					<Name>HttpRequest Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Contexts>

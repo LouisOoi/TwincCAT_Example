@@ -31,6 +31,7 @@ VAR
 	jsonDoc				: SJsonValue;
 	jsonVal				: SJsonValue;
 	sResultValue		: STRING;
+	sResultValue2		: STRING;
 	
 	nReqCount			: UDINT;
 	nResCount			: UDINT;
@@ -61,11 +62,11 @@ CASE nState OF
 				IF jsonDoc <> 0 THEN
 					bGetJsonResult:= TRUE;
 					IF fbJson.HasMember(jsonDoc, 'status')  THEN
-						jsonVal:= fbJson.FindMember(jsonDoc, 'status');
+						jsonVal:= fbJson.FindMember(jsonDoc, 'status');	
 						sResultValue:= fbJson.GetString(jsonVal);
 						IF sResultValue = 'success' THEN
-							nValidResCount:= nValidResCount+1;
-							bSuccess := TRUE;//////////////////////////////////////////////////
+							nValidResCount:= nValidResCount+1;	
+							bSuccess := TRUE;
 							bError:= FALSE;
 						END_IF
 					END_IF		
@@ -94,8 +95,11 @@ END_CASE
       <LineId Id="163" Count="1" />
       <LineId Id="623" Count="0" />
       <LineId Id="615" Count="2" />
-      <LineId Id="524" Count="2" />
-      <LineId Id="663" Count="1" />
+      <LineId Id="524" Count="0" />
+      <LineId Id="1130" Count="0" />
+      <LineId Id="526" Count="0" />
+      <LineId Id="663" Count="0" />
+      <LineId Id="1125" Count="0" />
       <LineId Id="1050" Count="0" />
       <LineId Id="668" Count="0" />
       <LineId Id="662" Count="0" />

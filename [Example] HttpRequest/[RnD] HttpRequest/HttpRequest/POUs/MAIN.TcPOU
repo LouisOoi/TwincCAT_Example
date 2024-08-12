@@ -3,7 +3,7 @@
   <POU Name="MAIN" Id="{41d800dd-6c26-40c4-8b1f-d3de318c5d3b}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
-	IPAdress		: STRING 	:= '192.168.1.168';
+	IPAdress		: STRING 	:= '10.0.120.115';
 	Port			: UINT		:= 8080;
 	UpdatePeriod	: TIME		:= T#60s;
 	fbHttpProcess	: FB_IotHttpClient :=(	sHostName			:= IPAdress,
@@ -16,6 +16,7 @@ VAR
 	API_Msg			: STRING[255] := '';
 	bSuccess		: BOOL;
 	bError			: BOOL;
+	
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[
@@ -44,7 +45,7 @@ fbHttpProcess.Execute();]]></ST>
       <LineId Id="82" Count="0" />
       <LineId Id="61" Count="0" />
       <LineId Id="42" Count="0" />
-      <LineId Id="2" Count="0" />
+      <LineId Id="98" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

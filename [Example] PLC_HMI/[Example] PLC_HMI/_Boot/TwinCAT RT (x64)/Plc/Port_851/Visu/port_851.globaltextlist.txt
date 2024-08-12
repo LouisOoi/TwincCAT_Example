@@ -1,2 +1,4 @@
 Id;Default
+934;Emergency Stop
+92;Reset Button
 941;Start Button
