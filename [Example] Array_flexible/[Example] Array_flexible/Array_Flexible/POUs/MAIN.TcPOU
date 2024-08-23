@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="MAIN" Id="{aa0aa1f3-0bc2-44b1-a361-ad6f41ab260c}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+VAR
+	aArr1 	: ARRAY[0..10] OF INT 	:= [1,1,1,1,1,1,1,1,1,1,1]; 
+	aArr2  	: ARRAY[0..5] OF INT 	:= [2,2,2,2,2,2];
+	aArr3  	: ARRAY[0..1] OF INT 	:= [10,10];
+	sum1	: DINT;
+	sum2	: DINT;
+	sum3	: DINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+sum1 := Fsum(aData := aArr1);
+sum2 := Fsum(aData := aArr2);
+sum3 := Fsum(aData := aArr3);]]></ST>
+    </Implementation>
+    <LineIds Name="MAIN">
+      <LineId Id="10" Count="1" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="14" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

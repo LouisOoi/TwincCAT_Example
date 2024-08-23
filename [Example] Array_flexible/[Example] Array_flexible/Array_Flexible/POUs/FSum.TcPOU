@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FSum" Id="{6bee12a3-ac00-4502-acf5-cdc9cd51b9e2}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION FSum : dint
+VAR_IN_OUT
+    aData     : ARRAY [*] OF INT;
+END_VAR
+VAR
+    i, nSum   : DINT;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[nSum := 0;
+ 
+FOR i := LOWER_BOUND(aData,1) TO UPPER_BOUND(aData,1) DO
+    nSum := nSum + aData[i];
+END_FOR;
+
+FSum := nSum;]]></ST>
+    </Implementation>
+    <LineIds Name="FSum">
+      <LineId Id="13" Count="5" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
