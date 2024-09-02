@@ -509,7 +509,83 @@
             <v n="FbGuid">{5a9109a5-644f-4af8-8415-8c000006c96e}</v>
           </o>
           <n n="InstantiationStorage" />
-          <n n="VisuUserManagement" />
+          <o n="VisuUserManagement" t="VisuUserManagement">
+            <v n="GroupIdCounter">3</v>
+            <v n="UserIdCounter">2</v>
+            <v n="ChangeToStartVisuAtLogout">false</v>
+            <o n="UserList" t="VisuUserList">
+              <l n="UserList" t="ArrayList" cet="VisuUser">
+                <o>
+                  <v n="Id">0</v>
+                  <v n="Name">"ADMIN"</v>
+                  <v n="FullName">"ADMIN"</v>
+                  <v n="Password">"0F037584C99E7FD4F4F8C59550F8F507"</v>
+                  <v n="Group">""</v>
+                  <v n="IsDeactivated">false</v>
+                  <v n="Description">""</v>
+                  <l2 n="Groups" cet="String">
+                    <v>Admin</v>
+                  </l2>
+                </o>
+                <o>
+                  <v n="Id">1</v>
+                  <v n="Name">"JBOY"</v>
+                  <v n="FullName">"JBOY"</v>
+                  <v n="Password">"0F037584C99E7FD4F4F8C59550F8F507"</v>
+                  <v n="Group">""</v>
+                  <v n="IsDeactivated">false</v>
+                  <v n="Description">""</v>
+                  <l2 n="Groups" cet="String">
+                    <v>Operator</v>
+                  </l2>
+                </o>
+              </l>
+            </o>
+            <o n="GroupList" t="VisuGroupList">
+              <l n="Groups" t="ArrayList" cet="VisuGroup">
+                <o>
+                  <v n="Id">0</v>
+                  <v n="Name">"None"</v>
+                  <v n="AutoLogOff">false</v>
+                  <v n="LogOffTimeValue">1</v>
+                  <v n="LogOffTimeUnit" t="TimeUnit">Minute</v>
+                  <v n="RightToChangeUser">false</v>
+                  <v n="Description">""</v>
+                  <v n="GroupNameIndex">"472"</v>
+                  <l n="UserMembers" t="ArrayList" />
+                </o>
+                <o>
+                  <v n="Id">1</v>
+                  <v n="Name">"Admin"</v>
+                  <v n="AutoLogOff">true</v>
+                  <v n="LogOffTimeValue">10</v>
+                  <v n="LogOffTimeUnit" t="TimeUnit">Minute</v>
+                  <v n="RightToChangeUser">false</v>
+                  <v n="Description">""</v>
+                  <v n="GroupNameIndex">"902"</v>
+                  <l n="UserMembers" t="ArrayList" cet="Int32">
+                    <v>0</v>
+                  </l>
+                </o>
+                <o>
+                  <v n="Id">2</v>
+                  <v n="Name">"Operator"</v>
+                  <v n="AutoLogOff">true</v>
+                  <v n="LogOffTimeValue">1</v>
+                  <v n="LogOffTimeUnit" t="TimeUnit">Minute</v>
+                  <v n="RightToChangeUser">false</v>
+                  <v n="Description">""</v>
+                  <v n="GroupNameIndex">"30"</v>
+                  <l n="UserMembers" t="ArrayList" cet="Int32">
+                    <v>1</v>
+                  </l>
+                </o>
+              </l>
+            </o>
+            <v n="ApplyLoginRestrictions">false</v>
+            <v n="MaxNumberOfAutenthicationAttempts">-1</v>
+            <v n="UserLockout">-1</v>
+          </o>
           <v n="UseLocalUserMgmt">true</v>
           <v n="UseUserMgmtInPlc">true</v>
           <n n="RemoteUserMgmtPath" />
@@ -564,12 +640,18 @@
         <Type n="Int32">System.Int32</Type>
         <Type n="Int64">System.Int64</Type>
         <Type n="String">System.String</Type>
+        <Type n="TimeUnit">{58d66555-1558-40f4-a380-3a4ea48199c6}</Type>
         <Type n="UnicodeSupport">{19611221-ebd3-4607-86d2-9822fbe84c30}</Type>
         <Type n="VisualClientSizeMode">{c37fe731-4f69-4d98-82fe-4f9aefbe200d}</Type>
         <Type n="VisualizationTargetProperties">{997fedbb-1888-4256-b61c-2933d8056bfd}</Type>
         <Type n="VisualManagerGlobalOpenNumpadKeypadSettings">{422ed780-41e9-4352-8132-b322b16154c1}</Type>
         <Type n="VisualManagerObject">{4d3fdb8f-ab50-4c35-9d3a-d4bb9bb9a628}</Type>
         <Type n="VisualManagerViewSettings">{ec9b2ec6-92a2-4856-be72-7866fb274c64}</Type>
+        <Type n="VisuGroup">{cbdfd22d-3118-4cd3-9de0-6ad5f85c196b}</Type>
+        <Type n="VisuGroupList">{52cd9b36-c895-43a1-810e-c0afb1947ceb}</Type>
+        <Type n="VisuUser">{050e44ed-396f-4de1-93af-4790d44c8a3c}</Type>
+        <Type n="VisuUserList">{63f1c5cc-68c6-498d-a3f4-1430af57d0ee}</Type>
+        <Type n="VisuUserManagement">{f1a7c401-b0c5-42ec-993a-fe48f4235864}</Type>
       </TypeList>
     </XmlArchive>
     <TargetVisu Name="TargetVisualization" Id="{f5e82247-39f2-4f5c-9cef-6b0de6828f17}">

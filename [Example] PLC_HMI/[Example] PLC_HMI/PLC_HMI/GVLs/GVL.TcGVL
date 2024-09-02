@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <GVL Name="GVL" Id="{91cce4c8-d258-4ec1-a4bf-b4e621e39a91}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

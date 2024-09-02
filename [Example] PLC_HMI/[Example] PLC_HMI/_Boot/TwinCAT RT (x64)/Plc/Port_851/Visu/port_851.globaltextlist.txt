@@ -1,4 +1,19 @@
 Id;Default
+82;%s
+902;Admin
+132;ADMIN
+997;Are you Sure ?
 934;Emergency Stop
+186;Login
+47;LOGIN
+735;Logout
+992;LOGOUT
+532;No
+472;None
+30;Operator
+391;OPERATOR
 92;Reset Button
+899;Selected model
 941;Start Button
+608;WARNING
+412;Yes

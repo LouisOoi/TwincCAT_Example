@@ -6,8 +6,68 @@
         <o xml:space="preserve" t="GlobalTextListObject">
           <l n="TextList" t="ArrayList" cet="TextListRow">
             <o>
+              <v n="TextID">"82"</v>
+              <v n="TextDefault">"%s"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"902"</v>
+              <v n="TextDefault">"Admin"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"132"</v>
+              <v n="TextDefault">"ADMIN"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"997"</v>
+              <v n="TextDefault">"Are you Sure ?"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"934"</v>
               <v n="TextDefault">"Emergency Stop"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"186"</v>
+              <v n="TextDefault">"Login"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"47"</v>
+              <v n="TextDefault">"LOGIN"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"735"</v>
+              <v n="TextDefault">"Logout"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"992"</v>
+              <v n="TextDefault">"LOGOUT"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"532"</v>
+              <v n="TextDefault">"No"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"472"</v>
+              <v n="TextDefault">"None"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"30"</v>
+              <v n="TextDefault">"Operator"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"391"</v>
+              <v n="TextDefault">"OPERATOR"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
@@ -16,8 +76,23 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"899"</v>
+              <v n="TextDefault">"Selected model"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"941"</v>
               <v n="TextDefault">"Start Button"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"608"</v>
+              <v n="TextDefault">"WARNING"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"412"</v>
+              <v n="TextDefault">"Yes"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
           </l>
