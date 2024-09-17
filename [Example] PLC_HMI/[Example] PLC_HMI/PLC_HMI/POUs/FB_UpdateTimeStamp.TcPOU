@@ -14,7 +14,9 @@ VAR_OUTPUT
 	day 	: ARRAY [1..7] OF BOOL;
 END_VAR
 VAR
-	fb_LocalTime	 : FB_LocalSystemTime;
+	fb_LocalTime	: FB_LocalSystemTime;
+	dayNum			: UINT;
+	today 			: STRING;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -47,8 +49,70 @@ END_VAR
 		SystemTime		:= CONCAT(SystemTime, WORD_TO_STRING(fb_LocalTime.systemTime.wSecond));
 		
 		SystemHour		:= WORD_TO_STRING(fb_LocalTime.systemTime.wHour);
+	
+		dayNum := WORD_TO_UINT(fb_localTime.systemTime.wDayOfWeek);
+		GVL.TODAY := fb_localTime.systemTime.wDay;
+		IF dayNum = 0 THEN
+			dayNum :=1;
+		END_IF
 		
-	END_IF]]></ST>
+		GVL.TableRecord [1,dayNum] := CONCAT (WORD_TO_STRING(fb_LocalTime.systemTime.wDay),'-');
+		GVL.TableRecord [1,dayNum] := CONCAT (GVL.TableRecord [1,dayNum],WORD_TO_STRING(fb_LocalTime.systemTime.wMonth));
+		GVL.TableRecord [1,dayNum] := CONCAT (GVL.TableRecord [1,dayNum],'-');
+		GVL.TableRecord [1,dayNum] := CONCAT (GVL.TableRecord [1,dayNum],WORD_TO_STRING(fb_LocalTime.systemTime.wYear));
+		
+		CASE dayNum OF
+			1:
+				today := 'Monday';
+				day[1] := FALSE;
+				day[2] := day[3] := day[4] := day[5] := day[6] := day[7] := TRUE;
+			2:
+				today := 'Tuesday';
+				day[2] := FALSE;
+				day[1] := day[3] := day[4] := day[5] := day[6] := day[7] := TRUE;
+			3:
+				today := 'Wednesday';
+				day[3] := FALSE;
+				day[1] := day[2] := day[4] := day[5] := day[6] := day[7] := TRUE;
+			4:
+				today := 'Thursday';
+				day[4] := FALSE;
+				day[1] := day[2] := day[3] := day[5] := day[6] := day[7] := TRUE;
+			5:
+				today := 'Friday';
+				day[5] := FALSE;
+				day[1] := day[2] := day[3] := day[4] := day[6] := day[7] := TRUE;
+			6:
+				today := 'Saturday';
+				day[6] := FALSE;
+				day[1] := day[2] := day[3] := day[4] := day[5] := day[7] := TRUE;
+			7:
+				today := 'Sunday';
+				day[7] := FALSE;
+				day[1] := day[2] := day[3] := day[4] := day[5] := day[6] := TRUE;
+			END_CASE
+
+	//  --------------------------------------------------------------- TABLE logging
+		IF GVL.TODAY <> GVL.YESTERDAY THEN
+			GVL.YESTERDAY := GVL.TODAY;
+			GVL.DailyCnt_FG1 := GVL.DailyCnt_FG2 := GVL.DailyCnt_FG3 := GVL.DailyCnt_FG4 := 0;
+		END_IF		
+		IF GVL.LASTMONTH <> fb_LocalTime.systemTime.wMonth THEN
+			GVL.LASTMONTH := fb_LocalTime.systemTime.wMonth;
+			GVL.MonthCnt  := GVL.MonthCnt + 1;
+		END_IF	
+		IF GVL.LASTYEAR <> fb_LocalTime.systemTime.wYear THEN
+			GVL.LASTYEAR := fb_LocalTime.systemTime.wYear;
+			GVL.YearCnt  := GVL.YearCnt + 1;
+		END_IF
+		
+		GVL.TableRecord [2,dayNum] := INT_TO_STRING(GVL.DailyCnt_FG1);
+		GVL.TableRecord [3,dayNum] := INT_TO_STRING(GVL.DailyCnt_FG2);
+		GVL.TableRecord [4,dayNum] := INT_TO_STRING(GVL.DailyCnt_FG3);
+		GVL.TableRecord [5,dayNum] := INT_TO_STRING(GVL.DailyCnt_FG4);
+		
+	END_IF
+	]]></ST>
     </Implementation>
     <LineIds Name="FB_UpdateTimeStamp">
       <LineId Id="180" Count="0" />
@@ -57,8 +121,13 @@ END_VAR
       <LineId Id="84" Count="3" />
       <LineId Id="270" Count="0" />
       <LineId Id="88" Count="12" />
-      <LineId Id="121" Count="0" />
-      <LineId Id="235" Count="0" />
+      <LineId Id="291" Count="46" />
+      <LineId Id="339" Count="7" />
+      <LineId Id="290" Count="0" />
+      <LineId Id="351" Count="3" />
+      <LineId Id="347" Count="0" />
+      <LineId Id="349" Count="1" />
+      <LineId Id="348" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

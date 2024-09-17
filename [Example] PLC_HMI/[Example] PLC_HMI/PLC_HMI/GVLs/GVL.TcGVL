@@ -3,6 +3,18 @@
   <GVL Name="GVL" Id="{91cce4c8-d258-4ec1-a4bf-b4e621e39a91}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL
+	TableRecord		: ARRAY [1..5,1..7] OF STRING;
+	TODAY			: WORD;
+	YESTERDAY		: WORD;
+	LASTMONTH		: UINT;
+	LASTYEAR		: UINT;
+	
+	DailyCnt_FG1	: INT;
+	DailyCnt_FG2	: INT;
+	DailyCnt_FG3	: INT;
+	DailyCnt_FG4	: INT;
+	MonthCnt		: UINT;
+	YearCnt			: UINT;
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

@@ -1,14 +1,23 @@
 Id;Default
 82;%s
+217;A
 902;Admin
 132;ADMIN
 997;Are you Sure ?
+773;B
+996;C
 180;Calibration
 3105;Connect   Laser
 1339;Connect Scanner
 395;Control
 313;CONTROL PAGE
+596;D
+815;Date
 934;Emergency Stop
+153;FG-1
+767;FG-2
+89;FG-3
+417;FG-4
 133;Home
 266;HOME PAGE
 186;Login
