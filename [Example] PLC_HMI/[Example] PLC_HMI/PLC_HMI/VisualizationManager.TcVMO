@@ -654,12 +654,12 @@
         <Type n="VisuUserManagement">{f1a7c401-b0c5-42ec-993a-fe48f4235864}</Type>
       </TypeList>
     </XmlArchive>
-    <TargetVisu Name="TargetVisualization" Id="{f5e82247-39f2-4f5c-9cef-6b0de6828f17}">
+    <TargetVisu Name="TargetVisualization" Id="{99500963-a00c-4cfe-8b0d-923771a9e890}">
       <XmlArchive>
         <Data>
           <o xml:space="preserve" t="TargetVisualizationObject">
             <o n="ViewSettings" t="TargetVisualizationViewSettings">
-              <v n="StartVisu">"HOME_PAGE"</v>
+              <v n="StartVisu">"PAGE_HOME"</v>
               <n n="HtmFileName" />
               <v n="UpdateRate">200</v>
               <v n="CommBufferSize">50000</v>
@@ -691,12 +691,12 @@
         </TypeList>
       </XmlArchive>
     </TargetVisu>
-    <WebVisu Name="WebVisualization" Id="{e7f086f4-1a16-45e7-8982-b814a042de9c}">
+    <WebVisu Name="WebVisualization" Id="{6fe5915d-759f-4530-9ef7-390382e66e09}">
       <XmlArchive>
         <Data>
           <o xml:space="preserve" t="WebVisualizationObject">
             <o n="ViewSettings" t="WebVisualizationViewSettings">
-              <v n="StartVisu">"HOME_PAGE"</v>
+              <v n="StartVisu">"PAGE_HOME"</v>
               <v n="HtmFileName">"webvisu"</v>
               <v n="MainStartHtm">true</v>
               <v n="UpdateRate">200</v>

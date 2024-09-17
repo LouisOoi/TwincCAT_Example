@@ -26,8 +26,43 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"180"</v>
+              <v n="TextDefault">"Calibration"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"3105"</v>
+              <v n="TextDefault">"Connect   Laser"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"1339"</v>
+              <v n="TextDefault">"Connect Scanner"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"395"</v>
+              <v n="TextDefault">"Control"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"313"</v>
+              <v n="TextDefault">"CONTROL PAGE"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"934"</v>
               <v n="TextDefault">"Emergency Stop"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"133"</v>
+              <v n="TextDefault">"Home"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"266"</v>
+              <v n="TextDefault">"HOME PAGE"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
@@ -48,6 +83,12 @@
             <o>
               <v n="TextID">"992"</v>
               <v n="TextDefault">"LOGOUT"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"2441"</v>
+              <v n="TextDefault">"Mute
+Buzzer"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
@@ -76,6 +117,16 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"885"</v>
+              <v n="TextDefault">"Run"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"192"</v>
+              <v n="TextDefault">"RUN PAGE"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"899"</v>
               <v n="TextDefault">"Selected model"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -83,6 +134,16 @@
             <o>
               <v n="TextID">"941"</v>
               <v n="TextDefault">"Start Button"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"88"</v>
+              <v n="TextDefault">"System"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"451"</v>
+              <v n="TextDefault">"SYSTEM PAGE"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>

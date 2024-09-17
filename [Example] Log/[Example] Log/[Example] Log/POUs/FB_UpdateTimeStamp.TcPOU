@@ -38,6 +38,7 @@ END_VAR
 		SystemDate		:= CONCAT(SystemDate, WORD_TO_STRING(fb_LocalTime.systemTime.wMonth));
 		SystemDate		:= CONCAT(SystemDate, '.');
 		SystemDate		:= CONCAT(SystemDate, WORD_TO_STRING(fb_LocalTime.systemTime.wDay));
+		Today			:= SystemDate;
 		
 		SystemTime		:= WORD_TO_STRING(fb_LocalTime.systemTime.wHour);
 		SystemTime		:= CONCAT(SystemTime, ':');
@@ -52,7 +53,9 @@ END_VAR
       <LineId Id="180" Count="0" />
       <LineId Id="75" Count="8" />
       <LineId Id="181" Count="0" />
-      <LineId Id="84" Count="16" />
+      <LineId Id="84" Count="8" />
+      <LineId Id="251" Count="0" />
+      <LineId Id="93" Count="7" />
       <LineId Id="235" Count="0" />
     </LineIds>
   </POU>

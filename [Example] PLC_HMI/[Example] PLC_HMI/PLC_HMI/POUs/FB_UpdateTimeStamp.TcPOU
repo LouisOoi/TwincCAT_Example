@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_UpdateTimeStamp" Id="{ae735186-4697-4995-bd8e-265b3602c2fb}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_UpdateTimeStamp
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+	FullSystemTime	: STRING;
+	SystemYear		: STRING;
+	SystemDate		: STRING;
+	SystemTime		: STRING;
+	SystemHour		: STRING;
+	timeValid		: BOOL;
+	day 	: ARRAY [1..7] OF BOOL;
+END_VAR
+VAR
+	fb_LocalTime	 : FB_LocalSystemTime;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//  --------------------------------------------------------------- Initialize
+	fb_LocalTime(
+			sNetID:= , 
+			bEnable:= TRUE , 
+			dwCycle:= 1, 
+			dwOpt:= , 
+			tTimeout:= ,
+			bValid=> timeValid, 
+			systemTime=> , 
+			tzID=> );
+			
+//  --------------------------------------------------------------- Set system time	
+	IF fb_localTime.bValid THEN
+		FullSystemTime 	:= SYSTEMTIME_TO_STRING(fb_LocalTime.systemTime);
+		
+		SystemYear		:= WORD_TO_STRING(fb_LocalTime.systemTime.wYear);
+		SystemDate		:= WORD_TO_STRING(fb_LocalTime.systemTime.wYear);
+		SystemDate		:= CONCAT(SystemDate, '.');
+		SystemDate		:= CONCAT(SystemDate, WORD_TO_STRING(fb_LocalTime.systemTime.wMonth));
+		SystemDate		:= CONCAT(SystemDate, '.');
+		SystemDate		:= CONCAT(SystemDate, WORD_TO_STRING(fb_LocalTime.systemTime.wDay));
+		
+		SystemTime		:= WORD_TO_STRING(fb_LocalTime.systemTime.wHour);
+		SystemTime		:= CONCAT(SystemTime, ':');
+		SystemTime		:= CONCAT(SystemTime, WORD_TO_STRING(fb_LocalTime.systemTime.wMinute));
+		SystemTime		:= CONCAT(SystemTime, ':');
+		SystemTime		:= CONCAT(SystemTime, WORD_TO_STRING(fb_LocalTime.systemTime.wSecond));
+		
+		SystemHour		:= WORD_TO_STRING(fb_LocalTime.systemTime.wHour);
+		
+	END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="FB_UpdateTimeStamp">
+      <LineId Id="180" Count="0" />
+      <LineId Id="75" Count="8" />
+      <LineId Id="181" Count="0" />
+      <LineId Id="84" Count="3" />
+      <LineId Id="270" Count="0" />
+      <LineId Id="88" Count="12" />
+      <LineId Id="121" Count="0" />
+      <LineId Id="235" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

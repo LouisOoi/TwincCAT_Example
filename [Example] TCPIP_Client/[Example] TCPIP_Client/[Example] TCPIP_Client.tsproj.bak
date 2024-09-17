@@ -10,7 +10,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{E759FE3C-4CD4-4B1A-9490-8F76588D4EE6}" Name="TCPIP_Client" PrjFilePath="TCPIP_Client\TCPIP_Client.plcproj" TmcFilePath="TCPIP_Client\TCPIP_Client.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="TCPIP_Client\TCPIP_Client.tmc" TmcHash="{8DE45582-E7C2-A5CA-590F-66F9C7B3BEC3}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="TCPIP_Client\TCPIP_Client.tmc" TmcHash="{C469EC96-AECD-2C7C-7912-6C902AA0A131}">
 					<Name>TCPIP_Client Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Contexts>

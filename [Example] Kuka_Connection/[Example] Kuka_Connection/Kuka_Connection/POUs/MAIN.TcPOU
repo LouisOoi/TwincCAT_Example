@@ -3,13 +3,19 @@
   <POU Name="MAIN" Id="{093faa6d-62d8-4703-ba60-8d584e27ea50}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
+	bit1 : UINT;
+	bit2 : UINT;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[Kuka();]]></ST>
+      <ST><![CDATA[Kuka();
+
+]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
       <LineId Id="2" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="25" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

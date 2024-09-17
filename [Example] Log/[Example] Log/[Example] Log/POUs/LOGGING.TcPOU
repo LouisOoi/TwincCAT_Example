@@ -26,7 +26,8 @@ VAR
 					 WRITE_TITLE,
 					 WRITE_LOG, 
 					 FILE_CLOSE,
-					 CLEAR, 
+					 CLEAR,
+					 BUFFER, 
 					 ERROR);
 	
 	sTextLog	 	: STRING[300];		
@@ -42,6 +43,7 @@ VAR
 	sInLogComp	: STRING;
 	sInLogAction	: STRING;
 	sInLogStatus	: STRING;
+	berror			: BOOL;
 	
 END_VAR
 ]]></Declaration>
@@ -58,8 +60,7 @@ END_IF
 sTextLog := string_concat(sInLogEvent, sInLogComp,sInLogAction,sInLogStatus);
 
 WHILE blogFlag DO
-	CASE ilog_state OF
-		// INIT -------------------------------------------------------------------
+			// INIT -------------------------------------------------------------------
 		INIT:
 			blog_complete	:= FALSE;
 			blog_error		:= FALSE;
@@ -205,7 +206,9 @@ string_concat := Con_String;]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="LOGGING">
-      <LineId Id="224" Count="128" />
+      <LineId Id="224" Count="11" />
+      <LineId Id="534" Count="114" />
+      <LineId Id="352" Count="0" />
       <LineId Id="9" Count="0" />
     </LineIds>
     <LineIds Name="LOGGING.string_concat">

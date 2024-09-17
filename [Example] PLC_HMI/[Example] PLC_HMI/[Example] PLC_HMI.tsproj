@@ -19,7 +19,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{BBFCCDF6-2BAC-44C3-ABD8-1CD0FD02A137}" Name="PLC_HMI" PrjFilePath="PLC_HMI\PLC_HMI.plcproj" TmcFilePath="PLC_HMI\PLC_HMI.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="PLC_HMI\PLC_HMI.tmc" TmcHash="{1D8A7A4B-070E-F93F-797D-26B6A6679834}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="PLC_HMI\PLC_HMI.tmc" TmcHash="{E4FA8895-CA6C-7FB3-C310-22AE87ABA973}">
 					<Name>PLC_HMI Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Contexts>

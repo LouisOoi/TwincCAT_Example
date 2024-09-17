@@ -3,7 +3,7 @@
   <POU Name="MAIN" Id="{d3c7fc20-9915-42b0-84f1-c5b81a710447}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
-	
+	fb_TimeStamp : FB_UpdateTimeStamp ();
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -11,12 +11,14 @@ END_VAR
 // Open PLC HMI web view with this link   http://127.0.0.1/Tc3PlcHmiWeb/Port_851/Visu/webvisu.htm
 
 
+fb_TimeStamp();
 OP_BTN();
 ]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
       <LineId Id="11" Count="1" />
       <LineId Id="8" Count="0" />
+      <LineId Id="19" Count="0" />
       <LineId Id="10" Count="0" />
       <LineId Id="2" Count="0" />
       <LineId Id="7" Count="0" />

@@ -3,17 +3,29 @@ Id;Default
 902;Admin
 132;ADMIN
 997;Are you Sure ?
+180;Calibration
+3105;Connect   Laser
+1339;Connect Scanner
+395;Control
+313;CONTROL PAGE
 934;Emergency Stop
+133;Home
+266;HOME PAGE
 186;Login
 47;LOGIN
 735;Logout
 992;LOGOUT
+2441;Mute$R$NBuzzer
 532;No
 472;None
 30;Operator
 391;OPERATOR
 92;Reset Button
+885;Run
+192;RUN PAGE
 899;Selected model
 941;Start Button
+88;System
+451;SYSTEM PAGE
 608;WARNING
 412;Yes

@@ -5,6 +5,11 @@
 VAR_GLOBAL
 	// Create this Folder to store log
 	Log_Directory : STRING := 'C:\Users\celli\OneDrive\Desktop\TEST_LOG\PROCESS\';
+END_VAR
+
+VAR_GLOBAL PERSISTENT
+	yesterday 	: STRING;
+	today		: STRING;
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

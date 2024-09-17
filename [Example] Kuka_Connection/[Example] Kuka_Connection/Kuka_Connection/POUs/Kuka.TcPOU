@@ -2,7 +2,7 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="Kuka" Id="{13c9358a-325a-48a9-ab41-c40cff7f9d48}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM Kuka
-VAR
+VAR_INPUT
 	//Output
 	PLC_O_D1 AT %Q* : USINT;
 	PLC_O_D2 AT %Q* : USINT;

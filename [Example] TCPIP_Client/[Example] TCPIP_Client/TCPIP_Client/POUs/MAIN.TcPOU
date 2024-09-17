@@ -24,8 +24,7 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[
-	fbCloseAll( sSrvNetID := sSrvNetID, bExecute:= bInitialize );
+      <ST><![CDATA[	fbCloseAll( sSrvNetID := sSrvNetID, bExecute:= bInitialize );
 	IF fbCloseAll.bBusy OR fbCloseAll.bError THEN
 		nErrId := fbCloseAll.nErrId;
 		RETURN;
@@ -41,14 +40,12 @@ END_VAR
 	END_IF
 	
 	Received_msg := fbClient_ABC.RxText;
+
 ]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
-      <LineId Id="6" Count="2" />
-      <LineId Id="41" Count="0" />
-      <LineId Id="9" Count="11" />
-      <LineId Id="2" Count="0" />
-      <LineId Id="62" Count="0" />
+      <LineId Id="118" Count="16" />
+      <LineId Id="140" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
