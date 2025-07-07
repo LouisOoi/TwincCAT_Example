@@ -1,0 +1,589 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_RunLayerPad" Id="{0c7b045c-27db-4fa0-a0cb-d7026768c360}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_RunLayerPad
+VAR
+	LP_sequence	: UINT;
+	
+	process_A	: UINT; //KR5 Remove Magnet
+	process_B	: UINT; //KR5 Get Suction
+	process_C	: UINT; //KR5 Get Layer Pad
+	process_D	: UINT; //KR5 Place Layer Pad
+	process_E	: UINT; //KR5 Remove Suction
+	process_F	: UINT; //KR5 Get Magnet
+	
+	bit1		: UINT;
+	bit2		: UINT;
+	
+END_VAR
+VAR_INPUT
+	Basket 		: UINT;
+	Layer		: UINT;
+	Execute		: BOOL;
+END_VAR
+VAR_OUTPUT
+	Complete	: BOOL;
+	Error		: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF NOT Execute THEN
+	 LP_sequence := 0;
+	 RETURN;	
+END_IF
+
+CASE LP_sequence OF
+	// Init ------------------------------------------------------------------------------------------------------------------	
+	0:
+		AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG.ACTION_LYRPD_INIT);	
+		LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+		 			spLogAction	 := MSG.ACTION_LYRPD_INIT, 
+		 			spLogStatus	 := MSG.STATUS_DONE,
+	 	 		 	plogFlag	 := TRUE);
+		process_A	:= 0;
+		process_B	:= 0;
+		process_C	:= 0;
+		process_D	:= 0;
+		process_E	:= 0;
+		Error 		:= FALSE;
+		Complete	:= FALSE;
+		LP_sequence := 1;
+		GVL.LAYERPAD := TRUE;
+	
+	// Check Tool -------------------------------------------------------------------------------------------------------------	
+	1:	
+		IF GVL.KR1_EOAT_FILL THEN
+			// Remove Magnet EOAT
+			IF process_A = 0 THEN
+				IF KR1.Idle THEN
+//					KR1.PLC_O_D3.1 := TRUE; //201
+					KR1.bOutBit[3,1] := TRUE;
+					AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG.ACTION_REMOVE_MAGNET);
+					AUTO_MODE.processnameFG := CONCAT(AUTO_MODE.processnameFG,MSG.STATUS_RUN);
+					LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+								spLogAction	 := MSG.ACTION_REMOVE_MAGNET, 
+								spLogStatus	 := MSG.STATUS_RUN,
+								plogFlag	 := TRUE);
+					process_A := 1;
+					RETURN;
+				END_IF
+			ELSIF process_A = 1 THEN
+//				KR1.PLC_O_D3.1 := TRUE; //201
+				KR1.bOutBit[3,1] := TRUE;
+				IF KR1.bInBit[3,1] THEN
+//					KR1.PLC_O_D3.1 := FALSE; //201
+					KR1.bOutBit[3,1] := FALSE;
+					AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG.ACTION_REMOVE_MAGNET);
+					AUTO_MODE.processnameFG := CONCAT(AUTO_MODE.processnameFG,MSG.STATUS_ACK);
+					LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+								spLogAction	 := MSG.ACTION_REMOVE_MAGNET, 
+								spLogStatus	 := MSG.STATUS_ACK,
+								plogFlag	 := TRUE);
+					process_A := 2;
+					RETURN;
+				END_IF	
+			ELSIF process_A = 2 THEN
+//				KR1.PLC_O_D3.1 := FALSE; //201
+				KR1.bOutBit[3,1] := FALSE;
+				IF NOT KR1.bInBit[3,1] THEN
+					AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG.ACTION_REMOVE_MAGNET);
+					AUTO_MODE.processnameFG := CONCAT(AUTO_MODE.processnameFG,MSG.STATUS_DONE);
+					LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+								spLogAction	 := MSG.ACTION_REMOVE_MAGNET, 
+								spLogStatus	 := MSG.STATUS_DONE,
+								plogFlag	 := TRUE);
+					process_A:= 3;
+					RETURN;
+				END_IF	
+			ELSIF process_A = 3 THEN
+				IF KR1.Idle THEN
+					AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG.ACTION_REMOVE_MAGNET);
+					AUTO_MODE.processnameFG := CONCAT(AUTO_MODE.processnameFG,MSG.STATUS_COMP);
+					LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+								spLogAction	 := MSG.ACTION_REMOVE_MAGNET, 
+								spLogStatus	 := MSG.STATUS_COMP,
+								plogFlag	 := TRUE);
+					process_A := 4;
+					LP_sequence := 2;
+					AUTO_MODE.next_step := FALSE;
+					GVL.KR1_EOAT_FILL := FALSE;
+				END_IF
+			END_IF
+		ELSE
+			LP_sequence := 2;
+		END_IF
+	
+	// Get Suction -------------------------------------------------------------------------------------------------------------	
+	2:	
+		IF NOT GVL.KR1_EOAT_FILL AND NOT GVL.KR1_EOAT_SUCTION THEN
+			// Get Suction EOAT
+			IF process_B = 0 THEN
+				IF KR1.Idle THEN
+//					KR1.PLC_O_D3.2 := TRUE; //202
+					KR1.bOutBit[3,2] := TRUE;
+					AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG.ACTION_GET_SUCTION);
+					AUTO_MODE.processnameFG := CONCAT(AUTO_MODE.processnameFG,MSG.STATUS_RUN);
+					LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+								spLogAction	 := MSG.ACTION_GET_SUCTION, 
+								spLogStatus	 := MSG.STATUS_RUN,
+								plogFlag	 := TRUE);
+					process_B := 1;
+					RETURN;
+				END_IF
+			ELSIF process_B = 1 THEN
+//				KR1.PLC_O_D3.2 := TRUE; //202
+				KR1.bOutBit[3,2] := TRUE;
+				IF KR1.bInBit[3,2] THEN
+//					KR1.PLC_O_D3.2 := FALSE; //202	
+					KR1.bOutBit[3,2] := FALSE;
+					AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG.ACTION_GET_SUCTION);
+					AUTO_MODE.processnameFG := CONCAT(AUTO_MODE.processnameFG,MSG.STATUS_ACK);
+					LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+								spLogAction	 := MSG.ACTION_GET_SUCTION, 
+								spLogStatus	 := MSG.STATUS_ACK,
+								plogFlag	 := TRUE);
+					process_B := 2;
+					RETURN;
+				END_IF	
+			ELSIF process_B = 2 THEN
+//				KR1.PLC_O_D3.2 := FALSE; //202	
+				KR1.bOutBit[3,2] := FALSE;
+				IF NOT KR1.bInBit[3,2] THEN
+					AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG.ACTION_GET_SUCTION);
+					AUTO_MODE.processnameFG := CONCAT(AUTO_MODE.processnameFG,MSG.STATUS_DONE);
+					LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+								spLogAction	 := MSG.ACTION_GET_SUCTION, 
+								spLogStatus	 := MSG.STATUS_DONE,
+								plogFlag	 := TRUE);
+					process_B:= 3;
+					RETURN;
+				END_IF	
+			ELSIF process_B = 3 THEN
+				IF KR1.Idle THEN
+					AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG.ACTION_GET_SUCTION);
+					AUTO_MODE.processnameFG := CONCAT(AUTO_MODE.processnameFG,MSG.STATUS_COMP);
+					LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+								spLogAction	 := MSG.ACTION_GET_SUCTION, 
+								spLogStatus	 := MSG.STATUS_COMP,
+								plogFlag	 := TRUE);
+					process_B := 4;
+					LP_sequence := 4;
+					AUTO_MODE.next_step := FALSE;
+					GVL.KR1_EOAT_SUCTION := TRUE;
+				END_IF
+			END_IF
+		ELSE
+			LP_sequence := 4;
+		END_IF
+	
+	// Get Layer Pad -------------------------------------------------------------------------------------------------------------	
+//	3:	
+//		IF GVL.KR1_EOAT_SUCTION THEN
+//			// Get Layer Pad
+//			IF process_C = 0 THEN
+//				IF KR1.Idle THEN
+//					KR1.PLC_O_D4.1 := TRUE; //202
+//					AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG.ACTION_GET_LAYER_PAD);
+//					AUTO_MODE.processnameFG := CONCAT(AUTO_MODE.processnameFG,MSG.STATUS_RUN);
+//					LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+//								spLogAction	 := MSG.ACTION_GET_LAYER_PAD, 
+//								spLogStatus	 := MSG.STATUS_RUN,
+//								plogFlag	 := TRUE);
+//					process_C := 1;
+//					RETURN;
+//				END_IF
+//			ELSIF process_C = 1 THEN
+//				KR1.PLC_O_D4.1 := TRUE; //202
+//				IF KR1.bInBit[4,1] THEN
+//					KR1.PLC_O_D4.1 := FALSE; //202	
+//					AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG.ACTION_GET_LAYER_PAD);
+//					AUTO_MODE.processnameFG := CONCAT(AUTO_MODE.processnameFG,MSG.STATUS_ACK);
+//					LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+//								spLogAction	 := MSG.ACTION_GET_LAYER_PAD, 
+//								spLogStatus	 := MSG.STATUS_ACK,
+//								plogFlag	 := TRUE);
+//					process_C := 2;
+//					RETURN;
+//				END_IF	
+//			ELSIF process_C = 2 THEN
+//				KR1.PLC_O_D4.1 := FALSE; //202	
+//				IF NOT KR1.bInBit[4,1] THEN
+//					AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG.ACTION_GET_LAYER_PAD);
+//					AUTO_MODE.processnameFG := CONCAT(AUTO_MODE.processnameFG,MSG.STATUS_DONE);
+//					LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+//								spLogAction	 := MSG.ACTION_GET_LAYER_PAD, 
+//								spLogStatus	 := MSG.STATUS_DONE,
+//								plogFlag	 := TRUE);
+//					process_C:= 3;
+//					RETURN;
+//				END_IF	
+//			ELSIF process_C = 3 THEN
+//				IF KR1.Idle THEN
+//					AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG.ACTION_GET_LAYER_PAD);
+//					AUTO_MODE.processnameFG := CONCAT(AUTO_MODE.processnameFG,MSG.STATUS_COMP);
+//					LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+//								spLogAction	 := MSG.ACTION_GET_LAYER_PAD, 
+//								spLogStatus	 := MSG.STATUS_COMP,
+//								plogFlag	 := TRUE);
+//					process_C := 4;
+//					LP_sequence := 4;
+//					AUTO_MODE.next_step := FALSE;
+//					GVL.KR1_EOAT_SUCTION := TRUE;
+//				END_IF
+//			END_IF
+//		ELSE
+//			Error := TRUE;
+//		END_IF
+		
+	// Place Layer Pad -------------------------------------------------------------------------------------------------------------	
+	4:	
+		IF Basket = 1 THEN
+			CASE Layer OF
+				0:
+					bit1 := 29;
+					bit2 := 2;
+				1:
+					bit1 := 29;
+					bit2 := 3;
+				2:
+					bit1 := 29;
+					bit2 := 4;
+				3:
+					bit1 := 29;
+					bit2 := 5;
+				4:
+					bit1 := 29;
+					bit2 := 6;
+				5:
+					bit1 := 29;
+					bit2 := 7;
+				6:
+					bit1 := 30;
+					bit2 := 0;
+				7:
+					bit1 := 30;
+					bit2 := 1;
+				8:
+					bit1 := 30;
+					bit2 := 2;
+				9:
+					bit1 := 30;
+					bit2 := 3;
+			END_CASE	
+		END_IF
+		
+		IF GVL.KR1_EOAT_SUCTION THEN
+			// Place Layer Pad
+			IF process_D = 0 THEN
+				IF KR1.Idle THEN
+					KR1.bOutBit[bit1,bit2] := TRUE;
+//					KR1.PLC_O_D4.1 := TRUE; //202
+					AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG.ACTION_PLACE_LAYER_PAD);
+					AUTO_MODE.processnameFG := CONCAT(AUTO_MODE.processnameFG,MSG.STATUS_RUN);
+					LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+								spLogAction	 := MSG.ACTION_PLACE_LAYER_PAD, 
+								spLogStatus	 := MSG.STATUS_RUN,
+								plogFlag	 := TRUE);
+					process_D := 1;
+					RETURN;
+				END_IF
+			ELSIF process_D = 1 THEN
+				KR1.bOutBit[bit1,bit2] := TRUE;
+//				KR1.PLC_O_D4.1 := TRUE; //202
+				IF KR1.bInBit[bit1,bit2] THEN
+					KR1.bOutBit[bit1,bit2] := FALSE;
+//					KR1.PLC_O_D4.1 := FALSE; //202	
+					AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG.ACTION_PLACE_LAYER_PAD);
+					AUTO_MODE.processnameFG := CONCAT(AUTO_MODE.processnameFG,MSG.STATUS_ACK);
+					LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+								spLogAction	 := MSG.ACTION_PLACE_LAYER_PAD, 
+								spLogStatus	 := MSG.STATUS_ACK,
+								plogFlag	 := TRUE);
+					process_D := 2;
+					RETURN;
+				END_IF	
+			ELSIF process_D = 2 THEN
+				KR1.bOutBit[bit1,bit2] := FALSE;
+//				KR1.PLC_O_D4.1 := FALSE; //202	
+				IF NOT KR1.bInBit[bit1,bit2] THEN
+					AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG.ACTION_PLACE_LAYER_PAD);
+					AUTO_MODE.processnameFG := CONCAT(AUTO_MODE.processnameFG,MSG.STATUS_DONE);
+					LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+								spLogAction	 := MSG.ACTION_PLACE_LAYER_PAD, 
+								spLogStatus	 := MSG.STATUS_DONE,
+								plogFlag	 := TRUE);
+					process_D:= 3;
+					RETURN;
+				END_IF	
+			ELSIF process_D = 3 THEN
+				IF KR1.Idle THEN
+					AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG.ACTION_PLACE_LAYER_PAD);
+					AUTO_MODE.processnameFG := CONCAT(AUTO_MODE.processnameFG,MSG.STATUS_COMP);
+					LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+								spLogAction	 := MSG.ACTION_PLACE_LAYER_PAD, 
+								spLogStatus	 := MSG.STATUS_COMP,
+								plogFlag	 := TRUE);
+					process_D := 4;
+					LP_sequence := 5;
+					AUTO_MODE.next_step := FALSE;
+					GVL.KR1_EOAT_SUCTION := TRUE;
+				END_IF
+			END_IF
+		ELSE
+			Error := TRUE;
+		END_IF
+		
+	// Remove Suction -------------------------------------------------------------------------------------------------------------	
+	5:	
+		IF GVL.KR1_EOAT_SUCTION THEN
+			// Remove Layer Pad
+			IF process_E = 0 THEN
+				IF KR1.Idle THEN
+//					KR1.PLC_O_D3.3 := TRUE; //203
+					KR1.bOutBit[3,3] := TRUE;
+					AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG.ACTION_REMOVE_SUCTION);
+					AUTO_MODE.processnameFG := CONCAT(AUTO_MODE.processnameFG,MSG.STATUS_RUN);
+					LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+								spLogAction	 := MSG.ACTION_REMOVE_SUCTION, 
+								spLogStatus	 := MSG.STATUS_RUN,
+								plogFlag	 := TRUE);
+					process_E := 1;
+					RETURN;
+				END_IF
+			ELSIF process_E = 1 THEN
+//				KR1.PLC_O_D3.3 := TRUE; //203
+				KR1.bOutBit[3,3] := TRUE;
+				IF KR1.bInBit[3,3] THEN
+//					KR1.PLC_O_D3.3 := FALSE; //203	
+					KR1.bOutBit[3,3] := FALSE;
+					AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG.ACTION_REMOVE_SUCTION);
+					AUTO_MODE.processnameFG := CONCAT(AUTO_MODE.processnameFG,MSG.STATUS_ACK);
+					LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+								spLogAction	 := MSG.ACTION_REMOVE_SUCTION, 
+								spLogStatus	 := MSG.STATUS_ACK,
+								plogFlag	 := TRUE);
+					process_E := 2;
+					RETURN;
+				END_IF	
+			ELSIF process_E = 2 THEN
+//				KR1.PLC_O_D3.3 := FALSE; //203	
+				KR1.bOutBit[3,3] := FALSE;
+				IF NOT KR1.bInBit[3,3] THEN
+					AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG.ACTION_REMOVE_SUCTION);
+					AUTO_MODE.processnameFG := CONCAT(AUTO_MODE.processnameFG,MSG.STATUS_DONE);
+					LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+								spLogAction	 := MSG.ACTION_REMOVE_SUCTION, 
+								spLogStatus	 := MSG.STATUS_DONE,
+								plogFlag	 := TRUE);
+					process_E:= 3;
+					RETURN;
+				END_IF	
+			ELSIF process_E = 3 THEN
+				IF KR1.Idle THEN
+					AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG.ACTION_REMOVE_SUCTION);
+					AUTO_MODE.processnameFG := CONCAT(AUTO_MODE.processnameFG,MSG.STATUS_COMP);
+					LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+								spLogAction	 := MSG.ACTION_REMOVE_SUCTION, 
+								spLogStatus	 := MSG.STATUS_COMP,
+								plogFlag	 := TRUE);
+					process_E := 4;
+					LP_sequence := 6;
+					AUTO_MODE.next_step := FALSE;
+					GVL.KR1_EOAT_SUCTION := FALSE;
+				END_IF
+			END_IF
+		ELSE
+			Error := TRUE;
+		END_IF
+		
+	// Get Magnet --------------------------------------------------------------------------------------------------------------	
+	6:	
+		IF NOT GVL.KR1_EOAT_FILL AND NOT GVL.KR1_EOAT_SUCTION THEN
+			IF process_F = 0 THEN
+				IF KR1.Idle THEN
+//					KR1.PLC_O_D3.0 := TRUE; //200
+					KR1.bOutBit[3,0] := TRUE;
+								AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG.ACTION_GET_MAGNET);
+								AUTO_MODE.processnameFG := CONCAT(AUTO_MODE.processnameFG,MSG.STATUS_RUN);
+								LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+											spLogAction	 := MSG.ACTION_GET_MAGNET, 
+											spLogStatus	 := MSG.STATUS_RUN,
+											plogFlag	 := TRUE);
+					process_F := 1;
+					RETURN;
+				END_IF
+			ELSIF process_F = 1 THEN
+//				KR1.PLC_O_D3.0 := TRUE; //200
+				KR1.bOutBit[3,0] := TRUE;
+				IF NOT KR1.bInBit[3,0] THEN
+//					KR1.PLC_O_D3.0 := FALSE; //200	
+					KR1.bOutBit[3,0] := FALSE;
+					AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG.ACTION_GET_MAGNET);
+					AUTO_MODE.processnameFG := CONCAT(AUTO_MODE.processnameFG,MSG.STATUS_ACK);
+					LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+								spLogAction	 := MSG.ACTION_GET_MAGNET, 
+								spLogStatus	 := MSG.STATUS_ACK,
+								plogFlag	 := TRUE);
+					process_F := 2;
+					RETURN;
+				END_IF	
+			ELSIF process_F = 2 THEN
+//				KR1.PLC_O_D3.0 := FALSE; //200	
+				KR1.bOutBit[3,0] := FALSE;
+				IF KR1.bInBit[3,0] THEN
+					AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG.ACTION_GET_MAGNET);
+					AUTO_MODE.processnameFG := CONCAT(AUTO_MODE.processnameFG,MSG.STATUS_DONE);
+					LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+								spLogAction	 := MSG.ACTION_GET_MAGNET, 
+								spLogStatus	 := MSG.STATUS_DONE,
+								plogFlag	 := TRUE);
+					process_F:= 3;
+					RETURN;
+				END_IF	
+			ELSIF process_F = 3 THEN
+				IF KR1.Idle THEN
+					AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG.ACTION_GET_MAGNET);
+					AUTO_MODE.processnameFG := CONCAT(AUTO_MODE.processnameFG,MSG.STATUS_COMP);
+					LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+								spLogAction	 := MSG.ACTION_GET_MAGNET, 
+								spLogStatus	 := MSG.STATUS_COMP,
+								plogFlag	 := TRUE);
+					process_F := 4;
+					LP_sequence := 7;
+					AUTO_MODE.next_step := FALSE;
+					GVL.KR1_EOAT_FILL := TRUE;
+				END_IF
+			END_IF
+		ELSE
+			Error := TRUE;
+		END_IF
+		
+	// Complete ---------------------------------------------------------------------------------------------------------------	
+	7:
+		GVL.LAYERPAD := FALSE;
+		Complete := TRUE;	
+		
+END_CASE]]></ST>
+    </Implementation>
+    <LineIds Name="FB_RunLayerPad">
+      <LineId Id="18" Count="0" />
+      <LineId Id="238" Count="0" />
+      <LineId Id="241" Count="0" />
+      <LineId Id="239" Count="1" />
+      <LineId Id="19" Count="6" />
+      <LineId Id="30" Count="2" />
+      <LineId Id="227" Count="1" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="235" Count="1" />
+      <LineId Id="105" Count="0" />
+      <LineId Id="533" Count="0" />
+      <LineId Id="106" Count="1" />
+      <LineId Id="49" Count="1" />
+      <LineId Id="104" Count="0" />
+      <LineId Id="51" Count="2" />
+      <LineId Id="558" Count="0" />
+      <LineId Id="54" Count="6" />
+      <LineId Id="489" Count="0" />
+      <LineId Id="62" Count="2" />
+      <LineId Id="559" Count="0" />
+      <LineId Id="65" Count="1" />
+      <LineId Id="561" Count="0" />
+      <LineId Id="67" Count="6" />
+      <LineId Id="490" Count="0" />
+      <LineId Id="75" Count="2" />
+      <LineId Id="562" Count="0" />
+      <LineId Id="78" Count="7" />
+      <LineId Id="491" Count="0" />
+      <LineId Id="87" Count="16" />
+      <LineId Id="108" Count="8" />
+      <LineId Id="563" Count="0" />
+      <LineId Id="117" Count="6" />
+      <LineId Id="492" Count="0" />
+      <LineId Id="125" Count="2" />
+      <LineId Id="564" Count="0" />
+      <LineId Id="128" Count="1" />
+      <LineId Id="565" Count="0" />
+      <LineId Id="130" Count="6" />
+      <LineId Id="493" Count="0" />
+      <LineId Id="138" Count="2" />
+      <LineId Id="566" Count="0" />
+      <LineId Id="141" Count="7" />
+      <LineId Id="494" Count="0" />
+      <LineId Id="150" Count="32" />
+      <LineId Id="496" Count="0" />
+      <LineId Id="183" Count="11" />
+      <LineId Id="497" Count="0" />
+      <LineId Id="195" Count="10" />
+      <LineId Id="498" Count="0" />
+      <LineId Id="206" Count="13" />
+      <LineId Id="338" Count="0" />
+      <LineId Id="233" Count="1" />
+      <LineId Id="223" Count="0" />
+      <LineId Id="242" Count="0" />
+      <LineId Id="230" Count="0" />
+      <LineId Id="224" Count="0" />
+      <LineId Id="243" Count="0" />
+      <LineId Id="246" Count="0" />
+      <LineId Id="248" Count="0" />
+      <LineId Id="250" Count="0" />
+      <LineId Id="254" Count="26" />
+      <LineId Id="249" Count="0" />
+      <LineId Id="247" Count="0" />
+      <LineId Id="245" Count="0" />
+      <LineId Id="284" Count="4" />
+      <LineId Id="339" Count="0" />
+      <LineId Id="289" Count="7" />
+      <LineId Id="499" Count="0" />
+      <LineId Id="297" Count="1" />
+      <LineId Id="342" Count="0" />
+      <LineId Id="341" Count="0" />
+      <LineId Id="300" Count="0" />
+      <LineId Id="343" Count="0" />
+      <LineId Id="301" Count="7" />
+      <LineId Id="501" Count="0" />
+      <LineId Id="309" Count="1" />
+      <LineId Id="344" Count="0" />
+      <LineId Id="311" Count="8" />
+      <LineId Id="500" Count="0" />
+      <LineId Id="320" Count="13" />
+      <LineId Id="337" Count="0" />
+      <LineId Id="334" Count="1" />
+      <LineId Id="345" Count="8" />
+      <LineId Id="567" Count="0" />
+      <LineId Id="354" Count="6" />
+      <LineId Id="502" Count="0" />
+      <LineId Id="361" Count="2" />
+      <LineId Id="569" Count="0" />
+      <LineId Id="364" Count="1" />
+      <LineId Id="570" Count="0" />
+      <LineId Id="366" Count="6" />
+      <LineId Id="503" Count="0" />
+      <LineId Id="373" Count="2" />
+      <LineId Id="571" Count="0" />
+      <LineId Id="376" Count="7" />
+      <LineId Id="504" Count="0" />
+      <LineId Id="384" Count="16" />
+      <LineId Id="405" Count="7" />
+      <LineId Id="572" Count="0" />
+      <LineId Id="413" Count="6" />
+      <LineId Id="505" Count="0" />
+      <LineId Id="421" Count="2" />
+      <LineId Id="573" Count="0" />
+      <LineId Id="424" Count="1" />
+      <LineId Id="575" Count="0" />
+      <LineId Id="426" Count="6" />
+      <LineId Id="507" Count="0" />
+      <LineId Id="434" Count="2" />
+      <LineId Id="576" Count="0" />
+      <LineId Id="437" Count="7" />
+      <LineId Id="506" Count="0" />
+      <LineId Id="446" Count="16" />
+      <LineId Id="401" Count="2" />
+      <LineId Id="336" Count="0" />
+      <LineId Id="532" Count="0" />
+      <LineId Id="404" Count="0" />
+      <LineId Id="283" Count="0" />
+      <LineId Id="39" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

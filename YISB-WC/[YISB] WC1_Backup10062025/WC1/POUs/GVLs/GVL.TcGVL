@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <GVL Name="GVL" Id="{c4397652-4eca-4304-9dc3-4f1d2a3720f2}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+
+VAR_GLOBAL PERSISTENT
+	iCooling_Time 	: INT :=30;
+	
+	CRTimer			: ARRAY [1..21] OF INT;
+	CR_NextPickNum	: UINT;
+	CR_NextPlaceNum	: UINT;
+	
+	monthly_output	: USINT;
+	weekly_output	: USINT;
+	daily_output	: USINT;
+	
+	Basket_A_Counter : UINT;
+	Basket_B_Counter : UINT;
+	
+	Fail_Counter	: USINT;
+	Pass_Counter	: USINT;
+	Rework_Counter	: USINT;	
+	
+	KR1_EOAT_FILL	: BOOL;
+	KR1_EOAT_SUCTION: BOOL;
+	
+	ClearError		: BOOL;
+		
+	LAYERPAD0	: BOOL := FALSE;
+END_VAR
+
+VAR_GLOBAL
+	//IO -> JIG
+	JIGA_Standby 	AT %I*	: BOOL;
+	JIGA_Ready	 	AT %I*	: BOOL;
+	JIGA_Complete 	AT %I*	: BOOL;
+	JIGB_Standby 	AT %I*	: BOOL;
+	JIGB_Ready	 	AT %I*	: BOOL;
+	JIGB_Complete 	AT %I*	: BOOL;
+	JIGC_Standby 	AT %I*	: BOOL;
+	JIGC_Ready 		AT %I*	: BOOL;
+	JIGC_Complete 	AT %I*	: BOOL;
+	JIGA_Clamp 	 	AT %Q*	: BOOL;
+	JIGA_Release 	AT %Q*	: BOOL;
+	JIGB_Clamp 		AT %Q*	: BOOL;
+	JIGB_Release	AT %Q*	: BOOL;
+	JIGC_Clamp 		AT %Q*	: BOOL;
+	JIGC_Release 	AT %Q*	: BOOL;
+	
+	//IO -> TWIN TORCH
+	TTorch_Standy   AT %I*	: BOOL;
+	TTorch_Complete AT %I*	: BOOL;
+	TTorch_Run	 	AT %Q*	: BOOL;
+	
+	//IO -> VIBRATOR BOWL
+	VibBowl_Ready	AT %I*	: BOOL;
+	
+	//IO -> CONVEYOR & REWORK JIG
+	Conveyor_Full	AT %I*	: BOOL;
+	Rework_Empty	AT %I*	: BOOL;
+	
+	//IO -> COSMO
+	COSMO_OK	 	AT %I*	: BOOL;
+	COSMO_NOTOK	 	AT %I*	: BOOL;
+	COSMO_Ready	 	AT %I*	: BOOL;
+	COSMO_Run	 	AT %Q*	: BOOL;
+	
+	//Variable
+	JIG_ERROR	: BOOL := FALSE;
+	
+	//Kuka
+	KR2_bypass	: BOOL := FALSE;
+	KR5_bypass	: BOOL := FALSE;
+	KR4_bypass	: BOOL := FALSE;
+	KR3_bypass	: BOOL := FALSE;
+	KR1_bypass	: BOOL := FALSE;
+	
+	//pack
+	LAYERPAD	: BOOL := FALSE;
+	COSMO_UNLOAD: BOOL := FALSE;
+	
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

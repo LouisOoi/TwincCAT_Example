@@ -1,0 +1,240 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="LOGPROCESS" Id="{22f5787e-8e16-45ab-bb8c-d41b9eca7ff5}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM LOGPROCESS
+VAR_INPUT
+	spLogEvent	: STRING;
+	spLogComp	: STRING;
+	spLogAction	: STRING;
+	spLogStatus	: STRING;
+	plogFlag		: BOOL;
+END_VAR
+VAR_OUTPUT
+	plog_complete : BOOL := FALSE;
+	plog_error	 : BOOL := FALSE;
+END_VAR
+VAR
+	fb_TimeStamp : FB_UpdateTimeStamp ();
+	fbCreateDir	 : FB_CreateDir;
+	fbFileOpen	 : FB_FileOpen;
+	fbFileWrite	 : FB_FilePuts;
+	fbFileClose	 : FB_FileClose;
+	plog_state	 : ( INIT, 
+					 CREATE_DIR, 
+					 FILE_OPEN,
+					 WRITE_TITLE,
+					 WRITE_LOG, 
+					 FILE_CLOSE,
+					 CLEAR, 
+					 ERROR);
+					
+	pwritepLog	 : STRING[255];
+	pwriteTitle	 : STRING;
+	spFolderName	 : STRING;
+	spwFolderName	 : STRING;
+	spFileName	 : STRING;
+	spTextLog	 : STRING;
+	spwTextLog	 : STRING;
+	plastFileName : STRING;	
+	spwLogEvent	: STRING;
+	spwLogComp	: STRING;
+	spwLogAction	: STRING;
+	spwLogStatus	: STRING;
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF spLogComp<>spwLogComp OR spLogAction<>spwLogAction OR spLogStatus<>spwLogStatus THEN
+//	spwLogEvent		:= spLogEvent;
+	spwLogComp		:= spLogComp;
+	spwLogAction	:= spLogAction;
+	spwLogStatus	:= spLogStatus;
+ELSE
+	RETURN;
+END_IF
+
+spTextLog := str_concat(spwLogComp,spwLogAction,spwLogStatus);
+
+WHILE plogFlag DO
+	CASE plog_state OF
+		// INIT -------------------------------------------------------------------
+		INIT:
+			plog_complete	:= FALSE;
+			plog_error		:= FALSE;
+			plog_state 		:= CREATE_DIR;
+			fbCreateDir(bExecute:= FALSE);
+	
+		// CREATE_DIR -------------------------------------------------------------			
+		CREATE_DIR:	
+			spFolderName := CONCAT('C:\Users\Administrator\Desktop\log\PROCESS\', MAIN.fb_TimeStamp.SystemDate);
+//			spFolderName := CONCAT('C:\Users\celli\OneDrive\Desktop\YISB_LOG\PROCESS\', MAIN.fb_TimeStamp.SystemDate);
+
+			IF spFolderName = spwFolderName THEN
+				plog_state := FILE_OPEN;
+				fbCreateDir(bExecute := FALSE);
+				fbFileOpen(bExecute := FALSE);
+			ELSE
+				fbCreateDir( sPathName:= spFolderName, bExecute:= TRUE );
+				IF NOT fbCreateDir.bBusy THEN
+					plog_state := FILE_OPEN;
+					fbCreateDir(bExecute := FALSE);
+					fbFileOpen(bExecute := FALSE);
+					spwFolderName := spFolderName;
+				END_IF
+			END_IF
+			
+		// FILE_OPEN -------------------------------------------------------------
+		FILE_OPEN:
+			spFileName := CONCAT(spFolderName,'\');
+			spFileName := CONCAT(spFileName, MAIN.fb_TimeStamp.SystemHour);
+			spFileName := CONCAT(spFileName,'.csv');
+				
+			fbFileOpen( sPathName:= spFileName, 
+						nMode:= FOPEN_MODEAPPEND, 
+						bExecute:= TRUE, 
+						hFile=>);
+			IF fbFileOpen.bError THEN
+				plog_state := ERROR;
+				fbFileOpen(bExecute := FALSE);
+				fbFileWrite(bExecute := FALSE);
+			ELSIF NOT fbFileOpen.bBusy THEN
+				plog_state := WRITE_TITLE;
+				fbFileOpen(bExecute := FALSE);
+				fbFileWrite(bExecute := FALSE);
+			END_IF
+			
+		// WRITE_TITLE -------------------------------------------------------------
+		WRITE_TITLE:
+			IF plastFileName <> spFileName THEN	
+				pwriteTitle := CONCAT('$n','Time Stamp');
+				pwriteTitle := CONCAT(pwriteTitle,';');
+				pwriteTitle := CONCAT(pwriteTitle,'Component');
+				pwriteTitle := CONCAT(pwriteTitle,';');
+				pwriteTitle := CONCAT(pwriteTitle,'Action');
+				pwriteTitle := CONCAT(pwriteTitle,';');
+				pwriteTitle := CONCAT(pwriteTitle,'Status');
+				
+				fbFileWrite ( hFile:=fbFileOpen.hFile,
+								sLine:=pwriteTitle,
+								bExecute:=TRUE);
+				IF fbFileWrite.bError THEN
+					plog_state := ERROR;
+					fbFileWrite(bExecute := FALSE);
+					fbFileClose(bExecute := FALSE);
+				ELSIF NOT fbFileWrite.bBusy THEN
+					plog_state := WRITE_LOG;
+					fbFileWrite(bExecute := FALSE);
+					fbFileClose(bExecute := FALSE);
+					plastFileName := spFileName;
+				END_IF
+			ELSE
+				plog_state := WRITE_LOG;
+			END_IF
+
+		// WRITE_LOG -------------------------------------------------------------
+		WRITE_LOG:	
+			pwritepLog := spTextLog;
+			
+			fbFileWrite ( hFile:=fbFileOpen.hFile,
+							sLine:=pwritepLog,
+							bExecute:=TRUE);
+			IF fbFileWrite.bError THEN
+				plog_state := ERROR;
+				fbFileWrite(bExecute := FALSE);
+				fbFileClose(bExecute := FALSE);
+			ELSIF NOT fbFileWrite.bBusy THEN
+				plog_state := FILE_CLOSE;
+				fbFileWrite(bExecute := FALSE);
+				fbFileClose(bExecute := FALSE);
+			END_IF
+			
+		// FILE_CLOSE -------------------------------------------------------------
+		FILE_CLOSE:			
+			fbFileClose( hFile:=fbFileOpen.hFile,
+						 bExecute:=TRUE);
+			IF fbFileClose.bError THEN
+				plog_state := ERROR;
+				fbFileClose(bExecute := FALSE);
+			ELSIF NOT fbFileClose.bBusy THEN
+				plog_state := CLEAR;
+				fbFileClose(bExecute := FALSE);
+			END_IF
+			
+		// CLEAR -------------------------------------------------------------	
+		CLEAR:
+			plog_complete	:= TRUE;
+			plogFlag		:= FALSE;
+			plog_state 		:= INIT;
+				
+		// ERROR -------------------------------------------------------------	
+		ERROR:
+			plog_error		:= TRUE;
+			plogFlag		:= FALSE;
+			plog_state 		:= INIT;
+	END_CASE
+END_WHILE]]></ST>
+    </Implementation>
+    <Method Name="str_concat" Id="{e94d434c-09ac-414a-9d91-a0fda7e24031}">
+      <Declaration><![CDATA[METHOD str_concat : STRING
+VAR_INPUT
+	text1	: STRING;
+	text2	: STRING;
+	text3	: STRING;
+END_VAR
+VAR
+	Con_String : String;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Con_String := CONCAT('$n', MAIN.fb_TimeStamp.FullSystemTime);
+Con_String := CONCAT(Con_String, ' ; ');
+Con_String := CONCAT(Con_String, text1);
+Con_String := CONCAT(Con_String, ' ; ');
+Con_String := CONCAT(Con_String, text2);
+Con_String := CONCAT(Con_String, ' ; ');
+Con_String := CONCAT(Con_String, text3);
+
+str_concat := Con_String;]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="LOGPROCESS">
+      <LineId Id="286" Count="0" />
+      <LineId Id="308" Count="3" />
+      <LineId Id="303" Count="0" />
+      <LineId Id="312" Count="0" />
+      <LineId Id="300" Count="0" />
+      <LineId Id="285" Count="0" />
+      <LineId Id="175" Count="0" />
+      <LineId Id="15" Count="12" />
+      <LineId Id="284" Count="0" />
+      <LineId Id="393" Count="12" />
+      <LineId Id="33" Count="20" />
+      <LineId Id="228" Count="0" />
+      <LineId Id="213" Count="1" />
+      <LineId Id="242" Count="0" />
+      <LineId Id="215" Count="0" />
+      <LineId Id="237" Count="0" />
+      <LineId Id="232" Count="0" />
+      <LineId Id="239" Count="0" />
+      <LineId Id="233" Count="0" />
+      <LineId Id="238" Count="0" />
+      <LineId Id="235" Count="0" />
+      <LineId Id="216" Count="11" />
+      <LineId Id="246" Count="0" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="243" Count="2" />
+      <LineId Id="229" Count="0" />
+      <LineId Id="55" Count="1" />
+      <LineId Id="58" Count="38" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="LOGPROCESS.str_concat">
+      <LineId Id="6" Count="2" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="12" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

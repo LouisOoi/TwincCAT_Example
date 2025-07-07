@@ -1,0 +1,171 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="MAIN" Id="{2e5786d8-6d11-41e5-a2a9-962bd5c7bdd1}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+
+VAR_INPUT
+	btnEstop		AT %I* : BOOL;
+	btnStart		AT %I* : BOOL;
+	btnStop			AT %I* : BOOL;
+	btnReset		AT %I* : BOOL;
+	btn_Reset		: BOOL;
+	btnSoftEstop	: BOOL;
+	btnTorchClean	: BOOL;
+	Kuka_Ready		: BOOL;
+	LogText			: STRING;
+	BTN_LOG			: BOOL;
+	Reset_State	: BOOL;
+END_VAR
+
+VAR
+	fb_TimeStamp	: FB_UpdateTimeStamp;
+	ModbusOn	: TON;
+	ModbusOff	: TON;
+	bOn			: BOOL;
+	bLastOn		: BOOL;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[	// =============================== Estop
+		IF NOT btnEStop OR btnSoftEstop THEN
+			ESTOP(); 
+		END_IF
+		
+	// =============================== Reset
+		IF btn_Reset THEN
+			Reset_State := TRUE; 
+		END_IF	
+		
+		IF btnReset THEN
+			Reset_State := TRUE;
+			IF NOT Reset_State THEN
+				LOGFILE( sLogEvent	 := MSG.EVENT_BTN,
+						sLogComp	 := MSG.COMP_OP_BTN, 
+						sLogAction	 := MSG.ACTION_RESET, 
+						 logFlag	 := TRUE);
+			END_IF
+		END_IF
+			
+		IF Reset_State THEN
+			RESET_SEQ();
+		END_IF
+		
+	// =============================== Kuka Ready	
+		IF KR1.KROnline AND KR2.KROnline AND KR3.KROnline AND KR4.KROnline AND KR5.KROnline THEN
+				MAIN.Kuka_Ready := TRUE;
+		ELSE
+				MAIN.Kuka_Ready := FALSE;	
+		END_IF
+		
+	// =============================== Programme	
+	fb_TimeStamp();
+	IF fb_TimeStamp.timeValid THEN
+			KUKA_IO();
+			INFEED_RACK();
+			COOL_RACK();
+			JIG();
+			AUTO_MODE();
+			SAFETY_SENSOR();
+			TL();
+			
+			//======================================= Modbus
+			//Off time
+			ModbusOn(IN:= NOT ModbusOff.Q, PT:= T#1S, Q=> bOn , ET=> );
+			//On time
+			ModbusOff(IN:= bOn, PT:= T#1S, Q=> , ET=> );
+				
+			IF bOn <> bLastOn THEN
+				IF bON THEN
+					COOL_RACK.bstart_Read := INFEED_RACK.bstart_Read := TRUE;
+				ELSE
+					COOL_RACK.bstart_Read := INFEED_RACK.bstart_Read := FALSE;
+				END_IF
+			END_IF
+			bLastOn := bOn;
+			// ================================================
+		
+			// ======================================= Torch Clean
+			IF btnTorchClean THEN 
+				TORCHCLEAN(); 
+			ELSE 
+				TORCHCLEAN.process_A:=0; 
+			END_IF
+		
+			// ======================================= Operator Button
+			IF btnStart THEN
+				IF NOT AUTO_MODE.AutoMode THEN
+					AUTO_MODE.Halt_Production := FALSE;
+					LOGFILE( sLogEvent	 := MSG.EVENT_BTN,
+							 sLogComp	 := MSG.COMP_OP_BTN, 
+							 sLogAction	 := MSG.ACTION_START, 
+							 logFlag	 := TRUE);
+					AUTO_MODE.AutoMode := TRUE; 
+					AUTO_MODE.Start_time := MAIN.fb_TimeStamp.SystemTime;
+				ELSE
+					AUTO_MODE.Halt_Production := FALSE;
+					AUTO_MODE.AutoMode := TRUE; 
+				END_IF
+			END_IF
+			
+			IF btnStop THEN
+				IF NOT AUTO_MODE.Halt_Production THEN
+					LOGFILE( sLogEvent	 := MSG.EVENT_BTN,
+							 sLogComp	 := MSG.COMP_OP_BTN, 
+							 sLogAction	 := MSG.ACTION_STOP, 
+							 logFlag	 := TRUE);
+					KR1.bOutBit[1,0]:= FALSE;
+					KR2.bOutBit[1,0]:= FALSE;
+					KR3.bOutBit[1,0]:= FALSE;
+					KR4.bOutBit[1,0]:= FALSE;
+					KR5.bOutBit[1,0]:= FALSE;
+					AUTO_MODE.Halt_Production := TRUE;
+					AUTO_MODE.AutoMode := FALSE;
+					Reset_State := FALSE;
+				ELSE
+					KR1.bOutBit[1,0]:= FALSE;
+					KR2.bOutBit[1,0]:= FALSE;
+					KR3.bOutBit[1,0]:= FALSE;
+					KR4.bOutBit[1,0]:= FALSE;
+					KR5.bOutBit[1,0]:= FALSE;
+					AUTO_MODE.Halt_Production := TRUE;
+					AUTO_MODE.AutoMode := FALSE;
+					Reset_State := FALSE;
+				END_IF
+			END_IF
+	END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="MAIN">
+      <LineId Id="763" Count="2" />
+      <LineId Id="755" Count="0" />
+      <LineId Id="767" Count="0" />
+      <LineId Id="766" Count="0" />
+      <LineId Id="756" Count="2" />
+      <LineId Id="789" Count="0" />
+      <LineId Id="781" Count="7" />
+      <LineId Id="759" Count="0" />
+      <LineId Id="771" Count="9" />
+      <LineId Id="770" Count="0" />
+      <LineId Id="790" Count="0" />
+      <LineId Id="289" Count="0" />
+      <LineId Id="604" Count="0" />
+      <LineId Id="368" Count="5" />
+      <LineId Id="729" Count="0" />
+      <LineId Id="653" Count="0" />
+      <LineId Id="554" Count="13" />
+      <LineId Id="374" Count="0" />
+      <LineId Id="768" Count="1" />
+      <LineId Id="382" Count="1" />
+      <LineId Id="578" Count="3" />
+      <LineId Id="468" Count="0" />
+      <LineId Id="677" Count="22" />
+      <LineId Id="792" Count="0" />
+      <LineId Id="701" Count="0" />
+      <LineId Id="791" Count="0" />
+      <LineId Id="703" Count="2" />
+      <LineId Id="730" Count="0" />
+      <LineId Id="706" Count="7" />
+      <LineId Id="731" Count="0" />
+      <LineId Id="714" Count="1" />
+      <LineId Id="367" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

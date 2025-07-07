@@ -1,7 +1,12 @@
 <?xml version="1.0"?>
-<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4024.55">
+<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4024.47">
 	<Project ProjectGUID="{C2751EF9-AC72-4D80-B51F-08AFDAA73D78}" Target64Bit="true" ShowHideConfigurations="#x6">
 		<System>
+			<Licenses>
+				<Target>
+					<ManualSelect>{3EBB9639-5FF3-42B6-8847-35C70DC013C8}</ManualSelect>
+				</Target>
+			</Licenses>
 			<Tasks>
 				<Task Id="3" Priority="20" CycleTime="100000" AmsPort="350" AdtTasks="true">
 					<Name>PlcTask</Name>
@@ -10,7 +15,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{E759FE3C-4CD4-4B1A-9490-8F76588D4EE6}" Name="TCPIP_Client" PrjFilePath="TCPIP_Client\TCPIP_Client.plcproj" TmcFilePath="TCPIP_Client\TCPIP_Client.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="TCPIP_Client\TCPIP_Client.tmc" TmcHash="{70D8DFD3-CC00-E2E1-73A1-2E90DCEBDD74}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="TCPIP_Client\TCPIP_Client.tmc" TmcHash="{B8896406-9E73-4815-0B1A-5FC83838FEF4}">
 					<Name>TCPIP_Client Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Contexts>

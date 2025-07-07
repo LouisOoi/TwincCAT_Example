@@ -1,0 +1,240 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="SEQ_RW" Id="{1956c91f-91b4-46d5-bf62-e089dbee7ad6}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM SEQ_RW
+VAR_INPUT
+	RW_sequence	: UINT;
+END_VAR
+
+VAR
+	process_X	: UINT; //Conveyor to Pitstop
+	process_G	: UINT; //KR1 GET Magnet	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+IF AUTO_MODE.KR1_PITSTOP THEN
+	RETURN;
+END_IF
+
+CASE RW_sequence OF
+	0:
+		AUTO_MODE.processnameCR := CONCAT(MSG.COMP_RW,MSG.ACTION_INIT);	
+		LOGPROCESS( spLogComp	 := MSG.COMP_RW, 
+		 			spLogAction	 := MSG.ACTION_INIT, 
+		 			spLogStatus	 := MSG.STATUS_DONE,
+	 	 		 	plogFlag	 := TRUE);
+		process_X	:= 0;
+		process_G	:= 0;
+		RW_sequence := 1;
+		
+	// Get Magnet -------------------------------------------------------------------------------------------------------------	
+	1:
+		IF NOT GVL.KR1_EOAT_FILL THEN
+			IF process_G = 0 THEN
+				IF KR1.Idle THEN
+//					KR1.PLC_O_D3.0 := TRUE; //200
+					KR1.bOutBit[3,0] := TRUE;
+					AUTO_MODE.processnameCOSMO := CONCAT(MSG.COMP_RW,MSG.ACTION_GET_MAGNET);
+					AUTO_MODE.processnameCOSMO := CONCAT(AUTO_MODE.processnameCOSMO,MSG.STATUS_RUN);
+					LOGPROCESS( spLogComp	 := MSG.COMP_RW, 
+								spLogAction	 := MSG.ACTION_GET_MAGNET, 
+								spLogStatus	 := MSG.STATUS_RUN,
+								plogFlag	 := TRUE);
+					process_G := 1;
+					RETURN;
+				END_IF
+			ELSIF process_G = 1 THEN
+//				KR1.PLC_O_D3.0 := TRUE; //200
+				KR1.bOutBit[3,0] := TRUE;
+				IF NOT KR1.bInBit[3,0] THEN
+//					KR1.PLC_O_D3.0 := FALSE; //200	
+					KR1.bOutBit[3,0] := FALSE;
+					AUTO_MODE.processnameCOSMO := CONCAT(MSG.COMP_RW,MSG.ACTION_GET_MAGNET);
+					AUTO_MODE.processnameCOSMO := CONCAT(AUTO_MODE.processnameCOSMO,MSG.STATUS_ACK);
+					LOGPROCESS( spLogComp	 := MSG.COMP_RW, 
+								spLogAction	 := MSG.ACTION_GET_MAGNET, 
+								spLogStatus	 := MSG.STATUS_ACK,
+								plogFlag	 := TRUE);
+					process_G := 2;
+					RETURN;
+				END_IF	
+			ELSIF process_G = 2 THEN
+//				KR1.PLC_O_D3.0 := FALSE; //200	
+				KR1.bOutBit[3,0] := FALSE;
+				IF KR1.bInBit[3,0] THEN
+					AUTO_MODE.processnameCOSMO := CONCAT(MSG.COMP_RW,MSG.ACTION_GET_MAGNET);
+					AUTO_MODE.processnameCOSMO := CONCAT(AUTO_MODE.processnameCOSMO,MSG.STATUS_DONE);
+					LOGPROCESS( spLogComp	 := MSG.COMP_RW, 
+								spLogAction	 := MSG.ACTION_GET_MAGNET, 
+								spLogStatus	 := MSG.STATUS_DONE,
+								plogFlag	 := TRUE);
+					process_G:= 3;
+					RETURN;
+				END_IF	
+			ELSIF process_G = 3 THEN
+				IF KR1.Idle THEN
+					AUTO_MODE.processnameCOSMO := CONCAT(MSG.COMP_RW,MSG.ACTION_GET_MAGNET);
+					AUTO_MODE.processnameCOSMO := CONCAT(AUTO_MODE.processnameCOSMO,MSG.STATUS_COMP);
+					LOGPROCESS( spLogComp	 := MSG.COMP_RW, 
+								spLogAction	 := MSG.ACTION_GET_MAGNET, 
+								spLogStatus	 := MSG.STATUS_COMP,
+								plogFlag	 := TRUE);
+					process_G := 4;
+					RW_sequence := 2;
+					AUTO_MODE.next_step := FALSE;
+					GVL.KR1_EOAT_FILL := TRUE;
+				END_IF
+			END_IF
+		ELSE
+			RW_sequence := 2;
+		END_IF
+		
+	// Conveyor to Pitstop -------------------------------------------------------------------------------------------------------------	
+	2: 
+		IF process_X = 0 THEN
+			IF KR1.Idle AND NOT GVL.Rework_Empty THEN
+//				KR1.PLC_O_D3.7 := TRUE; //206
+				KR1.bOutBit[3,7] := TRUE;
+				AUTO_MODE.processnameCOSMO := CONCAT(MSG.COMP_RW,MSG.ACTION_REWORK_IN);
+				AUTO_MODE.processnameCOSMO := CONCAT(AUTO_MODE.processnameCOSMO,MSG.STATUS_RUN);
+				LOGPROCESS( spLogComp	 := MSG.COMP_RW, 
+							spLogAction	 := MSG.ACTION_REWORK_IN, 
+							spLogStatus	 := MSG.STATUS_RUN,
+							plogFlag	 := TRUE);
+				process_X := 1;
+				AUTO_MODE.RW_PACKING := TRUE;
+				RETURN;
+			END_IF
+		ELSIF process_X = 1 THEN
+//			KR1.PLC_O_D3.7 := TRUE; //206
+			KR1.bOutBit[3,7] := TRUE;
+			IF KR1.bInBit[3,7] THEN
+//				KR1.PLC_O_D3.7 := FALSE; //206	
+				KR1.bOutBit[3,7] := FALSE;
+				AUTO_MODE.processnameCOSMO := CONCAT(MSG.COMP_RW,MSG.ACTION_REWORK_IN);
+				AUTO_MODE.processnameCOSMO := CONCAT(AUTO_MODE.processnameCOSMO,MSG.STATUS_ACK);
+				LOGPROCESS( spLogComp	 := MSG.COMP_RW, 
+							spLogAction	 := MSG.ACTION_REWORK_IN, 
+							spLogStatus	 := MSG.STATUS_ACK,
+							plogFlag	 := TRUE);
+				process_X := 2;
+				RETURN;
+			END_IF	
+		ELSIF process_X = 2 THEN
+//			KR1.PLC_O_D3.7 := FALSE; //206	
+			KR1.bOutBit[3,7] := FALSE;
+			IF NOT KR1.bInBit[3,7] THEN
+				AUTO_MODE.processnameCOSMO := CONCAT(MSG.COMP_RW,MSG.ACTION_REWORK_IN);
+				AUTO_MODE.processnameCOSMO := CONCAT(AUTO_MODE.processnameCOSMO,MSG.STATUS_DONE);
+				LOGPROCESS( spLogComp	 := MSG.COMP_RW, 
+							spLogAction	 := MSG.ACTION_REWORK_IN, 
+							spLogStatus	 := MSG.STATUS_DONE,
+							plogFlag	 := TRUE);
+				process_X:= 3;
+				RETURN;
+			END_IF
+		ELSIF process_X = 3 THEN
+			IF KR1.Idle THEN
+					AUTO_MODE.processnameCOSMO := CONCAT(MSG.COMP_RW,MSG.ACTION_REWORK_IN);
+					AUTO_MODE.processnameCOSMO := CONCAT(AUTO_MODE.processnameCOSMO,MSG.STATUS_COMP);
+					LOGPROCESS( spLogComp	 := MSG.COMP_RW, 
+								spLogAction	 := MSG.ACTION_REWORK_IN, 
+								spLogStatus	 := MSG.STATUS_COMP,
+								plogFlag	 := TRUE);
+					process_X := 4;
+					RW_sequence := 3;
+					AUTO_MODE.next_step := FALSE;
+					AUTO_MODE.KR1_PITSTOP := TRUE;
+				END_IF
+		END_IF	
+		
+	3:
+		RW_sequence := 0;
+		AUTO_MODE.next_step := FALSE;
+		AUTO_MODE.processnameRW := CONCAT(MSG.COMP_RW,MAIN.fb_TimeStamp.SystemTime);
+		AUTO_MODE.processnameRW := CONCAT(AUTO_MODE.processnameRW,MSG.STATUS_END);
+		LOGPROCESS( spLogComp	 := MSG.COMP_RW, 
+					spLogAction	 := MSG.ACTION_REWORK_IN, 
+					spLogStatus	 := MSG.STATUS_END,
+					plogFlag	 := TRUE);
+END_CASE
+
+		]]></ST>
+    </Implementation>
+    <LineIds Name="SEQ_RW">
+      <LineId Id="537" Count="3" />
+      <LineId Id="6" Count="1" />
+      <LineId Id="612" Count="4" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="400" Count="1" />
+      <LineId Id="456" Count="0" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="95" Count="0" />
+      <LineId Id="97" Count="0" />
+      <LineId Id="199" Count="0" />
+      <LineId Id="98" Count="1" />
+      <LineId Id="617" Count="0" />
+      <LineId Id="684" Count="0" />
+      <LineId Id="618" Count="4" />
+      <LineId Id="101" Count="0" />
+      <LineId Id="103" Count="0" />
+      <LineId Id="464" Count="0" />
+      <LineId Id="105" Count="1" />
+      <LineId Id="563" Count="0" />
+      <LineId Id="685" Count="0" />
+      <LineId Id="107" Count="0" />
+      <LineId Id="629" Count="0" />
+      <LineId Id="687" Count="0" />
+      <LineId Id="630" Count="4" />
+      <LineId Id="108" Count="4" />
+      <LineId Id="565" Count="0" />
+      <LineId Id="688" Count="0" />
+      <LineId Id="635" Count="4" />
+      <LineId Id="113" Count="0" />
+      <LineId Id="640" Count="0" />
+      <LineId Id="115" Count="3" />
+      <LineId Id="641" Count="5" />
+      <LineId Id="119" Count="0" />
+      <LineId Id="121" Count="2" />
+      <LineId Id="462" Count="0" />
+      <LineId Id="124" Count="0" />
+      <LineId Id="93" Count="1" />
+      <LineId Id="200" Count="1" />
+      <LineId Id="546" Count="0" />
+      <LineId Id="354" Count="3" />
+      <LineId Id="647" Count="0" />
+      <LineId Id="689" Count="0" />
+      <LineId Id="648" Count="4" />
+      <LineId Id="358" Count="0" />
+      <LineId Id="360" Count="0" />
+      <LineId Id="562" Count="0" />
+      <LineId Id="361" Count="2" />
+      <LineId Id="566" Count="0" />
+      <LineId Id="690" Count="0" />
+      <LineId Id="364" Count="0" />
+      <LineId Id="653" Count="0" />
+      <LineId Id="691" Count="0" />
+      <LineId Id="654" Count="4" />
+      <LineId Id="365" Count="4" />
+      <LineId Id="567" Count="0" />
+      <LineId Id="692" Count="0" />
+      <LineId Id="659" Count="5" />
+      <LineId Id="370" Count="0" />
+      <LineId Id="372" Count="3" />
+      <LineId Id="665" Count="5" />
+      <LineId Id="378" Count="0" />
+      <LineId Id="380" Count="2" />
+      <LineId Id="549" Count="0" />
+      <LineId Id="383" Count="0" />
+      <LineId Id="321" Count="0" />
+      <LineId Id="195" Count="0" />
+      <LineId Id="579" Count="1" />
+      <LineId Id="601" Count="1" />
+      <LineId Id="671" Count="3" />
+      <LineId Id="196" Count="0" />
+      <LineId Id="32" Count="1" />
+      <LineId Id="26" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

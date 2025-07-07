@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="SEQ_NAME" Id="{8ffe6285-ce05-41f7-a6c1-d93184620eaa}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE SEQ_NAME :
+(
+	INITIATE,
+	IFRACK_PICK,
+	PLACE_TO_JIG_A,
+	JIG_A_CLAMP,
+	JIG_A_WELDING,
+	JIG_A_TO_JIG_B,
+	JIG_B_CLAMP,
+	JIG_B_WELDING,
+	JIG_B_TO_TT,
+	TT_WELDING,
+	TT_WELD_COMPLETE,
+	TT_TO_JIG_C,
+	BRACKET_TO_JIG_C,
+	JIG_C_CLAMP,
+	JIG_C_WELDING,
+	JIG_C_PICK,
+	PLACE_TO_CR,
+	END
+);
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>

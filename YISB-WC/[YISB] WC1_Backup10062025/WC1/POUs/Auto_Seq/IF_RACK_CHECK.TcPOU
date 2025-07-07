@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="IF_RACK_CHECK" Id="{4d16c559-2d91-410a-8902-60c712acc471}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM IF_RACK_CHECK
+VAR_INPUT
+	checkIn_A5 : BOOL;
+	checkIn_A4 : BOOL;
+	checkIn_A3 : BOOL;
+	checkIn_A2 : BOOL;
+	checkIn_A1 : BOOL;
+	checkIn_B5 : BOOL;
+	checkIn_B4 : BOOL;
+	checkIn_B3 : BOOL;
+	checkIn_B2 : BOOL;
+	checkIn_B1 : BOOL;
+END_VAR
+VAR
+	infeedRack_A_empty: BOOL;
+	infeedRack_B_empty: BOOL;
+	turnflag: BOOL;
+	turningA: BOOL;
+	turningB: BOOL;
+	cool_rack_check : UINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+IF NOT AUTO_MODE.Run_Next_Rack THEN
+	RETURN;
+END_IF
+	
+IF COOL_RACK.CR_full THEN
+	RETURN;
+END_IF
+
+IF INFEED_RACK.FaceA_InWC THEN
+	IF INFEED_RACK.A5_Sensor THEN
+		checkIn_A5 := TRUE; AUTO_MODE.Run_Next_Rack := FALSE;
+	ELSIF INFEED_RACK.A4_Sensor THEN
+		checkIn_A4 := TRUE; AUTO_MODE.Run_Next_Rack := FALSE;
+	ELSIF INFEED_RACK.A3_Sensor THEN
+		checkIn_A3 := TRUE; AUTO_MODE.Run_Next_Rack := FALSE;
+	ELSIF INFEED_RACK.A2_Sensor THEN
+		checkIn_A2 := TRUE; AUTO_MODE.Run_Next_Rack := FALSE;
+	ELSIF INFEED_RACK.A1_Sensor THEN
+		checkIn_A1 := TRUE; AUTO_MODE.Run_Next_Rack := FALSE;
+	ELSE
+		infeedRack_A_empty := TRUE;	
+	END_IF
+	
+ELSIF INFEED_RACK.FaceB_InWC THEN
+	IF INFEED_RACK.B5_Sensor THEN
+		checkIn_B5 := TRUE; AUTO_MODE.Run_Next_Rack := FALSE;
+	ELSIF INFEED_RACK.B4_Sensor THEN
+		checkIn_B4 := TRUE; AUTO_MODE.Run_Next_Rack := FALSE;
+	ELSIF INFEED_RACK.B3_Sensor THEN
+		checkIn_B3 := TRUE; AUTO_MODE.Run_Next_Rack := FALSE;
+	ELSIF INFEED_RACK.B2_Sensor THEN
+		checkIn_B2 := TRUE; AUTO_MODE.Run_Next_Rack := FALSE;
+	ELSIF INFEED_RACK.B1_Sensor THEN
+		checkIn_B1 := TRUE; AUTO_MODE.Run_Next_Rack := FALSE;
+	ELSE
+		infeedRack_B_empty := TRUE;	
+	END_IF
+END_IF
+
+IF INFEED_RACK.IFRack_Ready and INFEED_RACK.IFRack_TurnReady THEN
+	IF infeedRack_A_empty AND NOT turningB THEN
+		turningA := TRUE;
+		INFEED_RACK.IFRack_arr[1].5 := FALSE; //BtoA
+		INFEED_RACK.IFRack_arr[1].4 := TRUE; //AtoB
+		INFEED_RACK(bStart_Write:=TRUE);
+		IF INFEED_RACK.FaceB_InWC THEN
+			turningA := FALSE;
+			infeedRack_A_empty := FALSE;
+			INFEED_RACK(bStart_Write:=FALSE);
+		END_IF
+	ELSIF infeedRack_B_empty AND NOT turningA THEN
+		turningB := TRUE;
+		INFEED_RACK.IFRack_arr[1].4 := FALSE; //AtoB
+		INFEED_RACK.IFRack_arr[1].5 := TRUE; //BtoA
+		INFEED_RACK(bStart_Write:=TRUE);
+		IF INFEED_RACK.FaceA_InWC THEN
+			turningB := FALSE;
+			infeedRack_B_empty := FALSE;
+			INFEED_RACK(bStart_Write:=FALSE);
+		END_IF
+	END_IF
+END_IF
+
+//INFEED_RACK.bStart_Read:=FALSE;
+//INFEED_RACK.bStart_Write:=FALSE;]]></ST>
+    </Implementation>
+    <LineIds Name="IF_RACK_CHECK">
+      <LineId Id="219" Count="0" />
+      <LineId Id="200" Count="1" />
+      <LineId Id="198" Count="0" />
+      <LineId Id="272" Count="0" />
+      <LineId Id="277" Count="2" />
+      <LineId Id="276" Count="0" />
+      <LineId Id="163" Count="2" />
+      <LineId Id="167" Count="2" />
+      <LineId Id="171" Count="1" />
+      <LineId Id="174" Count="1" />
+      <LineId Id="177" Count="2" />
+      <LineId Id="161" Count="0" />
+      <LineId Id="180" Count="0" />
+      <LineId Id="32" Count="13" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="230" Count="0" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="247" Count="0" />
+      <LineId Id="114" Count="1" />
+      <LineId Id="225" Count="0" />
+      <LineId Id="117" Count="0" />
+      <LineId Id="248" Count="0" />
+      <LineId Id="119" Count="0" />
+      <LineId Id="220" Count="0" />
+      <LineId Id="120" Count="0" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="244" Count="0" />
+      <LineId Id="243" Count="0" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="91" Count="1" />
+      <LineId Id="246" Count="0" />
+      <LineId Id="94" Count="0" />
+      <LineId Id="221" Count="0" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="82" Count="0" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="78" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

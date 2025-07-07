@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <ImagePool Name="ImagePool" Id="{7c688065-7aba-446f-85ac-15ab0813582f}">
+    <XmlArchive>
+      <Data>
+        <o xml:space="preserve" t="ImagePoolObject">
+          <v n="UniqueIdGenerator">"55"</v>
+          <l n="BitmapPool" t="ArrayList" cet="ImagePoolItem">
+            <o>
+              <v n="BitmapID">"The-New-Silver-Backgrounds"</v>
+              <v n="FileID">"5ce3da45-db07-42e7-a21c-a00fff4ed8f6|C:\Users\celli\OneDrive\Documents\TcXaeShell\[YISB] Workcell1\The-New-Silver-Backgrounds.jpg"</v>
+              <v n="ItemID">7</v>
+            </o>
+            <o>
+              <v n="BitmapID">"RPAPLUS LOGO"</v>
+              <v n="FileID">"5ce3da45-db07-42e7-a21c-a00fff4ed8f6|C:\Users\celli\OneDrive\Documents\TcXaeShell\RPAPLUS LOGO.png"</v>
+              <v n="ItemID">8</v>
+            </o>
+            <o>
+              <v n="BitmapID">"KukaManipulator"</v>
+              <v n="FileID">"5ce3da45-db07-42e7-a21c-a00fff4ed8f6|C:\Users\celli\OneDrive\Documents\TcXaeShell\[YISB] Workcell1\KukaManipulator.png"</v>
+              <v n="ItemID">9</v>
+            </o>
+            <o>
+              <v n="BitmapID">"KukaWelding"</v>
+              <v n="FileID">"5ce3da45-db07-42e7-a21c-a00fff4ed8f6|C:\Users\celli\OneDrive\Documents\TcXaeShell\[YISB] Workcell1\KukaWelding.png"</v>
+              <v n="ItemID">11</v>
+            </o>
+            <o>
+              <v n="BitmapID">"kuk"</v>
+              <v n="FileID">""</v>
+              <v n="ItemID">13</v>
+            </o>
+            <o>
+              <v n="BitmapID">"Icon-JigA"</v>
+              <v n="FileID">"5ce3da45-db07-42e7-a21c-a00fff4ed8f6|C:\Users\celli\OneDrive\Desktop\[YISB] Workcell1 V2\WC-HMI\JigA.png"</v>
+              <v n="ItemID">15</v>
+            </o>
+            <o>
+              <v n="BitmapID">"Icon-JigB"</v>
+              <v n="FileID">"5ce3da45-db07-42e7-a21c-a00fff4ed8f6|C:\Users\celli\OneDrive\Desktop\[YISB] Workcell1 V2\WC-HMI\JigB.png"</v>
+              <v n="ItemID">17</v>
+            </o>
+            <o>
+              <v n="BitmapID">"Icon-JigC"</v>
+              <v n="FileID">"5ce3da45-db07-42e7-a21c-a00fff4ed8f6|C:\Users\celli\OneDrive\Desktop\[YISB] Workcell1 V2\WC-HMI\JigC.png"</v>
+              <v n="ItemID">20</v>
+            </o>
+            <o>
+              <v n="BitmapID">"Icon-Conveyor"</v>
+              <v n="FileID">"5ce3da45-db07-42e7-a21c-a00fff4ed8f6|C:\Users\celli\OneDrive\Shared folder RPA+ Customers\cus-YISB\HMI\WC Cad\Conveyor.png"</v>
+              <v n="ItemID">22</v>
+            </o>
+            <o>
+              <v n="BitmapID">"Icon-InFeedRack"</v>
+              <v n="FileID">"5ce3da45-db07-42e7-a21c-a00fff4ed8f6|C:\Users\celli\OneDrive\Desktop\[YISB] Workcell1 V2\WC-HMI\InfeedRack.png"</v>
+              <v n="ItemID">26</v>
+            </o>
+            <o>
+              <v n="BitmapID">"Icon-CoolingRack"</v>
+              <v n="FileID">"5ce3da45-db07-42e7-a21c-a00fff4ed8f6|C:\Users\celli\OneDrive\Desktop\[YISB] Workcell1 V2\WC-HMI\CoolingRack.png"</v>
+              <v n="ItemID">35</v>
+            </o>
+            <o>
+              <v n="BitmapID">"Icon-COSMO"</v>
+              <v n="FileID">"5ce3da45-db07-42e7-a21c-a00fff4ed8f6|C:\Users\celli\OneDrive\Desktop\[YISB] Workcell1 V2\WC-HMI\Cosmo.png"</v>
+              <v n="ItemID">38</v>
+            </o>
+            <o>
+              <v n="BitmapID">"Icon_TwinTorch"</v>
+              <v n="FileID">"5ce3da45-db07-42e7-a21c-a00fff4ed8f6|C:\Users\celli\OneDrive\Desktop\[YISB] Workcell1 V2\WC-HMI\TwinTiorch.png"</v>
+              <v n="ItemID">42</v>
+            </o>
+            <o>
+              <v n="BitmapID">"Layout2D"</v>
+              <v n="FileID">"5ce3da45-db07-42e7-a21c-a00fff4ed8f6|C:\Users\celli\OneDrive\Desktop\[YISB] Workcell1 V2\WC-HMI\Layout.png"</v>
+              <v n="ItemID">45</v>
+            </o>
+            <o>
+              <v n="BitmapID">"001-resources"</v>
+              <v n="FileID">"5ce3da45-db07-42e7-a21c-a00fff4ed8f6|C:\Users\celli\Downloads\mycollection\png\001-resources.png"</v>
+              <v n="ItemID">48</v>
+            </o>
+            <o>
+              <v n="BitmapID">"002-plunger"</v>
+              <v n="FileID">"5ce3da45-db07-42e7-a21c-a00fff4ed8f6|C:\Users\celli\Downloads\mycollection\png\002-plunger.png"</v>
+              <v n="ItemID">53</v>
+            </o>
+            <o>
+              <v n="BitmapID">"3D workcell"</v>
+              <v n="FileID">"5ce3da45-db07-42e7-a21c-a00fff4ed8f6|C:\Users\celli\OneDrive\Documents\TcXaeShell\[YISB] Workcell1_240726\Image\3D workcell.jpg"</v>
+              <v n="ItemID">51</v>
+            </o>
+            <o>
+              <v n="BitmapID">""</v>
+              <v n="FileID">""</v>
+              <v n="ItemID">54</v>
+            </o>
+          </l>
+          <v n="GuidInit">{11034c0f-bc22-480a-947c-be72a7205a18}</v>
+          <v n="GuidReInit">{310d4a9c-5f58-4f34-9127-bd42eedf90a4}</v>
+          <v n="GuidExitX">{511b6cdc-5a4e-4629-92a3-54bd77d101a6}</v>
+          <v n="ValidIds">true</v>
+        </o>
+      </Data>
+      <TypeList>
+        <Type n="ArrayList">System.Collections.ArrayList</Type>
+        <Type n="Boolean">System.Boolean</Type>
+        <Type n="Guid">System.Guid</Type>
+        <Type n="ImagePoolItem">{215b2719-0347-4e4d-ba85-8bcd66946f66}</Type>
+        <Type n="ImagePoolObject">{bb0b9044-714e-4614-ad3e-33cbdf34d16b}</Type>
+        <Type n="Int32">System.Int32</Type>
+        <Type n="String">System.String</Type>
+      </TypeList>
+    </XmlArchive>
+  </ImagePool>
+</TcPlcObject>

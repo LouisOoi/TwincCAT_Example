@@ -1,0 +1,191 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="COOL_RACK" Id="{2e5097aa-277c-4e8c-9fa7-74391d42fcb3}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM COOL_RACK
+VAR_INPUT
+	bstart_Read		: BOOL;
+	bstart_Write	: BOOL;
+	iCooling_Time	: INT;
+	set_time		: bool;
+END_VAR
+VAR_OUTPUT
+	CR_full 	: bool;
+END_VAR
+VAR
+	WriteCoil	: FB_MBWriteCoils;
+	Read_Coils	: FB_MBReadCoils;
+	ReadInput: FB_MBReadInputs;
+	
+	IP_Address		: STRING:='169.254.106.102';
+	MB_Port			: UINT	:=502;
+	nUnit			: BYTE	:=255; 
+	nQuantity		: WORD	:=24;
+	nMBAddr			: WORD	:=2048;
+	bError_Read		: BOOL;
+	bError_Write	: BOOL;
+	nErrId_Read		: UDINT;
+	nErrId_Write	: UDINT;
+	
+	CoolRack_arr		: ARRAY [0..2] OF BYTE;
+
+	
+	CR	: ARRAY [1..21] OF BOOL;
+	num	: INT;
+	
+	CR_Reset		: INT;
+	CR_Sel			: INT;
+	CRON			: BOOL;
+	CRONlast		: BOOL;
+	CRcounterON 	: TON;
+	CRcounterOFF	: TON;
+
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+//Off time
+CRcounterON(IN:= NOT CRcounterOFF.Q, PT:= T#1S, Q=> CRON , ET=> );
+//On time
+CRcounterOFF(IN:= CRON, PT:= T#1S, Q=> , ET=> );
+	
+IF CRON <> CRONlast THEN
+	FOR CR_Sel := 1 TO 21 BY 1 DO
+		IF CR[CR_Sel] THEN
+			GVL.CRTimer[CR_Sel] := GVL.CRTimer[CR_Sel] - 1;
+		END_IF
+	END_FOR
+END_IF
+CRONlast := CRON;
+//================================ Function Block
+
+Read_Coils(
+	sIPAddr:= IP_Address, 
+	nTCPPort:= MB_Port, 
+	nUnitID:= nUnit, 
+	nQuantity:= nQuantity, 
+	nMBAddr:= nMBAddr, 
+	cbLength:= SIZEOF(CoolRack_arr), 
+	pDestAddr:= ADR(CoolRack_arr), 
+	bExecute:= bstart_Read, 
+	tTimeout:= T#1S, 
+	bBusy=> , 
+	bError=> bError_Read, 
+	nErrId=> nErrId_Read, 
+	cbRead=> );
+
+WriteCoil(
+	sIPAddr:= IP_Address, 
+	nTCPPort:= MB_Port, 
+	nUnitID:= nUnit, 
+	nQuantity:= nQuantity, 
+	nMBAddr:= nMBAddr, 
+	cbLength:= SIZEOF(CoolRack_arr),  
+	pSrcAddr:= ADR(CoolRack_arr), 
+	bExecute:= bstart_Write, 
+	tTimeout:= T#1S, 
+	bBusy=> , 
+	bError=> bError_Write, 
+	nErrId=> nErrId_Write);
+
+IF set_time THEN
+	FOR CR_Reset := 1 TO 21 BY 1 DO
+		GVL.CRTimer[CR_Reset] := GVL.iCooling_Time;
+	END_FOR	
+END_IF
+
+//================================ Sensor
+
+CR[1] := CoolRack_arr[0].0;
+CR[2] := CoolRack_arr[0].1;
+CR[3] := CoolRack_arr[0].2;
+CR[4] := CoolRack_arr[0].3;
+CR[5] := CoolRack_arr[0].4;
+CR[6] := CoolRack_arr[0].5;
+CR[7] := CoolRack_arr[0].6;
+
+CR[8] := CoolRack_arr[0].7;
+CR[9] := CoolRack_arr[1].0;
+CR[10] := CoolRack_arr[1].1;
+CR[11] := CoolRack_arr[1].2;
+CR[12] := CoolRack_arr[1].3;
+CR[13] := CoolRack_arr[1].4;
+CR[14] := CoolRack_arr[1].5;
+
+CR[15] := CoolRack_arr[1].6;
+CR[16] := CoolRack_arr[1].7;
+CR[17] := CoolRack_arr[2].0;
+CR[18] := CoolRack_arr[2].1;
+CR[19] := CoolRack_arr[2].2;
+CR[20] := CoolRack_arr[2].3;
+CR[21] := CoolRack_arr[2].4;
+
+CR[8]:=TRUE;
+CR[14]:=TRUE;
+CR[15]:=TRUE;
+CR[16]:=TRUE;
+CR[17]:=TRUE;
+CR[18]:=TRUE;
+CR[19]:=TRUE;
+CR[20]:=TRUE;
+CR[21]:=TRUE;
+//================================ Cooling Time
+FOR num:=1 TO 21 BY 1 DO
+	IF NOT CR[num] THEN
+		GVL.CRTimer[num] := GVL.iCooling_Time;
+	END_IF
+//	IF num > 21 THEN
+//		num := 1;			
+//	END_IF
+END_FOR
+
+IF CoolRack_arr[0] = 255 AND CoolRack_arr[1] = 255 AND CoolRack_arr[2] = 31 THEN
+	CR_full := TRUE;
+ELSE
+	CR_full := false;
+END_IF
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="COOL_RACK">
+      <LineId Id="287" Count="6" />
+      <LineId Id="305" Count="0" />
+      <LineId Id="294" Count="0" />
+      <LineId Id="297" Count="1" />
+      <LineId Id="306" Count="0" />
+      <LineId Id="299" Count="0" />
+      <LineId Id="196" Count="0" />
+      <LineId Id="189" Count="1" />
+      <LineId Id="26" Count="26" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="229" Count="0" />
+      <LineId Id="191" Count="0" />
+      <LineId Id="307" Count="0" />
+      <LineId Id="234" Count="0" />
+      <LineId Id="236" Count="0" />
+      <LineId Id="231" Count="0" />
+      <LineId Id="309" Count="0" />
+      <LineId Id="143" Count="0" />
+      <LineId Id="193" Count="0" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="79" Count="5" />
+      <LineId Id="194" Count="0" />
+      <LineId Id="85" Count="6" />
+      <LineId Id="195" Count="0" />
+      <LineId Id="92" Count="6" />
+      <LineId Id="520" Count="0" />
+      <LineId Id="199" Count="0" />
+      <LineId Id="521" Count="7" />
+      <LineId Id="200" Count="1" />
+      <LineId Id="367" Count="0" />
+      <LineId Id="369" Count="4" />
+      <LineId Id="368" Count="0" />
+      <LineId Id="476" Count="0" />
+      <LineId Id="475" Count="0" />
+      <LineId Id="477" Count="0" />
+      <LineId Id="479" Count="1" />
+      <LineId Id="478" Count="0" />
+      <LineId Id="474" Count="0" />
+      <LineId Id="144" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

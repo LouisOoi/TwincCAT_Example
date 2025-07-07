@@ -1,0 +1,146 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="INFEED_RACK" Id="{4a09a776-4e38-407c-b1c0-dc2256fcf74f}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM INFEED_RACK
+VAR_INPUT
+	bstart_Read		: BOOL;
+	bstart_Write	: BOOL;
+	A1_Valve		: BOOL;
+	A2_Valve		: BOOL;
+	A3_Valve		: BOOL;
+	A4_Valve		: BOOL;
+	A5_Valve		: BOOL;
+	B1_Valve		: BOOL;
+	B2_Valve		: BOOL;
+	B3_Valve		: BOOL;
+	B4_Valve		: BOOL;
+	B5_Valve		: BOOL;
+	IFRack_Connect	: BOOL;
+	IFRack_Ready	: BOOL;
+	Turn_A_to_B		: BOOL;
+	Turn_B_to_A		: BOOL;
+	A1_Sensor		: BOOL;
+	A2_Sensor		: BOOL;
+	A3_Sensor		: BOOL;
+	A4_Sensor		: BOOL;
+	A5_Sensor		: BOOL;
+	B1_Sensor		: BOOL;
+	B2_Sensor		: BOOL;
+	B3_Sensor		: BOOL;
+	B4_Sensor		: BOOL;
+	B5_Sensor		: BOOL;
+	FaceA_InWC		: BOOL;
+	FaceB_InWC		: BOOL;
+	IFRack_TurnReady : BOOL;
+	
+	IFRack_arr		: ARRAY [0..6] OF BYTE;
+END_VAR
+VAR
+	WriteCoil	: FB_MBWriteCoils;
+	Read_Coils	: FB_MBReadCoils;
+	ReadInput: FB_MBReadInputs;
+	
+	IP_Address		: STRING:='169.254.106.101';
+	MB_Port			: UINT	:=502;
+	nUnit			: BYTE	:=255; 
+	nQuantity		: WORD	:=48;
+	nMBAddr			: WORD	:=2048;
+	bError_Read		: BOOL;
+	bError_Write	: BOOL;
+	nErrId_Read		: UDINT;
+	nErrId_Write	: UDINT;
+	
+END_VAR
+
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+//================================ Function Block
+
+Read_Coils(
+	sIPAddr:= IP_Address, 
+	nTCPPort:= MB_Port, 
+	nUnitID:= nUnit, 
+	nQuantity:= nQuantity, 
+	nMBAddr:= nMBAddr, 
+	cbLength:= SIZEOF(IFRack_arr), 
+	pDestAddr:= ADR(IFRack_arr), 
+	bExecute:= bstart_Read, 
+	tTimeout:= T#1S, 
+	bBusy=> , 
+	bError=> bError_Read, 
+	nErrId=> nErrId_Read, 
+	cbRead=> );
+
+WriteCoil(
+	sIPAddr:= IP_Address, 
+	nTCPPort:= MB_Port, 
+	nUnitID:= nUnit, 
+	nQuantity:= nQuantity, 
+	nMBAddr:= nMBAddr, 
+	cbLength:= SIZEOF(IFRack_arr),  
+	pSrcAddr:= ADR(IFRack_arr), 
+	bExecute:= bstart_Write, 
+	tTimeout:= T#1S, 
+	bBusy=> , 
+	bError=> bError_Write, 
+	nErrId=> nErrId_Write);
+	
+//================================ Sensor
+
+IFRack_arr[0].0	:= A1_Valve;
+IFRack_arr[0].1	:= A2_Valve;
+IFRack_arr[0].2	:= A3_Valve;
+IFRack_arr[0].3	:= A4_Valve;
+IFRack_arr[0].4	:= A5_Valve;
+
+IFRack_arr[0].5	:= B1_Valve;
+IFRack_arr[0].6	:= B2_Valve;
+IFRack_arr[0].7	:= B3_Valve;
+IFRack_arr[1].0	:= B4_Valve;
+IFRack_arr[1].1	:= B5_Valve;
+
+IFRack_arr[1].2	:= IFRack_Connect;
+IFRack_Ready	:= IFRack_arr[1].3;
+IFRack_arr[1].4	:= Turn_A_to_B;
+IFRack_arr[1].5	:= Turn_B_to_A;
+
+A1_Sensor 		:= IFRack_arr[3].6;
+A2_Sensor 		:= IFRack_arr[3].7;
+A3_Sensor 		:= IFRack_arr[4].0;
+A4_Sensor 		:= IFRack_arr[4].1;
+A5_Sensor 		:= IFRack_arr[4].2;
+
+B1_Sensor 		:= IFRack_arr[4].3;
+B2_Sensor 		:= IFRack_arr[4].4;
+B3_Sensor 		:= IFRack_arr[4].5;
+B4_Sensor 		:= IFRack_arr[4].6;
+B5_Sensor 		:= IFRack_arr[4].7;
+
+FaceA_InWC		:= IFRack_arr[5].0;
+FaceB_InWC		:= IFRack_arr[5].1;
+IFRack_TurnReady:= IFRack_arr[5].2;
+]]></ST>
+    </Implementation>
+    <LineIds Name="INFEED_RACK">
+      <LineId Id="444" Count="2" />
+      <LineId Id="177" Count="27" />
+      <LineId Id="282" Count="0" />
+      <LineId Id="447" Count="0" />
+      <LineId Id="449" Count="0" />
+      <LineId Id="206" Count="4" />
+      <LineId Id="451" Count="0" />
+      <LineId Id="211" Count="4" />
+      <LineId Id="450" Count="0" />
+      <LineId Id="216" Count="3" />
+      <LineId Id="452" Count="0" />
+      <LineId Id="220" Count="4" />
+      <LineId Id="453" Count="0" />
+      <LineId Id="225" Count="4" />
+      <LineId Id="455" Count="0" />
+      <LineId Id="230" Count="1" />
+      <LineId Id="507" Count="0" />
+      <LineId Id="26" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

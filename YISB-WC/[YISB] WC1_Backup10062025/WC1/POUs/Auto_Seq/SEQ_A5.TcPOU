@@ -1,0 +1,1771 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="SEQ_A5" Id="{a7ca0df7-9e76-4909-86bc-4f1f4935f741}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM SEQ_A5
+VAR_INPUT
+	A5_sequence	: UINT;
+	process_A	: UINT; // IF RACK PICK (KR5)
+	process_J	: UINT; // PLACE TO JIG A (KR5)
+	process_B	: UINT; // JIG A WELDING(KR3)
+	process_C	: UINT; // JIG A TO JIG B {KR5}
+	process_D	: UINT; // JIG B WELDING (KR3) 
+	process_E	: UINT; // JIG B TO TWINTORCH (KR5) 
+	process_F	: UINT; // TWINTORCH TO JIG C (KR5)
+	process_G	: UINT; // BRACKET TO JIG C (KR2) 
+	process_H	: UINT; // JIG C WELDING (KR4)
+	process_I	: UINT; // JIG C TO PICK (KR2)
+	process_K	: UINT; // PLACE TO CR (KR2)
+	
+END_VAR
+VAR
+	Bit1			: INT;
+	Bit2			: INT;
+	Jig_ErrorTime 	: TIME := T#5S;
+	TT_ErrorTime 	: TIME := T#120S;
+	JigTimerA 		: TON;
+	JigTimerB 		: TON;
+	JigTimerC 		: TON;
+	TTTimer			: TON;
+	Msg_PlaceCR		: STRING;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF NOT IF_RACK_CHECK.checkIn_A5 
+OR NOT INFEED_RACK.IFRack_Ready THEN
+	RETURN;
+END_IF
+
+CASE A5_sequence OF
+	// INITIATE --------------------------------------------------------------------------------------------------------------		
+	0:
+		process_A := 0;
+		process_B := 0;
+		process_C := 0;
+		process_D := 0;
+		process_E := 0;
+		process_F := 0;
+		process_G := 0;
+		process_H := 0;
+		process_I := 0;
+		process_J := 0;
+		process_K := 0;
+		
+		JigTimerA (IN:= FALSE);
+		JigTimerB (IN:= FALSE);
+		JigTimerC (IN:= FALSE);
+		TTTimer	  (IN:= FALSE);
+		
+		AUTO_MODE.JIGA_ErrorState 	:= FALSE;
+		AUTO_MODE.JIGB_ErrorState 	:= FALSE;
+		AUTO_MODE.JIGC_ErrorState 	:= FALSE;
+		AUTO_MODE.TT_ErrorState 	:= FALSE;
+		
+		AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_INIT);
+		LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+		 			spLogAction	 := MSG.ACTION_INIT, 
+		 			spLogStatus	 := MSG.STATUS_DONE,
+	 	 		 	plogFlag	 := TRUE);
+	
+		A5_sequence := 1;
+		
+	// IF RACK PICK (KR5) --------------------------------------------------------------------------------------------------------------		
+	1:
+		IF process_A = 0 THEN
+			Bit1 := 3; 
+			Bit2 := 5; //205
+			IF 	KR3.Idle AND 
+				KR5.Idle AND 
+				GVL.JIGA_Standby AND
+				NOT AUTO_MODE.JIGA_LOAD AND
+				NOT AUTO_MODE.IF_PICK THEN
+						KR5.bOutBit[ Bit1,Bit2 ] := TRUE;
+						AUTO_MODE.IF_PICK := TRUE;
+						process_A := 1;
+						AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_IF_A5);
+						AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_RUN);
+						LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+									spLogAction	 := MSG.ACTION_IF_A5, 
+									spLogStatus	 := MSG.STATUS_RUN,
+									plogFlag	 := TRUE);
+						RETURN;
+			END_IF
+		ELSIF process_A = 1 THEN
+			KR5.bOutBit[ Bit1,Bit2 ] := TRUE; 
+			IF KR5.bInBit[ Bit1,Bit2 ] THEN
+				KR5.bOutBit[ Bit1,Bit2 ] := FALSE; 
+				process_A := 2;
+				AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_IF_A5);
+				AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_ACK);
+				LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+							spLogAction	 := MSG.ACTION_IF_A5, 
+							spLogStatus	 := MSG.STATUS_ACK,
+							plogFlag	 := TRUE);
+				RETURN;
+			END_IF	
+		ELSIF process_A = 2 THEN
+			KR5.bOutBit[ Bit1,Bit2 ] := FALSE; 
+			IF NOT KR5.bInBit[ Bit1,Bit2 ] THEN
+				process_A:= 3;
+				AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_IF_A5);
+				AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_DONE);
+				LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+							spLogAction	 := MSG.ACTION_IF_A5, 
+							spLogStatus	 := MSG.STATUS_DONE,
+							plogFlag	 := TRUE);
+				RETURN;
+			END_IF	
+		ELSIF process_A = 3 THEN
+			IF KR5.Idle THEN
+				process_A := 4;
+				A5_sequence := 2;
+				AUTO_MODE.next_step := FALSE;
+				AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_IF_A5);
+				AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_COMP);
+				LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+							spLogAction	 := MSG.ACTION_IF_A5, 
+							spLogStatus	 := MSG.STATUS_COMP,
+							plogFlag	 := TRUE);
+			END_IF
+		END_IF	
+		
+	// PLACE TO JIG A (KR5) --------------------------------------------------------------------------------------------------------------		
+	2:
+		IF process_J = 0 THEN
+			Bit1 := 3; 
+			Bit2 := 0; //200
+			IF 	KR3.Idle AND 
+				KR5.Idle AND
+				GVL.JIGA_Standby AND 
+				AUTO_MODE.IF_PICK AND 
+				NOT AUTO_MODE.JIGA_LOAD THEN 
+						KR5.bOutBit[ Bit1,Bit2 ] := TRUE;
+						AUTO_MODE.JIGA_LOAD := TRUE;
+						process_J := 1;
+						AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_JIGA_PLACE);
+						AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_RUN);
+						LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+									spLogAction	 := MSG.ACTION_JIGA_PLACE, 
+									spLogStatus	 := MSG.STATUS_RUN,
+									plogFlag	 := TRUE);
+						RETURN;
+			END_IF
+		ELSIF process_J = 1 THEN
+			KR5.bOutBit[ Bit1,Bit2 ] := TRUE;
+			IF NOT KR5.bInBit[ Bit1,Bit2 ] THEN
+				KR5.bOutBit[ Bit1,Bit2 ] := FALSE;
+				process_J := 2;
+				AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_JIGA_PLACE);
+				AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_ACK);
+				LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+							spLogAction	 := MSG.ACTION_JIGA_PLACE, 
+							spLogStatus	 := MSG.STATUS_ACK,
+							plogFlag	 := TRUE);
+				RETURN;
+			END_IF	
+		ELSIF process_J = 2 THEN
+			KR5.bOutBit[ Bit1,Bit2 ] := FALSE;
+			IF KR5.bInBit[ Bit1,Bit2 ] THEN
+				process_J:= 3;
+				AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_JIGA_PLACE);
+				AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_DONE);
+				LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+							spLogAction	 := MSG.ACTION_JIGA_PLACE, 
+							spLogStatus	 := MSG.STATUS_DONE,
+							plogFlag	 := TRUE);
+				RETURN;
+			END_IF	
+		ELSIF process_J = 3 THEN
+			IF 	KR5.Idle AND  
+				AUTO_MODE.JIGA_LOAD AND
+				NOT GVL.JIGA_Standby THEN
+						AUTO_MODE.IF_PICK := FALSE;
+						process_J := 4;
+						A5_sequence := 3;
+						AUTO_MODE.next_step := FALSE;
+						AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_JIGA_PLACE);
+						AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_COMP);
+						LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+									spLogAction	 := MSG.ACTION_JIGA_PLACE, 
+									spLogStatus	 := MSG.STATUS_COMP,
+									plogFlag	 := TRUE);
+			END_IF
+		END_IF	
+	
+	// JIG A CLAMP -----------------------------------------------------------------------------------------------------------------------
+	3:
+		IF NOT AUTO_MODE.Halt_Production THEN
+			GVL.JIGA_Clamp := TRUE;
+			GVL.JIGA_Release := FALSE;
+			JigTimerA(IN := TRUE, PT := JIG_ErrorTime);
+		END_IF
+		//insert Jig safety check here 
+		
+		IF JigTimerA.Q THEN
+			AUTO_MODE.JIGA_ErrorState := TRUE;
+			IF GVL.ClearError THEN
+				JigTimerA(IN:= FALSE);
+				GVL.ClearError := FALSE;
+			ELSE
+				AUTO_MODE.Halt_Production := TRUE;
+				AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_JIGA_CLAMP);
+				AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_ERROR);
+				LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+							spLogAction	 := MSG.ACTION_JIGA_CLAMP, 
+							spLogStatus	 := MSG.STATUS_ERROR,
+							plogFlag	 := TRUE);
+			END_IF
+		ELSIF GVL.JIGA_Ready THEN
+			JigTimerA(IN := FALSE);
+			AUTO_MODE.JIGA_ErrorState := FALSE;
+			AUTO_MODE.next_step := FALSE;
+			AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_JIGA_CLAMP);
+			AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_DONE);
+			LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+						spLogAction	 := MSG.ACTION_JIGA_CLAMP, 
+						spLogStatus	 := MSG.STATUS_COMP,
+						plogFlag	 := TRUE);
+			IF GVL.KR2_bypass THEN
+				process_B	:= 3;	
+				A5_sequence := 4;
+			ELSE	
+				process_B	:= 0;	
+				A5_sequence := 4;
+			END_IF
+		END_IF
+		
+	// JIG A WELDING(KR3) ------------------------------------------------------------------------------------------------------------------
+	4:
+		IF process_B = 0 THEN
+			Bit1 := 3; 
+			Bit2 := 0; //300
+			IF 	KR3.Idle AND 
+//				KR5.Idle AND
+				GVL.JIGA_Ready AND  
+				NOT AUTO_MODE.JIGA_WELDING AND 
+				NOT AUTO_MODE.JIGB_WELDING THEN
+						KR3.bOutBit[ Bit1,Bit2 ] := TRUE;
+						AUTO_MODE.JIGA_WELDING := TRUE;
+						process_B := 1;
+						AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_JIGA_WELDING);
+						AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_RUN);
+						LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+									spLogAction	 := MSG.ACTION_JIGA_WELDING, 
+									spLogStatus	 := MSG.STATUS_RUN,
+									plogFlag	 := TRUE);
+									RETURN;
+			END_IF
+		ELSIF process_B = 1 THEN 
+			KR3.bOutBit[ Bit1,Bit2 ] := TRUE;
+			IF NOT KR3.bInBit[ Bit1,Bit2 ] THEN
+				KR3.bOutBit[ Bit1,Bit2 ] := FALSE;	
+				process_B := 2;
+				AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_JIGA_WELDING);
+				AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_ACK);
+				LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+							spLogAction	 := MSG.ACTION_JIGA_WELDING, 
+							spLogStatus	 := MSG.STATUS_ACK,
+							plogFlag	 := TRUE);
+				RETURN;
+			END_IF
+		ELSIF process_B = 2 THEN 
+			KR3.bOutBit[ Bit1,Bit2 ] := FALSE;
+			IF KR3.bInBit[ Bit1,Bit2 ] THEN
+				process_B := 3;
+				AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_JIGA_WELDING);
+				AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_DONE);
+				LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+							spLogAction	 := MSG.ACTION_JIGA_WELDING, 
+							spLogStatus	 := MSG.STATUS_DONE,
+							plogFlag	 := TRUE);
+				RETURN;
+			END_IF
+		ELSIF process_B = 3 THEN
+			IF KR3.Idle THEN
+				AUTO_MODE.JIGA_WELDING := FALSE;
+				GVL.JIGA_Clamp := FALSE;
+				GVL.JIGA_Release := TRUE;
+				JigTimerA(IN := FALSE);
+				AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_JIGA_RELEASE);
+				AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_DONE);
+				LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+							spLogAction	 := MSG.ACTION_JIGA_RELEASE, 
+							spLogStatus	 := MSG.STATUS_DONE,
+							plogFlag	 := TRUE);
+				process_B := 4;
+				AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_JIGA_WELDING);
+				AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_COMP);
+				LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+							spLogAction	 := MSG.ACTION_JIGA_WELDING, 
+							spLogStatus	 := MSG.STATUS_COMP,
+							plogFlag	 := TRUE);
+			END_IF
+		ELSIF process_B = 4 THEN
+			IF NOT AUTO_MODE.Halt_Production THEN
+				GVL.JIGA_Clamp 		:= FALSE;
+				GVL.JIGA_Release 	:= TRUE;
+				JigTimerA(IN := TRUE, PT := JIG_ErrorTime);
+			END_IF
+			//insert Jig safety check here ------------------------------
+			IF JigTimerA.Q THEN
+				AUTO_MODE.JIGA_ErrorState := TRUE;
+				IF GVL.ClearError THEN
+					JigTimerA(IN:= FALSE);
+					GVL.ClearError := FALSE;
+				ELSE
+					AUTO_MODE.Halt_Production := TRUE;
+					AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_JIGA_RELEASE);
+					AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_ERROR);
+					LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+								spLogAction	 := MSG.ACTION_JIGA_RELEASE, 
+								spLogStatus	 := MSG.STATUS_ERROR,
+								plogFlag	 := TRUE);
+				END_IF
+			ELSIF GVL.JIGA_Complete THEN
+				JigTimerA(IN:= FALSE);
+				AUTO_MODE.JIGA_ErrorState := FALSE;
+				process_B := 5;
+				A5_sequence := 5;
+				AUTO_MODE.next_step := FALSE;
+				AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_JIGA_COMPLETE);
+				AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_COMP);
+				LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+							spLogAction	 := MSG.ACTION_JIGA_COMPLETE, 
+							spLogStatus	 := MSG.STATUS_COMP,
+							plogFlag	 := TRUE);
+			END_IF
+		END_IF
+		
+	// JIG A TO JIG B {KR5} -----------------------------------------------------------------------------------------------------------------
+	5: 
+		IF process_C = 0 THEN
+			Bit1 := 3;
+			Bit2 := 1; //201
+			IF 	KR3.Idle AND 
+				KR5.Idle AND 
+				GVL.JIGB_Standby AND 
+				NOT GVL.JIGA_Ready AND 
+				NOT AUTO_MODE.JIGB_LOAD AND 
+				NOT AUTO_MODE.JIGA_WELDING AND 
+				NOT AUTO_MODE.JIGB_WELDING AND 
+				NOT AUTO_MODE.JIGC_WELDING THEN
+						AUTO_MODE.JIGB_LOAD := TRUE;
+						KR5.bOutBit[ Bit1, Bit2 ] := TRUE;
+						process_C := 1;
+						AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_JIGA_TO_JIGB);
+						AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_RUN);
+						LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+									spLogAction	 := MSG.ACTION_JIGA_TO_JIGB, 
+									spLogStatus	 := MSG.STATUS_RUN,
+									plogFlag	 := TRUE);
+						RETURN;
+			END_IF
+		ELSIF process_C = 1 THEN 
+			KR5.bOutBit [ Bit1, Bit2 ] := TRUE;
+			IF KR5.bInBit[ Bit1, Bit2 ] THEN
+				KR5.bOutBit[ Bit1, Bit2 ] := FALSE;
+				process_C := 2;
+				AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_JIGA_TO_JIGB);
+				AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_ACK);
+				LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+							spLogAction	 := MSG.ACTION_JIGA_TO_JIGB, 
+							spLogStatus	 := MSG.STATUS_ACK,
+							plogFlag	 := TRUE);
+				RETURN;
+			END_IF
+		ELSIF process_C = 2 THEN 
+			KR5.bOutBit[ Bit1, Bit2 ] := FALSE;
+			IF NOT KR5.bInBit[ Bit1, Bit2 ] THEN
+				process_C := 3;
+				AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_JIGA_TO_JIGB);
+				AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_DONE);
+				LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+							spLogAction	 := MSG.ACTION_JIGA_TO_JIGB, 
+							spLogStatus	 := MSG.STATUS_DONE,
+							plogFlag	 := TRUE);
+				RETURN;
+			END_IF
+		ELSIF process_C = 3 THEN
+			IF 	KR5.Idle AND 
+				NOT GVL.JIGB_Standby THEN
+						AUTO_MODE.JIGA_LOAD := FALSE;
+						process_C := 4;
+						A5_sequence := 6;
+						AUTO_MODE.next_step := FALSE;
+						AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_JIGA_TO_JIGB);
+						AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_COMP);
+						LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+									spLogAction	 := MSG.ACTION_JIGA_TO_JIGB, 
+									spLogStatus	 := MSG.STATUS_COMP,
+									plogFlag	 := TRUE);
+			END_IF
+		END_IF
+		
+	//	JIG B CLAMP	-----------------------------------------------------------------------------------------------------------------------
+	6:
+		IF NOT AUTO_MODE.Halt_Production THEN
+			GVL.JIGB_Clamp := TRUE;
+			GVL.JIGB_Release := FALSE;
+			JigTimerB(IN := TRUE, PT := JIG_ErrorTime);
+		END_IF
+		//insert Jig safety check here ------------------------------
+		IF JigTimerB.Q THEN
+			AUTO_MODE.JIGB_ErrorState := TRUE;
+			IF GVL.ClearError THEN
+				JigTimerB(IN:= FALSE);
+				GVL.ClearError := FALSE;
+			ELSE
+				AUTO_MODE.Halt_Production := TRUE;
+			AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_JIGB_CLAMP);
+			AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_ERROR);
+			LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+						spLogAction	 := MSG.ACTION_JIGB_CLAMP, 
+						spLogStatus	 := MSG.STATUS_DONE,
+						plogFlag	 := TRUE);
+			END_IF
+		ELSIF GVL.JIGB_Ready THEN
+			JigTimerB(IN:= FALSE);
+			AUTO_MODE.JIGB_ErrorState := FALSE;
+			AUTO_MODE.next_step := FALSE;
+			AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_JIGB_CLAMP);
+			AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_DONE);
+			LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+						spLogAction	 := MSG.ACTION_JIGB_CLAMP, 
+						spLogStatus	 := MSG.STATUS_DONE,
+						plogFlag	 := TRUE);
+			IF GVL.KR2_bypass THEN
+				process_D	:= 3;	
+				A5_sequence := 7;
+			ELSE	
+				process_D	:= 0;	
+				A5_sequence := 7;
+			END_IF
+		END_IF
+		
+	// JIG B WELDING (KR3) -------------------------------------------------------------------------------------------------------------	
+	7:
+		IF process_D = 0 THEN
+			Bit1 := 3;
+			Bit2 := 1; //301
+			IF 	KR3.Idle AND 
+				GVL.JIGB_Ready AND
+				NOT AUTO_MODE.JIGA_WELDING AND 
+				NOT AUTO_MODE.JIGB_WELDING THEN
+						KR3.bOutBit[ Bit1, Bit2 ] := TRUE;
+						AUTO_MODE.JIGB_WELDING := TRUE;
+						process_D := 1;
+						AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_JIGB_WELDING);
+						AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_RUN);
+						LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+									spLogAction	 := MSG.ACTION_JIGB_WELDING, 
+									spLogStatus	 := MSG.STATUS_RUN,
+									plogFlag	 := TRUE);
+				RETURN;
+			END_IF
+		ELSIF process_D = 1 THEN
+			KR3.bOutBit[ Bit1, Bit2 ] := TRUE;
+			IF KR3.bInBit[ Bit1, Bit2 ] THEN
+				KR3.bOutBit[ Bit1, Bit2 ] := FALSE;
+				process_D := 2;
+				AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_JIGB_WELDING);
+				AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_ACK);
+				LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+							spLogAction	 := MSG.ACTION_JIGB_WELDING, 
+							spLogStatus	 := MSG.STATUS_ACK,
+							plogFlag	 := TRUE);
+				RETURN;
+			END_IF
+		ELSIF process_D = 2 THEN
+			KR3.bOutBit[ Bit1, Bit2 ] := FALSE;
+			IF NOT KR3.bInBit[ Bit1, Bit2 ] THEN
+				process_D := 3;
+				AUTO_MODE.Run_Next_Rack := TRUE;
+				AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_JIGB_WELDING);
+				AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_DONE);
+				LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+							spLogAction	 := MSG.ACTION_JIGB_WELDING, 
+							spLogStatus	 := MSG.STATUS_DONE,
+							plogFlag	 := TRUE);
+				RETURN;
+			END_IF
+		ELSIF process_D = 3 THEN
+			IF KR3.Idle THEN
+				AUTO_MODE.JIGB_WELDING := FALSE;
+				GVL.JIGB_Clamp := FALSE;
+				GVL.JIGB_Release := TRUE;
+				JigTimerB(IN:= FALSE);
+				AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_JIGB_RELEASE);
+				AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_DONE);
+				LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+							spLogAction	 := MSG.ACTION_JIGB_RELEASE, 
+							spLogStatus	 := MSG.STATUS_DONE,
+							plogFlag	 := TRUE);
+				process_D := 4;
+				AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_JIGB_WELDING);
+				AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_COMP);
+				LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+							spLogAction	 := MSG.ACTION_JIGB_WELDING, 
+							spLogStatus	 := MSG.STATUS_COMP,
+							plogFlag	 := TRUE);
+			END_IF
+		ELSIF process_D = 4 THEN
+			IF NOT AUTO_MODE.Halt_Production THEN
+				GVL.JIGB_Clamp 		:= FALSE;
+				GVL.JIGB_Release 	:= TRUE;
+				JigTimerB(IN := TRUE, PT := JIG_ErrorTime);
+			END_IF
+			//insert Jig safety check here ------------------------------
+			IF JigTimerB.Q THEN
+				AUTO_MODE.JIGB_ErrorState := TRUE;
+				IF GVL.ClearError THEN
+					JigTimerB(IN:= FALSE);
+					GVL.ClearError := FALSE;
+				ELSE
+					AUTO_MODE.Halt_Production := TRUE;
+					AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_JIGB_RELEASE);
+					AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_ERROR);
+					LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+								spLogAction	 := MSG.ACTION_JIGB_RELEASE, 
+								spLogStatus	 := MSG.STATUS_ERROR,
+								plogFlag	 := TRUE);
+				END_IF
+			ELSIF GVL.JIGB_Complete THEN
+				JigTimerB(IN:= FALSE);
+				AUTO_MODE.JIGB_ErrorState := FALSE;
+				process_D := 5;
+				A5_sequence := 8;
+				AUTO_MODE.next_step := FALSE;
+				AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_JIGB_COMPLETE);
+				AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_COMP);
+				LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+							spLogAction	 := MSG.ACTION_JIGB_COMPLETE, 
+							spLogStatus	 := MSG.STATUS_COMP,
+							plogFlag	 := TRUE);
+			END_IF
+		END_IF
+		
+	// JIG B TO TWINTORCH (KR5) -------------------------------------------------------------------------------------------------------------
+	8: 
+		IF process_E = 0 THEN
+			Bit1 := 3;
+			Bit2 := 2; //302
+//			IF 	KR3.Idle AND 
+			IF	KR5.Idle AND
+				GVL.TTorch_Standy AND 
+				NOT AUTO_MODE.IF_PICK AND
+				NOT AUTO_MODE.IF_PICK AND
+				NOT AUTO_MODE.TT_LOAD AND 
+				NOT GVL.JIGB_Ready AND
+				NOT AUTO_MODE.JIGA_WELDING AND 
+				NOT AUTO_MODE.JIGB_WELDING AND 
+				NOT AUTO_MODE.TT_WELDING THEN
+						AUTO_MODE.TT_LOAD := TRUE;
+						KR5.bOutBit[ Bit1, Bit2 ] := TRUE;
+						process_E := 1;
+						AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_JIGB_TO_TT);
+						AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_RUN);
+						LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+									spLogAction	 := MSG.ACTION_JIGB_TO_TT, 
+									spLogStatus	 := MSG.STATUS_RUN,
+									plogFlag	 := TRUE);
+						RETURN;
+			END_IF
+		ELSIF process_E = 1 THEN
+			KR5.bOutBit[ Bit1, Bit2 ] := TRUE;
+			IF KR5.bInBit[ Bit1, Bit2 ] THEN
+				KR5.bOutBit[ Bit1, Bit2 ] := FALSE;
+				process_E := 2;
+				AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_JIGB_TO_TT);
+				AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_ACK);
+				LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+							spLogAction	 := MSG.ACTION_JIGB_TO_TT, 
+							spLogStatus	 := MSG.STATUS_ACK,
+							plogFlag	 := TRUE);
+				RETURN;
+			END_IF
+		ELSIF process_E = 2 THEN
+			KR5.bOutBit[ Bit1, Bit2 ] := FALSE;
+			IF NOT KR5.bInBit[ Bit1, Bit2 ] THEN
+				process_E := 3;
+				AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_JIGB_TO_TT);
+				AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_DONE);
+				LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+							spLogAction	 := MSG.ACTION_JIGB_TO_TT, 
+							spLogStatus	 := MSG.STATUS_DONE,
+							plogFlag	 := TRUE);
+				RETURN;
+			END_IF
+		ELSIF process_E = 3 THEN
+			IF KR5.Idle THEN
+				AUTO_MODE.JIGB_LOAD := FALSE;
+				process_E := 4;
+				A5_sequence := 9;
+				AUTO_MODE.next_step := FALSE;
+//				AUTO_MODE.Run_Next_Rack :=TRUE;
+				AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_JIGB_TO_TT);
+				AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_COMP);
+				LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+							spLogAction	 := MSG.ACTION_JIGB_TO_TT, 
+							spLogStatus	 := MSG.STATUS_COMP,
+							plogFlag	 := TRUE);
+			END_IF
+		END_IF	
+	
+	// TWINTORCH WELDING -------------------------------------------------------------------------------------------------------------	
+	9:
+		//insert Jig safety check here ------------------------------
+		IF NOT GVL.TTorch_Standy THEN
+			GVL.TTorch_Run := TRUE;
+			AUTO_MODE.TT_WELDING := TRUE;
+			A5_sequence := 10;
+			TTTimer(IN := TRUE, PT := TT_ErrorTime);
+			AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_TT_RUN);
+			AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_RUN);
+			LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+						spLogAction	 := MSG.ACTION_TT_RUN, 
+						spLogStatus	 := MSG.STATUS_RUN,
+						plogFlag	 := TRUE);
+			RETURN;
+		END_IF
+	// TWINTORCH WELD COMPLETE -------------------------------------------------------------------------------------------------------------		
+	10:
+		
+		//insert Jig safety check here ------------------------------
+		IF TTTimer.Q THEN
+			AUTO_MODE.TT_ErrorState := TRUE;
+			IF GVL.ClearError THEN
+				TTTimer(IN:= FALSE);
+				GVL.ClearError := FALSE;
+			ELSE
+				AUTO_MODE.Halt_Production := TRUE;
+				AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_TT_RUN);
+				AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_ERROR);
+				LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+							spLogAction	 := MSG.ACTION_TT_RUN, 
+							spLogStatus	 := MSG.STATUS_ERROR,
+							plogFlag	 := TRUE);
+			END_IF
+		ELSIF GVL.TTorch_Complete THEN
+			TTTimer(IN:= FALSE);
+			AUTO_MODE.TT_ErrorState := FALSE;
+			GVL.TTorch_Run := FALSE;
+			AUTO_MODE.TT_WELDING := FALSE;
+			A5_sequence := 11;
+			AUTO_MODE.next_step := FALSE;
+			AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_TT_RUN);
+			AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_DONE);
+			LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+						spLogAction	 := MSG.ACTION_TT_RUN, 
+						spLogStatus	 := MSG.STATUS_DONE,
+						plogFlag	 := TRUE);
+			RETURN;
+		END_IF
+		
+	// TWINTORCH TO JIG C (KR5)	-------------------------------------------------------------------------------------------------------
+	11:
+		IF process_F = 0 THEN
+			Bit1 := 3;
+			Bit2 := 3; //203
+			IF 	KR5.Idle AND 
+				KR4.Idle AND 
+				GVL.JIGC_Standby AND 
+				NOT AUTO_MODE.JIGC_LOAD AND
+				NOT AUTO_MODE.JIGC_WELDING AND 
+				NOT AUTO_MODE.TT_WELDING  THEN
+						KR5.bOutBit[ Bit1, Bit2 ] := TRUE;
+						process_F := 1;
+						AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_TT_TO_JIGC);
+						AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_RUN);
+						LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+									spLogAction	 := MSG.ACTION_TT_TO_JIGC, 
+									spLogStatus	 := MSG.STATUS_RUN,
+									plogFlag	 := TRUE);
+						RETURN;
+			END_IF
+		ELSIF process_F = 1 THEN
+			KR5.bOutBit[ Bit1, Bit2 ] := TRUE;
+			IF KR5.bInBit[ Bit1, Bit2 ] THEN
+				KR5.bOutBit[ Bit1, Bit2 ] := FALSE;	
+				process_F := 2;
+				AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_TT_TO_JIGC);
+				AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_ACK);
+				LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+							spLogAction	 := MSG.ACTION_TT_TO_JIGC, 
+							spLogStatus	 := MSG.STATUS_ACK,
+							plogFlag	 := TRUE);
+				RETURN;
+			END_IF
+		ELSIF process_F = 2 THEN
+			KR5.bOutBit[ Bit1, Bit2 ] := FALSE;	
+			IF NOT KR5.bInBit[ Bit1, Bit2 ] THEN
+				process_F := 3;
+				AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_TT_TO_JIGC);
+				AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_DONE);
+				LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+							spLogAction	 := MSG.ACTION_TT_TO_JIGC, 
+							spLogStatus	 := MSG.STATUS_DONE,
+							plogFlag	 := TRUE);
+				RETURN;
+			END_IF
+		ELSIF process_F = 3 THEN
+			IF KR5.Idle AND NOT GVL.JIGC_Standby THEN
+				AUTO_MODE.JIGC_LOAD := TRUE;
+				AUTO_MODE.TT_LOAD := FALSE;
+				process_F := 4;
+				A5_sequence := 12;
+				AUTO_MODE.next_step := FALSE;
+				AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_TT_TO_JIGC);
+				AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_COMP);
+				LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+							spLogAction	 := MSG.ACTION_TT_TO_JIGC, 
+							spLogStatus	 := MSG.STATUS_COMP,
+							plogFlag	 := TRUE);
+			END_IF
+		END_IF
+	
+	// BRACKET TO JIG C (KR2) -------------------------------------------------------------------------------------------------------------
+	12:
+		Bit1 := 3;
+		Bit2 := 0; //200
+		IF process_G = 0 THEN
+			IF 	KR2.Idle AND 
+				KR4.Idle AND 
+				GVL.VibBowl_Ready AND
+				AUTO_MODE.JIGC_LOAD AND 
+				NOT GVL.JIGC_Standby AND 
+				NOT AUTO_MODE.CR_PICK AND
+				NOT AUTO_MODE.JIGC_PICK AND
+				NOT AUTO_MODE.JIGC_WELDING THEN
+						KR2.bOutBit[ Bit1, Bit2 ] := TRUE;
+						AUTO_MODE.VB_PICK := TRUE;
+						process_G := 1;
+						AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_VB_TO_JIGC);
+						AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_RUN);
+						LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+									spLogAction	 := MSG.ACTION_VB_TO_JIGC, 
+									spLogStatus	 := MSG.STATUS_RUN,
+									plogFlag	 := TRUE);
+						RETURN;
+			END_IF
+		ELSIF process_G = 1 THEN
+			KR2.bOutBit[ Bit1, Bit2 ] := TRUE;
+			IF NOT KR2.bInBit[ Bit1, Bit2 ] THEN
+				KR2.bOutBit[ Bit1, Bit2 ] := FALSE;
+				process_G := 2;
+				AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_VB_TO_JIGC);
+				AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_ACK);
+				LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+							spLogAction	 := MSG.ACTION_VB_TO_JIGC, 
+							spLogStatus	 := MSG.STATUS_ACK,
+							plogFlag	 := TRUE);
+				RETURN;
+			END_IF
+		ELSIF process_G = 2 THEN
+			KR2.bOutBit[ Bit1, Bit2 ] := FALSE;
+			IF KR2.bInBit[ Bit1, Bit2 ] THEN
+				process_G := 3;
+				AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_VB_TO_JIGC);
+				AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_DONE);
+				LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+							spLogAction	 := MSG.ACTION_VB_TO_JIGC, 
+							spLogStatus	 := MSG.STATUS_DONE,
+							plogFlag	 := TRUE);
+				RETURN;
+			END_IF
+		ELSIF process_G = 3 THEN 
+			IF 	KR2.Idle AND 
+				NOT GVL.JIGC_Standby AND 
+				AUTO_MODE.JIGC_LOAD THEN
+						AUTO_MODE.VB_PICK := FALSE;
+						process_G := 4;
+						A5_sequence := 13;
+						AUTO_MODE.next_step := FALSE;
+						AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_VB_TO_JIGC);
+						AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_COMP);
+						LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+									spLogAction	 := MSG.ACTION_VB_TO_JIGC, 
+									spLogStatus	 := MSG.STATUS_COMP,
+									plogFlag	 := TRUE);
+			END_IF
+		END_IF
+		
+	// JIG C CLAMP ---------------------------------------------------------------------------------------------------------------
+	13:
+		IF NOT AUTO_MODE.Halt_Production THEN
+			GVL.JIGC_Clamp := TRUE;
+			GVL.JIGC_Release := FALSE;
+			JigTimerC(IN := TRUE, PT := JIG_ErrorTime);
+		END_IF
+		//insert Jig safety check here ------------------------------
+		IF JigTimerC.Q THEN
+			AUTO_MODE.JIGC_ErrorState := TRUE;
+			IF GVL.ClearError THEN
+				JigTimerC(IN:= FALSE);
+				GVL.ClearError := FALSE;
+			ELSE
+				AUTO_MODE.Halt_Production := TRUE;
+				AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_JIGC_CLAMP);
+				AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_ERROR);
+				LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+							spLogAction	 := MSG.ACTION_JIGC_CLAMP, 
+							spLogStatus	 := MSG.STATUS_ERROR,
+							plogFlag	 := TRUE);
+			END_IF
+		ELSIF GVL.JIGC_Ready THEN
+			JigTimerC(IN:= FALSE);
+			AUTO_MODE.JIGC_ErrorState := FALSE;
+			AUTO_MODE.next_step := FALSE;
+			AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_JIGC_CLAMP);
+			AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_DONE);
+			LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+						spLogAction	 := MSG.ACTION_JIGC_CLAMP, 
+						spLogStatus	 := MSG.STATUS_DONE,
+						plogFlag	 := TRUE);
+			IF GVL.KR4_bypass THEN
+				process_H	:= 3;	
+				A5_sequence := 14;
+			ELSE	
+				process_H	:= 0;	
+				A5_sequence := 14;
+			END_IF
+		END_IF
+		
+	// JIG C WELDING (KR4) -------------------------------------------------------------------------------------------------------
+	14:
+		IF process_H = 0 THEN
+			Bit1 := 3;
+			Bit2 := 0; // 300
+			IF 	KR4.Idle AND 
+				GVL.JIGC_Ready AND 
+				AUTO_MODE.JIGC_LOAD AND
+				NOT AUTO_MODE.JIGC_WELDING THEN
+						KR4.bOutBit[ Bit1,Bit2 ] := TRUE;
+						AUTO_MODE.JIGC_WELDING := TRUE;
+						process_H := 1;
+						AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_JIGC_WELDING);
+						AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_RUN);
+						LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+									spLogAction	 := MSG.ACTION_JIGC_WELDING, 
+									spLogStatus	 := MSG.STATUS_RUN,
+									plogFlag	 := TRUE);
+						RETURN;
+			END_IF
+		ELSIF process_H = 1 THEN
+			KR4.bOutBit[ Bit1,Bit2 ] := TRUE;
+			IF NOT KR4.bInBit[ Bit1,Bit2 ] THEN
+				KR4.bOutBit[ Bit1,Bit2 ] := FALSE;
+				process_H := 2;
+				AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_JIGC_WELDING);
+				AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_ACK);
+				LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+							spLogAction	 := MSG.ACTION_JIGC_WELDING, 
+							spLogStatus	 := MSG.STATUS_ACK,
+							plogFlag	 := TRUE);
+				RETURN;
+			END_IF
+		ELSIF process_H = 2 THEN
+			KR4.bOutBit[ Bit1,Bit2 ] := FALSE;
+			IF KR4.bInBit[ Bit1,Bit2 ] THEN
+				process_H := 3;
+				AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_JIGC_WELDING);
+				AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_DONE);
+				LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+							spLogAction	 := MSG.ACTION_JIGC_WELDING, 
+							spLogStatus	 := MSG.STATUS_DONE,
+							plogFlag	 := TRUE);
+				RETURN;
+			END_IF
+		ELSIF process_H = 3 THEN
+			IF KR4.Idle THEN
+				AUTO_MODE.JIGC_WELDING := FALSE;
+				GVL.JIGC_Release := TRUE;
+				GVL.JIGC_Clamp := FALSE;
+				JigTimerC(IN:= FALSE);
+				process_H := 4;
+				AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_JIGC_WELDING);
+				AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_COMP);
+				LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+							spLogAction	 := MSG.ACTION_JIGC_WELDING, 
+							spLogStatus	 := MSG.STATUS_COMP,
+							plogFlag	 := TRUE);
+			END_IF
+		ELSIF process_H = 4 THEN
+			IF NOT AUTO_MODE.Halt_Production THEN
+				GVL.JIGC_Clamp 		:= FALSE;
+				GVL.JIGC_Release 	:= TRUE;
+				JigTimerC(IN := TRUE, PT := JIG_ErrorTime);
+			END_IF
+			//insert Jig safety check here ------------------------------
+			IF JigTimerC.Q THEN
+				AUTO_MODE.JIGC_ErrorState := TRUE;
+				IF GVL.ClearError THEN
+					JigTimerC(IN:= FALSE);
+					GVL.ClearError := FALSE;
+				ELSE
+					AUTO_MODE.Halt_Production := TRUE;
+					AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_JIGC_RELEASE);
+					AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_ERROR);
+					LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+								spLogAction	 := MSG.ACTION_JIGC_RELEASE, 
+								spLogStatus	 := MSG.STATUS_ERROR,
+								plogFlag	 := TRUE);
+				END_IF
+			ELSIF GVL.JIGC_Complete THEN
+				JigTimerC(IN:= FALSE);
+				AUTO_MODE.JIGC_ErrorState := FALSE;
+				process_H := 5;
+				A5_sequence := 15;
+				AUTO_MODE.next_step := FALSE;
+				AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_JIGC_COMPLETE);
+				AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_COMP);
+				LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+							spLogAction	 := MSG.ACTION_JIGC_COMPLETE, 
+							spLogStatus	 := MSG.STATUS_COMP,
+							plogFlag	 := TRUE);
+			END_IF
+		END_IF
+		
+	// JIG C PICK (KR2) -------------------------------------------------------------------------------------------------------
+	15: 
+		IF process_I = 0 THEN
+			Bit1 := 3;
+			Bit2 := 2; // 202
+			IF 	KR2.Idle AND 
+				KR4.Idle AND 
+				NOT GVL.JIGC_Ready AND 
+				AUTO_MODE.JIGC_LOAD AND 
+				NOT AUTO_MODE.JIGC_PICK AND
+				NOT AUTO_MODE.CR_PICK THEN
+						KR2.bOutBit[ Bit1, Bit2 ] := TRUE;
+						AUTO_MODE.JIGC_PICK := TRUE;
+						process_I := 1;
+						AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_JIGC_PICK);
+						AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_RUN);
+						LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+									spLogAction	 := MSG.ACTION_JIGC_PICK, 
+									spLogStatus	 := MSG.STATUS_RUN,
+									plogFlag	 := TRUE);
+						RETURN;
+			END_IF
+		ELSIF process_I = 1 THEN
+			KR2.bOutBit[ Bit1, Bit2 ] := TRUE;
+			IF KR2.bInBit[ Bit1, Bit2 ] THEN
+				KR2.bOutBit[ Bit1, Bit2 ] := FALSE;
+				process_I := 2;
+				AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_JIGC_PICK);
+				AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_ACK);
+				LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+							spLogAction	 := MSG.ACTION_JIGC_PICK, 
+							spLogStatus	 := MSG.STATUS_ACK,
+							plogFlag	 := TRUE);
+				RETURN;
+			END_IF
+		ELSIF process_I = 2 THEN
+			KR2.bOutBit[ Bit1, Bit2 ] := FALSE;
+			IF NOT KR2.bInBit[ Bit1, Bit2 ] THEN
+				process_I := 3;
+				AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_JIGC_PICK);
+				AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_DONE);
+				LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+							spLogAction	 := MSG.ACTION_JIGC_PICK, 
+							spLogStatus	 := MSG.STATUS_DONE,
+							plogFlag	 := TRUE);
+				RETURN;
+			END_IF
+		ELSIF process_I = 3 THEN
+			IF KR2.Idle THEN
+				AUTO_MODE.JIGC_LOAD := FALSE;
+				process_I := 4;
+				A5_sequence := 16;
+				AUTO_MODE.next_step := FALSE;
+				AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_JIGC_PICK);
+				AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_COMP);
+				LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+							spLogAction	 := MSG.ACTION_JIGC_PICK, 
+							spLogStatus	 := MSG.STATUS_COMP,
+							plogFlag	 := TRUE);
+			END_IF
+		END_IF
+	
+	// PLACE TO CR (KR2) ------------------------------------------------------------------------------------------
+	16:
+		IF process_K = 0 THEN
+			SEQ_CR_PLACE();
+			IF SEQ_CR_PLACE.CR_found THEN
+				IF KR2.Idle AND AUTO_MODE.JIGC_PICK THEN
+					CASE SEQ_CR_PLACE.CR_place_Rack OF
+						1:
+//							Bit1 						:= 3; 
+//							Bit2 						:= 5;
+							KR2.bOutBit[ Bit1, Bit2 ] 	:= TRUE;
+							Msg_PlaceCR 				:= MSG.ACTION_PLACE_TO_CR1;
+							process_K 					:= 1;
+						2:
+							Bit1 						:= 3; 
+							Bit2 						:= 6;
+							KR2.bOutBit[ Bit1, Bit2 ] 	:= TRUE;
+							Msg_PlaceCR 				:= MSG.ACTION_PLACE_TO_CR2;
+							process_K 					:= 1;
+						3:
+							Bit1 						:= 3; 
+							Bit2 						:= 7;
+							KR2.bOutBit[ Bit1, Bit2 ] 	:= TRUE;
+							Msg_PlaceCR 				:= MSG.ACTION_PLACE_TO_CR3;
+							process_K 					:= 1;
+						4:
+							Bit1 						:= 4; 
+							Bit2 						:= 0;
+							KR2.bOutBit[ Bit1, Bit2 ] 	:= TRUE;
+							Msg_PlaceCR 				:= MSG.ACTION_PLACE_TO_CR4;
+							process_K 					:= 1;
+						5:
+							Bit1 						:= 4; 
+							Bit2 						:= 1;
+							KR2.bOutBit[ Bit1, Bit2 ] 	:= TRUE;
+							Msg_PlaceCR 				:= MSG.ACTION_PLACE_TO_CR5;
+							process_K 					:= 1;
+						6:
+							Bit1 						:= 4; 
+							Bit2 						:= 2;
+							KR2.bOutBit[ Bit1, Bit2 ] 	:= TRUE;
+							Msg_PlaceCR 				:= MSG.ACTION_PLACE_TO_CR6;
+							process_K 					:= 1;
+						7:
+							Bit1 						:= 4; 
+							Bit2 						:= 3;
+							KR2.bOutBit[ Bit1, Bit2 ] 	:= TRUE;
+							Msg_PlaceCR 				:= MSG.ACTION_PLACE_TO_CR7;
+							process_K 					:= 1;
+						8:
+//							Bit1 						:= 4; 
+//							Bit2 						:= 4;
+							KR2.bOutBit[ Bit1, Bit2 ] 	:= TRUE;
+							Msg_PlaceCR 				:= MSG.ACTION_PLACE_TO_CR8;
+							process_K 					:= 1;
+						9:
+							Bit1 						:= 4; 
+							Bit2 						:= 5;
+							KR2.bOutBit[ Bit1, Bit2 ] 	:= TRUE;
+							Msg_PlaceCR 				:= MSG.ACTION_PLACE_TO_CR9;
+							process_K 					:= 1;
+						10:
+							Bit1 						:= 4; 
+							Bit2 						:= 6;
+							KR2.bOutBit[ Bit1, Bit2 ] 	:= TRUE;
+							Msg_PlaceCR 				:= MSG.ACTION_PLACE_TO_CR10;
+							process_K 					:= 1;
+						11:
+							Bit1 						:= 4; 
+							Bit2 						:= 7;
+							KR2.bOutBit[ Bit1, Bit2 ] 	:= TRUE;
+							Msg_PlaceCR 				:= MSG.ACTION_PLACE_TO_CR11;
+							process_K 					:= 1;
+						12:
+							Bit1 						:= 5; 
+							Bit2 						:= 0;
+							KR2.bOutBit[ Bit1, Bit2 ] 	:= TRUE;
+							Msg_PlaceCR 				:= MSG.ACTION_PLACE_TO_CR12;
+							process_K 					:= 1;
+						13:
+							Bit1 						:= 5; 
+							Bit2 						:= 1;
+							KR2.bOutBit[ Bit1, Bit2 ] 	:= TRUE;
+							Msg_PlaceCR 				:= MSG.ACTION_PLACE_TO_CR13;
+							process_K 					:= 1;
+						14: 
+							Msg_PlaceCR 				:= MSG.ACTION_PLACE_TO_CR14;
+							process_K 					:= 1;
+						15:
+//							Bit1 						:= 5; 
+//							Bit2 						:= 2;
+							KR2.bOutBit[ Bit1, Bit2 ] 	:= TRUE;
+							Msg_PlaceCR 				:= MSG.ACTION_PLACE_TO_CR15;
+							process_K 					:= 1;
+						16:
+							Bit1 						:= 5; 
+							Bit2 						:= 3;
+							KR2.bOutBit[ Bit1, Bit2 ] 	:= TRUE;
+							Msg_PlaceCR 				:= MSG.ACTION_PLACE_TO_CR16;
+							process_K 					:= 1;
+						17:
+							Bit1 						:= 5; 
+							Bit2 						:= 4;
+							KR2.bOutBit[ Bit1, Bit2 ] 	:= TRUE;
+							Msg_PlaceCR 				:= MSG.ACTION_PLACE_TO_CR17;
+							process_K 					:= 1;
+						18:
+							Bit1 						:= 5; 
+							Bit2 						:= 5;
+							KR2.bOutBit[ Bit1, Bit2 ] 	:= TRUE;
+							Msg_PlaceCR 				:= MSG.ACTION_PLACE_TO_CR18;
+							process_K 					:= 1;
+						19:
+							Bit1 						:= 5; 
+							Bit2 						:= 6;
+							KR2.bOutBit[ Bit1, Bit2 ] 	:= TRUE;
+							Msg_PlaceCR 				:= MSG.ACTION_PLACE_TO_CR19;
+							process_K 					:= 1;
+						20:
+							Bit1 						:= 5; 
+							Bit2 						:= 7;
+							KR2.bOutBit[ Bit1, Bit2 ] 	:= TRUE;
+							Msg_PlaceCR 				:= MSG.ACTION_PLACE_TO_CR20;
+							process_K 					:= 1;
+						21:
+							Bit1 						:= 6; 
+							Bit2 						:= 0;
+							KR2.bOutBit[ Bit1, Bit2 ] 	:= TRUE;
+							Msg_PlaceCR 				:= MSG.ACTION_PLACE_TO_CR21;
+							process_K 					:= 1;
+					END_CASE
+				
+					AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,Msg_PlaceCR);
+					AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_RUN);
+					LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+								spLogAction	 := Msg_PlaceCR, 
+								spLogStatus	 := MSG.STATUS_RUN,
+								plogFlag	 := TRUE);	
+				END_IF
+			END_IF
+		ELSIF process_K = 1 THEN
+			KR2.bOutBit[ Bit1, Bit2 ] := TRUE;
+			IF KR2.bInBit[ Bit1, Bit2] THEN
+				KR2.bOutBit[ Bit1, Bit2 ] := FALSE;
+				process_K := 2;
+				AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_PLACE_TO_CR);
+				AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_ACK);
+				LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+							spLogAction	 := MSG.ACTION_PLACE_TO_CR, 
+							spLogStatus	 := MSG.STATUS_ACK,
+							plogFlag	 := TRUE);
+				RETURN;
+			END_IF
+		ELSIF process_K = 2 THEN
+			KR2.bOutBit[ Bit1, Bit2] := FALSE;
+			IF NOT KR2.bInBit[ Bit1, Bit2] THEN
+				process_K := 3;
+				AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_PLACE_TO_CR);
+				AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_DONE);
+				LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+							spLogAction	 := MSG.ACTION_PLACE_TO_CR, 
+							spLogStatus	 := MSG.STATUS_DONE,
+							plogFlag	 := TRUE);
+				RETURN;
+			END_IF
+		ELSIF process_K = 3 THEN
+			IF KR2.Idle THEN
+				AUTO_MODE.JIGC_PICK := FALSE;
+				SEQ_CR_PLACE.CR_found := FALSE;
+				process_K := 4;
+				A5_sequence := 17;
+				AUTO_MODE.next_step := FALSE;
+				AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MSG.ACTION_PLACE_TO_CR);
+				AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_COMP);
+				LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+							spLogAction	 := MSG.ACTION_PLACE_TO_CR, 
+							spLogStatus	 := MSG.STATUS_COMP,
+							plogFlag	 := TRUE);
+			END_IF
+		END_IF
+	// END (KR2) -------------------------------------------------------------------------------------------------------
+	17:
+		A5_sequence := 0;
+		IF_RACK_CHECK.checkIn_A5 := FALSE;
+		AUTO_MODE.next_step := FALSE;
+		AUTO_MODE.processnameA5 := CONCAT(MSG.COMP_A5,MAIN.fb_TimeStamp.SystemTime);
+		AUTO_MODE.processnameA5 := CONCAT(AUTO_MODE.processnameA5,MSG.STATUS_END);
+		LOGPROCESS( spLogComp	 := MSG.COMP_A5, 
+					spLogAction	 := MSG.ACTION_IF_TO_CR, 
+					spLogStatus	 := MSG.STATUS_END,
+					plogFlag	 := TRUE);
+		
+END_CASE
+]]></ST>
+    </Implementation>
+    <LineIds Name="SEQ_A5">
+      <LineId Id="1114" Count="0" />
+      <LineId Id="1451" Count="0" />
+      <LineId Id="1115" Count="0" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="1116" Count="0" />
+      <LineId Id="2462" Count="23" />
+      <LineId Id="854" Count="0" />
+      <LineId Id="2090" Count="0" />
+      <LineId Id="1775" Count="0" />
+      <LineId Id="1777" Count="1" />
+      <LineId Id="1452" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="2486" Count="1" />
+      <LineId Id="371" Count="0" />
+      <LineId Id="370" Count="0" />
+      <LineId Id="1464" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="1466" Count="0" />
+      <LineId Id="1465" Count="0" />
+      <LineId Id="1462" Count="0" />
+      <LineId Id="1461" Count="0" />
+      <LineId Id="1455" Count="0" />
+      <LineId Id="1457" Count="0" />
+      <LineId Id="1313" Count="1" />
+      <LineId Id="1448" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="1779" Count="1" />
+      <LineId Id="1782" Count="1" />
+      <LineId Id="1147" Count="0" />
+      <LineId Id="556" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="552" Count="0" />
+      <LineId Id="1315" Count="0" />
+      <LineId Id="553" Count="0" />
+      <LineId Id="1316" Count="0" />
+      <LineId Id="1447" Count="0" />
+      <LineId Id="1149" Count="0" />
+      <LineId Id="1784" Count="1" />
+      <LineId Id="1787" Count="1" />
+      <LineId Id="576" Count="0" />
+      <LineId Id="557" Count="0" />
+      <LineId Id="554" Count="0" />
+      <LineId Id="345" Count="0" />
+      <LineId Id="1467" Count="0" />
+      <LineId Id="1150" Count="0" />
+      <LineId Id="1446" Count="0" />
+      <LineId Id="2091" Count="0" />
+      <LineId Id="1789" Count="1" />
+      <LineId Id="1792" Count="1" />
+      <LineId Id="348" Count="0" />
+      <LineId Id="551" Count="0" />
+      <LineId Id="363" Count="0" />
+      <LineId Id="351" Count="0" />
+      <LineId Id="353" Count="0" />
+      <LineId Id="355" Count="0" />
+      <LineId Id="369" Count="0" />
+      <LineId Id="2093" Count="1" />
+      <LineId Id="1794" Count="1" />
+      <LineId Id="1797" Count="1" />
+      <LineId Id="499" Count="0" />
+      <LineId Id="352" Count="0" />
+      <LineId Id="356" Count="0" />
+      <LineId Id="801" Count="0" />
+      <LineId Id="768" Count="1" />
+      <LineId Id="1475" Count="1" />
+      <LineId Id="770" Count="1" />
+      <LineId Id="1474" Count="0" />
+      <LineId Id="1468" Count="0" />
+      <LineId Id="1473" Count="0" />
+      <LineId Id="1470" Count="0" />
+      <LineId Id="1479" Count="0" />
+      <LineId Id="1483" Count="0" />
+      <LineId Id="1443" Count="0" />
+      <LineId Id="1157" Count="0" />
+      <LineId Id="1799" Count="1" />
+      <LineId Id="1802" Count="1" />
+      <LineId Id="774" Count="0" />
+      <LineId Id="776" Count="2" />
+      <LineId Id="1480" Count="0" />
+      <LineId Id="780" Count="0" />
+      <LineId Id="1481" Count="0" />
+      <LineId Id="2095" Count="1" />
+      <LineId Id="1804" Count="1" />
+      <LineId Id="1807" Count="1" />
+      <LineId Id="781" Count="0" />
+      <LineId Id="784" Count="2" />
+      <LineId Id="1482" Count="0" />
+      <LineId Id="1160" Count="0" />
+      <LineId Id="2097" Count="1" />
+      <LineId Id="1809" Count="1" />
+      <LineId Id="1812" Count="1" />
+      <LineId Id="788" Count="0" />
+      <LineId Id="791" Count="3" />
+      <LineId Id="1486" Count="0" />
+      <LineId Id="1484" Count="0" />
+      <LineId Id="803" Count="0" />
+      <LineId Id="796" Count="1" />
+      <LineId Id="2099" Count="1" />
+      <LineId Id="1814" Count="1" />
+      <LineId Id="1817" Count="1" />
+      <LineId Id="798" Count="1" />
+      <LineId Id="372" Count="0" />
+      <LineId Id="800" Count="0" />
+      <LineId Id="373" Count="0" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="1487" Count="0" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="523" Count="0" />
+      <LineId Id="2488" Count="0" />
+      <LineId Id="1488" Count="0" />
+      <LineId Id="2489" Count="17" />
+      <LineId Id="150" Count="0" />
+      <LineId Id="2101" Count="1" />
+      <LineId Id="1819" Count="1" />
+      <LineId Id="1822" Count="1" />
+      <LineId Id="2507" Count="6" />
+      <LineId Id="500" Count="0" />
+      <LineId Id="514" Count="0" />
+      <LineId Id="374" Count="1" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="1494" Count="1" />
+      <LineId Id="365" Count="0" />
+      <LineId Id="95" Count="0" />
+      <LineId Id="1489" Count="0" />
+      <LineId Id="1493" Count="0" />
+      <LineId Id="1490" Count="1" />
+      <LineId Id="1499" Count="0" />
+      <LineId Id="320" Count="0" />
+      <LineId Id="2103" Count="1" />
+      <LineId Id="1824" Count="1" />
+      <LineId Id="1827" Count="1" />
+      <LineId Id="364" Count="0" />
+      <LineId Id="548" Count="0" />
+      <LineId Id="97" Count="0" />
+      <LineId Id="103" Count="0" />
+      <LineId Id="1497" Count="0" />
+      <LineId Id="106" Count="0" />
+      <LineId Id="1496" Count="0" />
+      <LineId Id="2109" Count="1" />
+      <LineId Id="1829" Count="1" />
+      <LineId Id="1832" Count="1" />
+      <LineId Id="575" Count="0" />
+      <LineId Id="549" Count="0" />
+      <LineId Id="558" Count="1" />
+      <LineId Id="704" Count="0" />
+      <LineId Id="1170" Count="0" />
+      <LineId Id="2113" Count="1" />
+      <LineId Id="1844" Count="1" />
+      <LineId Id="1847" Count="1" />
+      <LineId Id="561" Count="0" />
+      <LineId Id="564" Count="0" />
+      <LineId Id="107" Count="1" />
+      <LineId Id="321" Count="1" />
+      <LineId Id="508" Count="0" />
+      <LineId Id="2117" Count="0" />
+      <LineId Id="2614" Count="0" />
+      <LineId Id="2118" Count="0" />
+      <LineId Id="1834" Count="1" />
+      <LineId Id="1837" Count="1" />
+      <LineId Id="1096" Count="0" />
+      <LineId Id="2115" Count="1" />
+      <LineId Id="1839" Count="1" />
+      <LineId Id="1842" Count="1" />
+      <LineId Id="501" Count="0" />
+      <LineId Id="2234" Count="0" />
+      <LineId Id="2592" Count="21" />
+      <LineId Id="2235" Count="0" />
+      <LineId Id="2667" Count="0" />
+      <LineId Id="2237" Count="8" />
+      <LineId Id="102" Count="0" />
+      <LineId Id="360" Count="0" />
+      <LineId Id="376" Count="1" />
+      <LineId Id="114" Count="0" />
+      <LineId Id="379" Count="0" />
+      <LineId Id="1507" Count="1" />
+      <LineId Id="115" Count="0" />
+      <LineId Id="1500" Count="2" />
+      <LineId Id="1506" Count="0" />
+      <LineId Id="1503" Count="2" />
+      <LineId Id="206" Count="0" />
+      <LineId Id="120" Count="0" />
+      <LineId Id="2119" Count="1" />
+      <LineId Id="1849" Count="1" />
+      <LineId Id="1852" Count="1" />
+      <LineId Id="121" Count="0" />
+      <LineId Id="571" Count="0" />
+      <LineId Id="122" Count="1" />
+      <LineId Id="1509" Count="0" />
+      <LineId Id="125" Count="0" />
+      <LineId Id="1510" Count="0" />
+      <LineId Id="2121" Count="1" />
+      <LineId Id="1854" Count="1" />
+      <LineId Id="1857" Count="1" />
+      <LineId Id="574" Count="0" />
+      <LineId Id="572" Count="0" />
+      <LineId Id="565" Count="1" />
+      <LineId Id="1511" Count="0" />
+      <LineId Id="1190" Count="0" />
+      <LineId Id="2123" Count="1" />
+      <LineId Id="1859" Count="1" />
+      <LineId Id="1862" Count="1" />
+      <LineId Id="568" Count="0" />
+      <LineId Id="573" Count="0" />
+      <LineId Id="117" Count="0" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="132" Count="0" />
+      <LineId Id="1512" Count="0" />
+      <LineId Id="209" Count="0" />
+      <LineId Id="382" Count="0" />
+      <LineId Id="134" Count="0" />
+      <LineId Id="2125" Count="1" />
+      <LineId Id="1864" Count="1" />
+      <LineId Id="1867" Count="1" />
+      <LineId Id="502" Count="0" />
+      <LineId Id="131" Count="0" />
+      <LineId Id="383" Count="1" />
+      <LineId Id="155" Count="0" />
+      <LineId Id="380" Count="0" />
+      <LineId Id="1516" Count="0" />
+      <LineId Id="156" Count="0" />
+      <LineId Id="522" Count="0" />
+      <LineId Id="2532" Count="0" />
+      <LineId Id="2514" Count="17" />
+      <LineId Id="152" Count="0" />
+      <LineId Id="2127" Count="1" />
+      <LineId Id="1874" Count="1" />
+      <LineId Id="1877" Count="1" />
+      <LineId Id="2578" Count="6" />
+      <LineId Id="503" Count="0" />
+      <LineId Id="517" Count="0" />
+      <LineId Id="385" Count="1" />
+      <LineId Id="161" Count="0" />
+      <LineId Id="387" Count="0" />
+      <LineId Id="1521" Count="1" />
+      <LineId Id="323" Count="0" />
+      <LineId Id="1518" Count="0" />
+      <LineId Id="398" Count="0" />
+      <LineId Id="1519" Count="1" />
+      <LineId Id="324" Count="0" />
+      <LineId Id="2129" Count="1" />
+      <LineId Id="1899" Count="1" />
+      <LineId Id="1902" Count="1" />
+      <LineId Id="1198" Count="0" />
+      <LineId Id="584" Count="0" />
+      <LineId Id="167" Count="0" />
+      <LineId Id="389" Count="0" />
+      <LineId Id="1523" Count="0" />
+      <LineId Id="170" Count="0" />
+      <LineId Id="1524" Count="0" />
+      <LineId Id="2131" Count="1" />
+      <LineId Id="1879" Count="1" />
+      <LineId Id="1882" Count="1" />
+      <LineId Id="583" Count="0" />
+      <LineId Id="585" Count="0" />
+      <LineId Id="577" Count="1" />
+      <LineId Id="1525" Count="0" />
+      <LineId Id="1205" Count="0" />
+      <LineId Id="1418" Count="0" />
+      <LineId Id="2133" Count="1" />
+      <LineId Id="1884" Count="1" />
+      <LineId Id="1887" Count="1" />
+      <LineId Id="580" Count="0" />
+      <LineId Id="586" Count="0" />
+      <LineId Id="173" Count="0" />
+      <LineId Id="390" Count="0" />
+      <LineId Id="325" Count="1" />
+      <LineId Id="509" Count="0" />
+      <LineId Id="2137" Count="0" />
+      <LineId Id="2616" Count="0" />
+      <LineId Id="2138" Count="0" />
+      <LineId Id="1889" Count="1" />
+      <LineId Id="1892" Count="1" />
+      <LineId Id="1102" Count="0" />
+      <LineId Id="2135" Count="1" />
+      <LineId Id="1894" Count="1" />
+      <LineId Id="1897" Count="1" />
+      <LineId Id="504" Count="0" />
+      <LineId Id="2246" Count="0" />
+      <LineId Id="2617" Count="21" />
+      <LineId Id="2247" Count="0" />
+      <LineId Id="2666" Count="0" />
+      <LineId Id="2249" Count="8" />
+      <LineId Id="179" Count="0" />
+      <LineId Id="391" Count="2" />
+      <LineId Id="180" Count="0" />
+      <LineId Id="1535" Count="1" />
+      <LineId Id="184" Count="0" />
+      <LineId Id="399" Count="0" />
+      <LineId Id="1528" Count="1" />
+      <LineId Id="1664" Count="0" />
+      <LineId Id="1661" Count="0" />
+      <LineId Id="1530" Count="1" />
+      <LineId Id="409" Count="0" />
+      <LineId Id="1532" Count="1" />
+      <LineId Id="210" Count="0" />
+      <LineId Id="199" Count="0" />
+      <LineId Id="2139" Count="1" />
+      <LineId Id="1920" Count="1" />
+      <LineId Id="1923" Count="1" />
+      <LineId Id="200" Count="0" />
+      <LineId Id="593" Count="0" />
+      <LineId Id="187" Count="0" />
+      <LineId Id="402" Count="0" />
+      <LineId Id="1537" Count="0" />
+      <LineId Id="190" Count="0" />
+      <LineId Id="1538" Count="0" />
+      <LineId Id="2141" Count="1" />
+      <LineId Id="1904" Count="1" />
+      <LineId Id="1907" Count="1" />
+      <LineId Id="596" Count="0" />
+      <LineId Id="594" Count="0" />
+      <LineId Id="587" Count="1" />
+      <LineId Id="1539" Count="0" />
+      <LineId Id="590" Count="0" />
+      <LineId Id="2143" Count="1" />
+      <LineId Id="1910" Count="1" />
+      <LineId Id="1913" Count="1" />
+      <LineId Id="592" Count="0" />
+      <LineId Id="595" Count="0" />
+      <LineId Id="193" Count="0" />
+      <LineId Id="403" Count="0" />
+      <LineId Id="195" Count="0" />
+      <LineId Id="211" Count="0" />
+      <LineId Id="405" Count="0" />
+      <LineId Id="197" Count="0" />
+      <LineId Id="1408" Count="0" />
+      <LineId Id="2145" Count="1" />
+      <LineId Id="1915" Count="1" />
+      <LineId Id="1918" Count="1" />
+      <LineId Id="506" Count="0" />
+      <LineId Id="198" Count="0" />
+      <LineId Id="406" Count="1" />
+      <LineId Id="410" Count="0" />
+      <LineId Id="186" Count="0" />
+      <LineId Id="327" Count="0" />
+      <LineId Id="520" Count="0" />
+      <LineId Id="644" Count="0" />
+      <LineId Id="215" Count="0" />
+      <LineId Id="2147" Count="0" />
+      <LineId Id="2534" Count="0" />
+      <LineId Id="2148" Count="0" />
+      <LineId Id="1925" Count="1" />
+      <LineId Id="1928" Count="1" />
+      <LineId Id="742" Count="0" />
+      <LineId Id="645" Count="0" />
+      <LineId Id="2535" Count="20" />
+      <LineId Id="329" Count="0" />
+      <LineId Id="647" Count="0" />
+      <LineId Id="1404" Count="1" />
+      <LineId Id="2149" Count="1" />
+      <LineId Id="1930" Count="1" />
+      <LineId Id="1933" Count="1" />
+      <LineId Id="512" Count="0" />
+      <LineId Id="646" Count="0" />
+      <LineId Id="220" Count="0" />
+      <LineId Id="413" Count="1" />
+      <LineId Id="226" Count="0" />
+      <LineId Id="419" Count="0" />
+      <LineId Id="1549" Count="1" />
+      <LineId Id="228" Count="0" />
+      <LineId Id="1540" Count="2" />
+      <LineId Id="417" Count="0" />
+      <LineId Id="1543" Count="0" />
+      <LineId Id="1545" Count="0" />
+      <LineId Id="2151" Count="1" />
+      <LineId Id="1950" Count="1" />
+      <LineId Id="1953" Count="1" />
+      <LineId Id="1548" Count="0" />
+      <LineId Id="609" Count="0" />
+      <LineId Id="233" Count="0" />
+      <LineId Id="420" Count="0" />
+      <LineId Id="1551" Count="0" />
+      <LineId Id="236" Count="0" />
+      <LineId Id="1552" Count="0" />
+      <LineId Id="2153" Count="1" />
+      <LineId Id="1935" Count="1" />
+      <LineId Id="1938" Count="1" />
+      <LineId Id="612" Count="0" />
+      <LineId Id="610" Count="0" />
+      <LineId Id="603" Count="1" />
+      <LineId Id="1553" Count="0" />
+      <LineId Id="1227" Count="0" />
+      <LineId Id="2155" Count="1" />
+      <LineId Id="1940" Count="1" />
+      <LineId Id="1943" Count="1" />
+      <LineId Id="606" Count="0" />
+      <LineId Id="611" Count="0" />
+      <LineId Id="239" Count="0" />
+      <LineId Id="421" Count="0" />
+      <LineId Id="241" Count="0" />
+      <LineId Id="246" Count="0" />
+      <LineId Id="242" Count="0" />
+      <LineId Id="423" Count="0" />
+      <LineId Id="244" Count="0" />
+      <LineId Id="2157" Count="1" />
+      <LineId Id="1945" Count="1" />
+      <LineId Id="1948" Count="1" />
+      <LineId Id="524" Count="0" />
+      <LineId Id="245" Count="0" />
+      <LineId Id="416" Count="0" />
+      <LineId Id="424" Count="0" />
+      <LineId Id="247" Count="0" />
+      <LineId Id="415" Count="0" />
+      <LineId Id="1554" Count="1" />
+      <LineId Id="248" Count="0" />
+      <LineId Id="425" Count="0" />
+      <LineId Id="1556" Count="0" />
+      <LineId Id="1564" Count="0" />
+      <LineId Id="1557" Count="0" />
+      <LineId Id="1561" Count="0" />
+      <LineId Id="1558" Count="0" />
+      <LineId Id="2723" Count="0" />
+      <LineId Id="449" Count="0" />
+      <LineId Id="1589" Count="0" />
+      <LineId Id="1003" Count="0" />
+      <LineId Id="2159" Count="1" />
+      <LineId Id="1960" Count="1" />
+      <LineId Id="1963" Count="1" />
+      <LineId Id="1112" Count="0" />
+      <LineId Id="613" Count="0" />
+      <LineId Id="252" Count="1" />
+      <LineId Id="1586" Count="0" />
+      <LineId Id="255" Count="0" />
+      <LineId Id="1587" Count="0" />
+      <LineId Id="2161" Count="1" />
+      <LineId Id="1955" Count="1" />
+      <LineId Id="1958" Count="1" />
+      <LineId Id="622" Count="0" />
+      <LineId Id="614" Count="2" />
+      <LineId Id="1588" Count="0" />
+      <LineId Id="1235" Count="0" />
+      <LineId Id="2163" Count="1" />
+      <LineId Id="1965" Count="1" />
+      <LineId Id="1968" Count="1" />
+      <LineId Id="618" Count="0" />
+      <LineId Id="621" Count="0" />
+      <LineId Id="258" Count="2" />
+      <LineId Id="1600" Count="1" />
+      <LineId Id="1004" Count="0" />
+      <LineId Id="429" Count="0" />
+      <LineId Id="264" Count="0" />
+      <LineId Id="2165" Count="1" />
+      <LineId Id="1970" Count="1" />
+      <LineId Id="1973" Count="1" />
+      <LineId Id="525" Count="0" />
+      <LineId Id="265" Count="0" />
+      <LineId Id="430" Count="1" />
+      <LineId Id="433" Count="0" />
+      <LineId Id="268" Count="0" />
+      <LineId Id="1590" Count="0" />
+      <LineId Id="269" Count="0" />
+      <LineId Id="2556" Count="19" />
+      <LineId Id="529" Count="0" />
+      <LineId Id="2167" Count="1" />
+      <LineId Id="1975" Count="1" />
+      <LineId Id="1978" Count="1" />
+      <LineId Id="2585" Count="6" />
+      <LineId Id="272" Count="0" />
+      <LineId Id="533" Count="0" />
+      <LineId Id="434" Count="1" />
+      <LineId Id="278" Count="0" />
+      <LineId Id="436" Count="0" />
+      <LineId Id="1592" Count="1" />
+      <LineId Id="339" Count="0" />
+      <LineId Id="1598" Count="1" />
+      <LineId Id="450" Count="0" />
+      <LineId Id="1594" Count="0" />
+      <LineId Id="340" Count="0" />
+      <LineId Id="2169" Count="1" />
+      <LineId Id="1995" Count="1" />
+      <LineId Id="1998" Count="1" />
+      <LineId Id="300" Count="0" />
+      <LineId Id="624" Count="0" />
+      <LineId Id="285" Count="0" />
+      <LineId Id="437" Count="0" />
+      <LineId Id="1597" Count="0" />
+      <LineId Id="289" Count="0" />
+      <LineId Id="1595" Count="0" />
+      <LineId Id="2171" Count="1" />
+      <LineId Id="1980" Count="1" />
+      <LineId Id="1983" Count="1" />
+      <LineId Id="633" Count="0" />
+      <LineId Id="625" Count="2" />
+      <LineId Id="1596" Count="0" />
+      <LineId Id="1245" Count="0" />
+      <LineId Id="2173" Count="1" />
+      <LineId Id="1985" Count="1" />
+      <LineId Id="1988" Count="1" />
+      <LineId Id="629" Count="0" />
+      <LineId Id="632" Count="0" />
+      <LineId Id="292" Count="0" />
+      <LineId Id="438" Count="0" />
+      <LineId Id="341" Count="1" />
+      <LineId Id="295" Count="0" />
+      <LineId Id="535" Count="0" />
+      <LineId Id="2639" Count="0" />
+      <LineId Id="2175" Count="1" />
+      <LineId Id="1990" Count="1" />
+      <LineId Id="1993" Count="1" />
+      <LineId Id="536" Count="0" />
+      <LineId Id="2258" Count="0" />
+      <LineId Id="2640" Count="21" />
+      <LineId Id="2259" Count="0" />
+      <LineId Id="2665" Count="0" />
+      <LineId Id="2261" Count="8" />
+      <LineId Id="298" Count="0" />
+      <LineId Id="443" Count="1" />
+      <LineId Id="452" Count="0" />
+      <LineId Id="299" Count="0" />
+      <LineId Id="1602" Count="1" />
+      <LineId Id="454" Count="0" />
+      <LineId Id="302" Count="0" />
+      <LineId Id="1608" Count="2" />
+      <LineId Id="2724" Count="0" />
+      <LineId Id="1611" Count="1" />
+      <LineId Id="1606" Count="0" />
+      <LineId Id="2177" Count="1" />
+      <LineId Id="2015" Count="1" />
+      <LineId Id="2018" Count="1" />
+      <LineId Id="303" Count="0" />
+      <LineId Id="634" Count="0" />
+      <LineId Id="307" Count="0" />
+      <LineId Id="455" Count="0" />
+      <LineId Id="1613" Count="0" />
+      <LineId Id="310" Count="0" />
+      <LineId Id="1614" Count="0" />
+      <LineId Id="2179" Count="1" />
+      <LineId Id="2000" Count="1" />
+      <LineId Id="2003" Count="1" />
+      <LineId Id="457" Count="0" />
+      <LineId Id="635" Count="2" />
+      <LineId Id="1615" Count="0" />
+      <LineId Id="639" Count="0" />
+      <LineId Id="2181" Count="1" />
+      <LineId Id="2005" Count="1" />
+      <LineId Id="2008" Count="1" />
+      <LineId Id="641" Count="1" />
+      <LineId Id="313" Count="0" />
+      <LineId Id="456" Count="0" />
+      <LineId Id="315" Count="1" />
+      <LineId Id="458" Count="0" />
+      <LineId Id="318" Count="0" />
+      <LineId Id="2183" Count="1" />
+      <LineId Id="2010" Count="1" />
+      <LineId Id="2013" Count="1" />
+      <LineId Id="537" Count="0" />
+      <LineId Id="319" Count="0" />
+      <LineId Id="459" Count="0" />
+      <LineId Id="805" Count="1" />
+      <LineId Id="2297" Count="84" />
+      <LineId Id="2695" Count="0" />
+      <LineId Id="2382" Count="51" />
+      <LineId Id="829" Count="0" />
+      <LineId Id="1037" Count="0" />
+      <LineId Id="1041" Count="0" />
+      <LineId Id="832" Count="0" />
+      <LineId Id="1044" Count="0" />
+      <LineId Id="2205" Count="1" />
+      <LineId Id="2025" Count="1" />
+      <LineId Id="2028" Count="1" />
+      <LineId Id="835" Count="2" />
+      <LineId Id="927" Count="0" />
+      <LineId Id="1042" Count="0" />
+      <LineId Id="840" Count="0" />
+      <LineId Id="2207" Count="1" />
+      <LineId Id="2030" Count="1" />
+      <LineId Id="2033" Count="1" />
+      <LineId Id="842" Count="5" />
+      <LineId Id="864" Count="0" />
+      <LineId Id="849" Count="1" />
+      <LineId Id="2209" Count="1" />
+      <LineId Id="2035" Count="1" />
+      <LineId Id="2038" Count="1" />
+      <LineId Id="851" Count="1" />
+      <LineId Id="2576" Count="1" />
+      <LineId Id="807" Count="0" />
+      <LineId Id="1351" Count="0" />
+      <LineId Id="1350" Count="0" />
+      <LineId Id="2211" Count="1" />
+      <LineId Id="2040" Count="1" />
+      <LineId Id="2043" Count="1" />
+      <LineId Id="1348" Count="0" />
+      <LineId Id="224" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="19" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

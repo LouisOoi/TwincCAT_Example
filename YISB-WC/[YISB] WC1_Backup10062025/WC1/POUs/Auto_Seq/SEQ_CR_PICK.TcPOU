@@ -1,0 +1,446 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="SEQ_CR_PICK" Id="{96825f8c-74be-47cc-a7f8-f20f13d897f8}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM SEQ_CR_PICK
+VAR_INPUT
+	CR_sequence		: UINT;
+	CR_PickRack		: UINT :=1;
+END_VAR
+
+VAR
+	process_T	: UINT; //CR Pick
+	process_U	: UINT; //Place COSMO
+	
+	CR_racknum	: UINT;
+	CR_PickNum	: UINT;
+	OutBit1		: INT;
+	OutBit2		: INT;
+	InBit1		: INT;
+	InBit2		: INT;
+	Msg_CR		: STRING;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF AUTO_MODE.COSMO_LOAD OR AUTO_MODE.JIGC_PICK OR AUTO_MODE.VB_PICK THEN
+	RETURN;
+END_IF
+		
+IF NOT AUTO_MODE.CR_UNLOADING AND NOT AUTO_MODE.COSMO_LOAD AND KR2.Idle THEN
+	FOR CR_Picknum := 2 TO 21 BY 1 DO
+		IF CR_Picknum = 14 THEN
+			CONTINUE;
+		END_IF
+		IF GVL.CR_NextPickNum > 21 OR GVL.CR_NextPickNum < 2 OR CR_PickNum > 21 THEN
+			GVL.CR_NextPickNum := 2; CR_PickNum := 2;
+		END_IF
+		IF GVL.CRTimer[CR_PickNum] < 1 THEN
+			AUTO_MODE.CR_UNLOADING := TRUE;
+			CR_PickRack := CR_PickNum;
+			GVL.CR_NextPickNum := CR_PickNum + 1;
+			RETURN;
+		END_IF
+	END_FOR
+END_IF	
+
+//return;
+CASE CR_sequence OF
+	0:
+		AUTO_MODE.processnameCR := CONCAT(MSG.COMP_CR,MSG.ACTION_INIT);	
+		LOGPROCESS( spLogComp	 := MSG.COMP_CR, 
+		 			spLogAction	 := MSG.ACTION_INIT, 
+		 			spLogStatus	 := MSG.STATUS_DONE,
+	 	 		 	plogFlag	 := TRUE);
+		process_T	:= 0;
+		process_U	:= 0;
+		CR_sequence := 1;
+		
+	// CR PICK --------------------------------------------------------------------------------------------------------------		
+	1: 
+		IF process_T = 0 THEN
+			IF KR2.Idle AND GVL.COSMO_Ready AND AUTO_MODE.CR_UNLOADING and COOL_RACK.CR[CR_PickRack] THEN
+				CASE CR_PickRack OF
+					1:
+//						OutBit1	:=	InBit1 				:= 6; 
+//						OutBit2	:= 	InBit2 				:= 1;
+//						KR2.bOutBit[OutBit1,OutBit2] 	:= TRUE;
+						Msg_CR 							:= MSG.ACTION_CR1_PICK;
+						AUTO_MODE.CR_PICK 				:= TRUE;
+						process_T 						:= 1;
+					2:
+						OutBit1	:=	InBit1 				:= 6; 
+						OutBit2	:= 	InBit2 				:= 2;
+						KR2.bOutBit[OutBit1,OutBit2] 	:= TRUE;
+						Msg_CR 							:= MSG.ACTION_CR2_PICK;
+						AUTO_MODE.CR_PICK 				:= TRUE;
+						process_T 						:= 1;
+					3:
+						OutBit1	:=	InBit1 				:= 6; 
+						OutBit2	:= 	InBit2 				:= 3;
+						KR2.bOutBit[OutBit1,OutBit2] 	:= TRUE;
+						Msg_CR 							:= MSG.ACTION_CR3_PICK;
+						AUTO_MODE.CR_PICK 				:= TRUE;
+						process_T 						:= 1;
+					4:
+						OutBit1	:=	InBit1 				:= 6; 
+						OutBit2	:= 	InBit2 				:= 4;
+						KR2.bOutBit[OutBit1,OutBit2] 	:= TRUE;
+						Msg_CR 							:= MSG.ACTION_CR4_PICK;
+						AUTO_MODE.CR_PICK 				:= TRUE;
+						process_T 						:= 1;
+					5:
+						OutBit1	:=	InBit1 				:= 6; 
+						OutBit2	:= 	InBit2 				:= 5;
+						KR2.bOutBit[OutBit1,OutBit2] 	:= TRUE;
+						Msg_CR 							:= MSG.ACTION_CR5_PICK;
+						AUTO_MODE.CR_PICK 				:= TRUE;
+						process_T 						:= 1;
+					6:
+						OutBit1	:=	InBit1 				:= 6; 
+						OutBit2	:= 	InBit2 				:= 6;
+						KR2.bOutBit[OutBit1,OutBit2] 	:= TRUE;
+						Msg_CR 							:= MSG.ACTION_CR6_PICK;
+						AUTO_MODE.CR_PICK 				:= TRUE;
+						process_T 						:= 1;
+					7:
+						OutBit1	:=	InBit1 				:= 6; 
+						OutBit2	:= 	InBit2 				:= 7;
+						KR2.bOutBit[OutBit1,OutBit2] 	:= TRUE;
+						Msg_CR 							:= MSG.ACTION_CR7_PICK;
+						AUTO_MODE.CR_PICK 				:= TRUE;
+						process_T 						:= 1;
+					8:
+//						OutBit1	:=	InBit1 				:= 7; 
+//						OutBit2	:= 	InBit2 				:= 0;
+//						KR2.bOutBit[OutBit1,OutBit2] 	:= TRUE;
+						Msg_CR 							:= MSG.ACTION_CR8_PICK;
+						AUTO_MODE.CR_PICK 				:= TRUE;
+						process_T 						:= 1;
+					9:
+						OutBit1	:=	InBit1 				:= 7; 
+						OutBit2	:= 	InBit2 				:= 1;
+						KR2.bOutBit[OutBit1,OutBit2] 	:= TRUE;
+						Msg_CR 							:= MSG.ACTION_CR9_PICK;
+						AUTO_MODE.CR_PICK 				:= TRUE;
+						process_T 						:= 1;
+					10:
+						OutBit1	:=	InBit1 				:= 7; 
+						OutBit2	:= 	InBit2 				:= 2;
+						KR2.bOutBit[OutBit1,OutBit2] 	:= TRUE;
+						Msg_CR 							:= MSG.ACTION_CR10_PICK;
+						AUTO_MODE.CR_PICK 				:= TRUE;
+						process_T 						:= 1;
+					11:
+						OutBit1	:=	InBit1 				:= 7; 
+						OutBit2	:= 	InBit2 				:= 3;
+						KR2.bOutBit[OutBit1,OutBit2] 	:= TRUE;
+						Msg_CR 							:= MSG.ACTION_CR11_PICK;
+						AUTO_MODE.CR_PICK 				:= TRUE;
+						process_T 						:= 1;
+					12:
+						OutBit1	:=	InBit1 				:= 7; 
+						OutBit2	:= 	InBit2 				:= 4;
+						KR2.bOutBit[OutBit1,OutBit2] 	:= TRUE;
+						Msg_CR 							:= MSG.ACTION_CR12_PICK;
+						AUTO_MODE.CR_PICK 				:= TRUE;
+						process_T 						:= 1;
+					13:
+						OutBit1	:=	InBit1 				:= 7; 
+						OutBit2	:= 	InBit2 				:= 5;
+						KR2.bOutBit[OutBit1,OutBit2] 	:= TRUE;
+						Msg_CR 							:= MSG.ACTION_CR13_PICK;
+						AUTO_MODE.CR_PICK 				:= TRUE;
+						process_T 						:= 1;
+					15:
+//						OutBit1	:=	InBit1 				:= 7; 
+//						OutBit2	:= 	InBit2 				:= 6;
+//						KR2.bOutBit[OutBit1,OutBit2] 	:= TRUE;
+						Msg_CR 							:= MSG.ACTION_CR15_PICK;
+						AUTO_MODE.CR_PICK 				:= TRUE;
+						process_T 						:= 1;
+					16:
+						OutBit1	:=	InBit1 				:= 7; 
+						OutBit2	:= 	InBit2 				:= 7;
+						KR2.bOutBit[OutBit1,OutBit2] 	:= TRUE;
+						Msg_CR 							:= MSG.ACTION_CR16_PICK;
+						AUTO_MODE.CR_PICK 				:= TRUE;
+						process_T 						:= 1;
+					17:
+						OutBit1	:=	InBit1 				:= 8; 
+						OutBit2	:= 	InBit2 				:= 0;
+						KR2.bOutBit[OutBit1,OutBit2] 	:= TRUE;
+						Msg_CR 							:= MSG.ACTION_CR17_PICK;
+						AUTO_MODE.CR_PICK 				:= TRUE;
+						process_T 						:= 1;
+					18:
+						OutBit1	:=	InBit1 				:= 8; 
+						OutBit2	:= 	InBit2 				:= 1;
+						KR2.bOutBit[OutBit1,OutBit2] 	:= TRUE;
+						Msg_CR 							:= MSG.ACTION_CR18_PICK;
+						AUTO_MODE.CR_PICK 				:= TRUE;
+						process_T 						:= 1;
+					19:
+						OutBit1	:=	InBit1 				:= 8; 
+						OutBit2	:= 	InBit2 				:= 2;
+						KR2.bOutBit[OutBit1,OutBit2] 	:= TRUE;
+						Msg_CR 							:= MSG.ACTION_CR19_PICK;
+						AUTO_MODE.CR_PICK 				:= TRUE;
+						process_T 						:= 1;
+					20:
+						OutBit1	:=	InBit1 				:= 8; 
+						OutBit2	:= 	InBit2 				:= 3;
+						KR2.bOutBit[OutBit1,OutBit2] 	:= TRUE;
+						Msg_CR 							:= MSG.ACTION_CR20_PICK;
+						AUTO_MODE.CR_PICK 				:= TRUE;
+						process_T 						:= 1;
+					21:
+						OutBit1	:=	InBit1 				:= 8; 
+						OutBit2	:= 	InBit2 				:= 4;
+						KR2.bOutBit[OutBit1,OutBit2] 	:= TRUE;
+						Msg_CR 							:= MSG.ACTION_CR21_PICK;
+						AUTO_MODE.CR_PICK 				:= TRUE;
+						process_T 						:= 1;
+				END_CASE
+				
+				AUTO_MODE.processnameCR := CONCAT(MSG.COMP_CR,Msg_CR);
+				AUTO_MODE.processnameCR := CONCAT(AUTO_MODE.processnameCR,MSG.STATUS_RUN);
+				LOGPROCESS( spLogComp	 := MSG.COMP_CR, 
+							spLogAction	 := Msg_CR, 
+							spLogStatus	 := MSG.STATUS_RUN,
+							plogFlag	 := TRUE);
+			END_IF
+		ELSIF process_T = 1 THEN
+			KR2.bOutBit[OutBit1,OutBit2] := TRUE;
+			IF KR2.bInBit[InBit1,InBit2] THEN
+				KR2.bOutBit[OutBit1,OutBit2] := FALSE;	
+				AUTO_MODE.processnameCR := CONCAT(MSG.COMP_CR,MSG.ACTION_CR_PICK);
+				AUTO_MODE.processnameCR := CONCAT(AUTO_MODE.processnameCR,MSG.STATUS_ACK);
+				LOGPROCESS( spLogComp	 := MSG.COMP_CR, 
+							spLogAction	 := MSG.ACTION_CR_PICK, 
+							spLogStatus	 := MSG.STATUS_ACK,
+							plogFlag	 := TRUE);
+				process_T := 2;
+				RETURN;
+			END_IF	
+		ELSIF process_T = 2 THEN
+			KR2.bOutBit[OutBit1,OutBit2] := FALSE;
+			IF NOT KR2.bInBit[InBit1,InBit2] THEN
+				AUTO_MODE.processnameCR := CONCAT(MSG.COMP_CR,MSG.ACTION_CR_PICK);
+				AUTO_MODE.processnameCR := CONCAT(AUTO_MODE.processnameCR,MSG.STATUS_DONE);
+				LOGPROCESS( spLogComp	 := MSG.COMP_CR, 
+							spLogAction	 := MSG.ACTION_CR_PICK, 
+							spLogStatus	 := MSG.STATUS_DONE,
+							plogFlag	 := TRUE);
+				process_T:= 3;
+				RETURN;
+			END_IF	
+		ELSIF process_T = 3 THEN
+			IF KR2.Idle AND GVL.COSMO_Ready THEN
+				AUTO_MODE.processnameCR := CONCAT(MSG.COMP_CR,MSG.ACTION_CR_PICK);
+				AUTO_MODE.processnameCR := CONCAT(AUTO_MODE.processnameCR,MSG.STATUS_COMP);
+				LOGPROCESS( spLogComp	 := MSG.COMP_CR, 
+							spLogAction	 := MSG.ACTION_CR_PICK, 
+							spLogStatus	 := MSG.STATUS_COMP,
+							plogFlag	 := TRUE);
+				process_T := 4;
+				CR_sequence := 2;
+				AUTO_MODE.next_step := FALSE;
+				GVL.CRTimer[CR_PickNum] := GVL.iCooling_Time;
+			END_IF
+		END_IF
+	
+	// PLACE COSMO --------------------------------------------------------------------------------------------------------------		
+	2: 
+		IF process_U = 0 THEN
+			IF KR2.Idle AND GVL.COSMO_Ready THEN
+//				KR2.PLC_O_D3.3 := TRUE; //203
+				KR2.bOutBit[3,3] := TRUE;
+				AUTO_MODE.processnameCR := CONCAT(MSG.COMP_CR,MSG.ACTION_COSMO_PLACE);
+				AUTO_MODE.processnameCR := CONCAT(AUTO_MODE.processnameCR,MSG.STATUS_RUN);
+				LOGPROCESS( spLogComp	 := MSG.COMP_CR, 
+							spLogAction	 := MSG.ACTION_COSMO_PLACE, 
+							spLogStatus	 := MSG.STATUS_RUN,
+							plogFlag	 := TRUE);
+				process_U := 1;
+				RETURN;
+			END_IF
+		ELSIF process_U = 1 THEN
+//			KR2.PLC_O_D3.3 := TRUE; //203
+			KR2.bOutBit[3,3] := TRUE;
+			IF KR2.bInBit[3,3] THEN
+//				KR2.PLC_O_D3.3 := FALSE; //203
+				KR2.bOutBit[3,3] := FALSE;
+				AUTO_MODE.processnameCR := CONCAT(MSG.COMP_CR,MSG.ACTION_COSMO_PLACE);
+				AUTO_MODE.processnameCR := CONCAT(AUTO_MODE.processnameCR,MSG.STATUS_ACK);
+				LOGPROCESS( spLogComp	 := MSG.COMP_CR, 
+							spLogAction	 := MSG.ACTION_COSMO_PLACE, 
+							spLogStatus	 := MSG.STATUS_ACK,
+							plogFlag	 := TRUE);
+				process_U := 2;
+				RETURN;
+			END_IF
+		ELSIF process_U = 2 THEN
+//			KR2.PLC_O_D3.3 := FALSE; //203
+			KR2.bOutBit[3,3] := FALSE;
+			IF NOT KR2.bInBit[3,3] THEN
+				AUTO_MODE.processnameCR := CONCAT(MSG.COMP_CR,MSG.ACTION_COSMO_PLACE);
+				AUTO_MODE.processnameCR := CONCAT(AUTO_MODE.processnameCR,MSG.STATUS_DONE);
+				LOGPROCESS( spLogComp	 := MSG.COMP_CR, 
+							spLogAction	 := MSG.ACTION_COSMO_PLACE, 
+							spLogStatus	 := MSG.STATUS_DONE,
+							plogFlag	 := TRUE);
+				IF NOT GVL.COSMO_Ready THEN
+					GVL.COSMO_Run := TRUE;
+					AUTO_MODE.processnameCR := 'COSMO - (RUN)';
+				END_IF
+				process_U := 3;
+				RETURN;
+			END_IF
+		ELSIF process_U = 3 THEN
+			IF KR2.Idle THEN
+				AUTO_MODE.processnameCR := CONCAT(MSG.COMP_CR,MSG.ACTION_COSMO_PLACE);
+				AUTO_MODE.processnameCR := CONCAT(AUTO_MODE.processnameCR,MSG.STATUS_COMP);
+				LOGPROCESS( spLogComp	 := MSG.COMP_CR, 
+							spLogAction	 := MSG.ACTION_COSMO_PLACE, 
+							spLogStatus	 := MSG.STATUS_COMP,
+							plogFlag	 := TRUE);
+				process_U := 4;
+				CR_sequence := 3;
+				AUTO_MODE.COSMO_LOAD	:= TRUE;
+				AUTO_MODE.COSMO_RUN 	:= TRUE;
+				AUTO_MODE.CR_PICK 		:= FALSE;
+				AUTO_MODE.next_step 	:= FALSE;
+				AUTO_MODE.processnameCR := CONCAT(MSG.COMP_CR,MAIN.fb_TimeStamp.SystemTime);
+				AUTO_MODE.processnameCR := CONCAT(AUTO_MODE.processnameCR,MSG.STATUS_END);
+				LOGPROCESS( spLogComp	 := MSG.COMP_CR, 
+							spLogAction	 := MSG.ACTION_CR_TO_COSMO, 
+							spLogStatus	 := MSG.STATUS_END,
+							plogFlag	 := TRUE);
+			END_IF
+		END_IF
+		
+	// END -------------------------------------------------------------------------------------------------------------	
+	3:
+		CR_sequence := 0;
+		AUTO_MODE.next_step := FALSE;
+END_CASE
+
+		]]></ST>
+    </Implementation>
+    <LineIds Name="SEQ_CR_PICK">
+      <LineId Id="826" Count="1" />
+      <LineId Id="527" Count="0" />
+      <LineId Id="828" Count="0" />
+      <LineId Id="529" Count="0" />
+      <LineId Id="587" Count="0" />
+      <LineId Id="1345" Count="2" />
+      <LineId Id="689" Count="1" />
+      <LineId Id="603" Count="0" />
+      <LineId Id="530" Count="0" />
+      <LineId Id="604" Count="0" />
+      <LineId Id="531" Count="0" />
+      <LineId Id="541" Count="0" />
+      <LineId Id="831" Count="0" />
+      <LineId Id="534" Count="2" />
+      <LineId Id="829" Count="0" />
+      <LineId Id="6" Count="2" />
+      <LineId Id="1012" Count="3" />
+      <LineId Id="958" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="784" Count="0" />
+      <LineId Id="456" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="420" Count="0" />
+      <LineId Id="472" Count="0" />
+      <LineId Id="1227" Count="5" />
+      <LineId Id="627" Count="0" />
+      <LineId Id="1233" Count="5" />
+      <LineId Id="633" Count="0" />
+      <LineId Id="1239" Count="5" />
+      <LineId Id="639" Count="0" />
+      <LineId Id="1245" Count="5" />
+      <LineId Id="645" Count="0" />
+      <LineId Id="1251" Count="5" />
+      <LineId Id="657" Count="0" />
+      <LineId Id="1187" Count="5" />
+      <LineId Id="658" Count="0" />
+      <LineId Id="1181" Count="5" />
+      <LineId Id="664" Count="0" />
+      <LineId Id="1124" Count="5" />
+      <LineId Id="670" Count="0" />
+      <LineId Id="1118" Count="5" />
+      <LineId Id="676" Count="4" />
+      <LineId Id="1117" Count="0" />
+      <LineId Id="935" Count="0" />
+      <LineId Id="1257" Count="69" />
+      <LineId Id="650" Count="0" />
+      <LineId Id="606" Count="0" />
+      <LineId Id="1111" Count="5" />
+      <LineId Id="1110" Count="0" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="682" Count="1" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="979" Count="1" />
+      <LineId Id="1060" Count="3" />
+      <LineId Id="46" Count="5" />
+      <LineId Id="981" Count="1" />
+      <LineId Id="1064" Count="3" />
+      <LineId Id="684" Count="0" />
+      <LineId Id="53" Count="3" />
+      <LineId Id="983" Count="1" />
+      <LineId Id="1068" Count="3" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="59" Count="2" />
+      <LineId Id="457" Count="0" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="692" Count="4" />
+      <LineId Id="985" Count="0" />
+      <LineId Id="1366" Count="0" />
+      <LineId Id="986" Count="0" />
+      <LineId Id="1072" Count="3" />
+      <LineId Id="875" Count="0" />
+      <LineId Id="788" Count="0" />
+      <LineId Id="758" Count="2" />
+      <LineId Id="789" Count="0" />
+      <LineId Id="1367" Count="0" />
+      <LineId Id="790" Count="0" />
+      <LineId Id="987" Count="0" />
+      <LineId Id="1368" Count="0" />
+      <LineId Id="988" Count="0" />
+      <LineId Id="1076" Count="3" />
+      <LineId Id="791" Count="0" />
+      <LineId Id="793" Count="1" />
+      <LineId Id="767" Count="1" />
+      <LineId Id="795" Count="0" />
+      <LineId Id="1369" Count="0" />
+      <LineId Id="989" Count="1" />
+      <LineId Id="1080" Count="3" />
+      <LineId Id="917" Count="1" />
+      <LineId Id="921" Count="1" />
+      <LineId Id="796" Count="0" />
+      <LineId Id="798" Count="1" />
+      <LineId Id="774" Count="1" />
+      <LineId Id="991" Count="1" />
+      <LineId Id="1084" Count="3" />
+      <LineId Id="800" Count="0" />
+      <LineId Id="803" Count="0" />
+      <LineId Id="936" Count="1" />
+      <LineId Id="804" Count="0" />
+      <LineId Id="885" Count="0" />
+      <LineId Id="993" Count="1" />
+      <LineId Id="1088" Count="3" />
+      <LineId Id="939" Count="0" />
+      <LineId Id="782" Count="0" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="783" Count="0" />
+      <LineId Id="63" Count="1" />
+      <LineId Id="197" Count="0" />
+      <LineId Id="162" Count="0" />
+      <LineId Id="32" Count="1" />
+      <LineId Id="26" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

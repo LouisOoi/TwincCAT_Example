@@ -1,0 +1,2296 @@
+<?xml version="1.0"?>
+<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4024.55">
+	<DataTypes>
+		<DataType>
+			<Name GUID="{DFF35948-E121-1F9C-D2FD-CC20F1A59E1E}" IecBaseType="true" AutoDeleteType="true">ARRAY [1..6] OF DWORD</Name>
+			<BitSize>192</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000007}">DWORD</BaseType>
+			<ArrayInfo>
+				<LBound>1</LBound>
+				<Elements>6</Elements>
+			</ArrayInfo>
+		</DataType>
+		<DataType>
+			<Name GUID="{18071995-0000-0000-0000-00200000000C}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..11] OF BIT</Name>
+			<BitSize>12</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
+			<ArrayInfo>
+				<LBound>0</LBound>
+				<Elements>12</Elements>
+			</ArrayInfo>
+		</DataType>
+		<DataType>
+			<Name GUID="{18071995-0000-0000-0000-002000000001}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..0] OF BIT</Name>
+			<BitSize>1</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
+			<ArrayInfo>
+				<LBound>0</LBound>
+				<Elements>1</Elements>
+			</ArrayInfo>
+		</DataType>
+		<DataType>
+			<Name GUID="{18071995-0000-0000-0000-00200000000A}" IecBaseType="true" BitType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..9] OF BIT</Name>
+			<BitSize>10</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
+			<ArrayInfo>
+				<LBound>0</LBound>
+				<Elements>10</Elements>
+			</ArrayInfo>
+		</DataType>
+	</DataTypes>
+	<ImageDatas>
+		<ImageData Id="1000">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000c40e0000c40e00000000000000000000ff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080808080808080808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080c0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000bfff00bfffc0c0c0808080c0c0c000ffffc0c0c000ffff808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000bfff00bfffc0c0c0808080c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000bfff00bfffc0c0c0808080c0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080c0c0c0ff0000c0c0c0ff0000808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080c0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000bfff00bfffc0c0c0808080c0c0c00000ffc0c0c00000ff808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000bfff00bfffc0c0c0808080c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000bfff00bfffc0c0c0808080c0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080c0c0c0008000c0c0c0008000808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff</ImageData>
+		<ImageData Id="1001">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000120b0000120b00000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ff808080808080808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000ffffc0c0c000ffff808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0ff0000c0c0c0ff0000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c00000ffc0c0c00000ff808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0008000c0c0c0008000808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff</ImageData>
+		<ImageData Id="1002">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000c40e0000c40e00000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ff808080808080808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000ffffc0c0c000ffff808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0ff0000c0c0c0ff0000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c00000ffc0c0c00000ff808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0008000c0c0c0008000808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff</ImageData>
+		<ImageData Id="1003">424de6000000000000007600000028000000100000000e000000010004000000000070000000120b0000120b0000100000001000000000000000000080000080000000808000800000008000800080800000c0c0c000808080000000ff0000ff000000ffff00ff000000ff00ff00ffff0000ffffff00dddddd88888888dddddddd77777778dddddddd77888778dddddddd77888778dddddddd77888778dddddddd77777778dddddddd77888778dd9b9b9b77888778ddb9b9b977888778dd9b9b9b77777778ddb9b9b9777a7778dd9b9b9b777a7778ddb9b9b9777a7778dd9b9b9b77777778dd</ImageData>
+		<ImageData Id="1004">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000c40e0000c40e00000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ff808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff</ImageData>
+	</ImageDatas>
+	<Project ProjectGUID="{2D93F6C8-534A-4FE8-911F-50DA880F205A}" TargetNetId="169.254.120.209.1.1" Target64Bit="true" AutoPrioManagement="true" ShowHideConfigurations="#x106">
+		<System>
+			<Settings>
+				<IoIdleTask Priority="4"/>
+			</Settings>
+			<Licenses>
+				<Target>
+					<ManualSelect>{3EBB9639-5FF3-42B6-8847-35C70DC013C8}</ManualSelect>
+					<ManualSelect>{6952449D-F68C-49A2-ADE4-8639D85B33A4}</ManualSelect>
+				</Target>
+			</Licenses>
+			<Tasks>
+				<Task Id="3" Priority="6" CycleTime="100000" AmsPort="350" AdtTasks="true">
+					<Name>PlcTask</Name>
+				</Task>
+				<Task Id="4" Priority="8" CycleTime="1000000" AmsPort="351" DisableFpExceptions="true" AdtTasks="true">
+					<Name>VISU_TASK</Name>
+				</Task>
+			</Tasks>
+		</System>
+		<Plc>
+			<Project GUID="{8CD2DD24-8290-4BD7-8B52-A877877393EB}" Name="WC1" PrjFilePath="WC1\WC1.plcproj" TmcFilePath="WC1\WC1.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="WC1\WC1.tmc" TmcHash="{BE8B9853-F156-093B-4C27-050262A9ED9D}">
+					<Name>WC1 Instance</Name>
+					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
+					<Vars VarGrpType="1">
+						<Name>PlcTask Inputs</Name>
+						<Var>
+							<Name>MAIN.btnEstop</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.btnStart</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.btnStop</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.btnReset</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>KR5.PLC_I_SYS</Name>
+							<Type>DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR5.PLC_I_PROG1</Name>
+							<Type>DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR5.PLC_I_AXIS</Name>
+							<Type GUID="{DFF35948-E121-1F9C-D2FD-CC20F1A59E1E}">ARRAY [1..6] OF DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR5.PLC_I_CURR</Name>
+							<Type GUID="{DFF35948-E121-1F9C-D2FD-CC20F1A59E1E}">ARRAY [1..6] OF DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR5.PLC_I_TEMP</Name>
+							<Type GUID="{DFF35948-E121-1F9C-D2FD-CC20F1A59E1E}">ARRAY [1..6] OF DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR1.PLC_I_SYS</Name>
+							<Type>DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR1.PLC_I_PROG1</Name>
+							<Type>DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR1.PLC_I_PROG2</Name>
+							<Type>DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR1.PLC_I_PROG3</Name>
+							<Type>DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR1.PLC_I_PROG4</Name>
+							<Type>DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR1.PLC_I_PROG5</Name>
+							<Type>DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR1.PLC_I_PROG6</Name>
+							<Type>DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR1.PLC_I_PROG7</Name>
+							<Type>DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR1.PLC_I_PROG8</Name>
+							<Type>DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR1.PLC_I_AXIS</Name>
+							<Type GUID="{DFF35948-E121-1F9C-D2FD-CC20F1A59E1E}">ARRAY [1..6] OF DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR1.PLC_I_CURR</Name>
+							<Type GUID="{DFF35948-E121-1F9C-D2FD-CC20F1A59E1E}">ARRAY [1..6] OF DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR1.PLC_I_TEMP</Name>
+							<Type GUID="{DFF35948-E121-1F9C-D2FD-CC20F1A59E1E}">ARRAY [1..6] OF DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR4.PLC_I_SYS</Name>
+							<Type>DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR4.PLC_I_PROG1</Name>
+							<Type>DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR4.PLC_I_AXIS</Name>
+							<Type GUID="{DFF35948-E121-1F9C-D2FD-CC20F1A59E1E}">ARRAY [1..6] OF DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR4.PLC_I_CURR</Name>
+							<Type GUID="{DFF35948-E121-1F9C-D2FD-CC20F1A59E1E}">ARRAY [1..6] OF DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR4.PLC_I_TEMP</Name>
+							<Type GUID="{DFF35948-E121-1F9C-D2FD-CC20F1A59E1E}">ARRAY [1..6] OF DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR2.PLC_I_SYS</Name>
+							<Type>DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR2.PLC_I_PROG1</Name>
+							<Type>DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR2.PLC_I_PROG2</Name>
+							<Type>DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR2.PLC_I_AXIS</Name>
+							<Type GUID="{DFF35948-E121-1F9C-D2FD-CC20F1A59E1E}">ARRAY [1..6] OF DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR2.PLC_I_CURR</Name>
+							<Type GUID="{DFF35948-E121-1F9C-D2FD-CC20F1A59E1E}">ARRAY [1..6] OF DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR2.PLC_I_TEMP</Name>
+							<Type GUID="{DFF35948-E121-1F9C-D2FD-CC20F1A59E1E}">ARRAY [1..6] OF DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR3.PLC_I_SYS</Name>
+							<Type>DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR3.PLC_I_PROG1</Name>
+							<Type>DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR3.PLC_I_AXIS</Name>
+							<Type GUID="{DFF35948-E121-1F9C-D2FD-CC20F1A59E1E}">ARRAY [1..6] OF DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR3.PLC_I_CURR</Name>
+							<Type GUID="{DFF35948-E121-1F9C-D2FD-CC20F1A59E1E}">ARRAY [1..6] OF DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR3.PLC_I_TEMP</Name>
+							<Type GUID="{DFF35948-E121-1F9C-D2FD-CC20F1A59E1E}">ARRAY [1..6] OF DWORD</Type>
+						</Var>
+						<Var>
+							<Name>SAFETY_SENSOR.SENSOR_AIR_PRESSURE_OK</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>SAFETY_SENSOR.SENSOR_GAS_PRESSURE_OK</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>SAFETY_SENSOR.SENSOR_AIR_PRESSURE_HIGH</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>SAFETY_SENSOR.SENSOR_GAS_PRESSURE_HIGH</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>SAFETY_SENSOR.SENSOR_SAFETY_DOOR_CLOSE</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL.JIGA_Standby</Name>
+							<Comment><![CDATA[IO -> JIG]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL.JIGA_Ready</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL.JIGA_Complete</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL.JIGB_Standby</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL.JIGB_Ready</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL.JIGB_Complete</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL.JIGC_Standby</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL.JIGC_Ready</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL.JIGC_Complete</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL.TTorch_Standy</Name>
+							<Comment><![CDATA[IO -> TWIN TORCH]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL.TTorch_Complete</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL.VibBowl_Ready</Name>
+							<Comment><![CDATA[IO -> VIBRATOR BOWL]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL.Conveyor_Full</Name>
+							<Comment><![CDATA[IO -> CONVEYOR & REWORK JIG]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL.Rework_Empty</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL.COSMO_OK</Name>
+							<Comment><![CDATA[IO -> COSMO]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL.COSMO_NOTOK</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL.COSMO_Ready</Name>
+							<Type>BOOL</Type>
+						</Var>
+					</Vars>
+					<Vars VarGrpType="2" AreaNo="1">
+						<Name>PlcTask Outputs</Name>
+						<Var>
+							<Name>KR5.PLC_O_SYS</Name>
+							<Type>DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR5.PLC_O_PROG1</Name>
+							<Type>DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR1.PLC_O_SYS</Name>
+							<Type>DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR1.PLC_O_PROG1</Name>
+							<Type>DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR1.PLC_O_PROG2</Name>
+							<Type>DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR1.PLC_O_PROG3</Name>
+							<Type>DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR1.PLC_O_PROG4</Name>
+							<Type>DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR1.PLC_O_PROG5</Name>
+							<Type>DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR1.PLC_O_PROG6</Name>
+							<Type>DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR1.PLC_O_PROG7</Name>
+							<Type>DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR1.PLC_O_PROG8</Name>
+							<Type>DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR4.PLC_O_SYS</Name>
+							<Type>DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR4.PLC_O_PROG1</Name>
+							<Type>DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR2.PLC_O_SYS</Name>
+							<Type>DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR2.PLC_O_PROG1</Name>
+							<Type>DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR2.PLC_O_PROG2</Name>
+							<Type>DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR3.PLC_O_SYS</Name>
+							<Type>DWORD</Type>
+						</Var>
+						<Var>
+							<Name>KR3.PLC_O_PROG1</Name>
+							<Type>DWORD</Type>
+						</Var>
+						<Var>
+							<Name>TL.TL_Green</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>TL.TL_Ember</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>TL.TL_Red</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>TL.TL_Buzzer</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL.JIGA_Clamp</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL.JIGA_Release</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL.JIGB_Clamp</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL.JIGB_Release</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL.JIGC_Clamp</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL.JIGC_Release</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL.TTorch_Run</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL.COSMO_Run</Name>
+							<Type>BOOL</Type>
+						</Var>
+					</Vars>
+					<UnrestoredVarLinks ImportTime="2023-10-06T14:57:36">
+						<OwnerA Name="InputDst" Prefix="TIPC^WC1^WC1 Instance" Type="1">
+							<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 1 (EK1100)^Term 2 (EL1889)">
+								<Link VarA="JIG.Rework_Done" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 15^Input" Size="1" RestoreInfo="ANotFound"/>
+							</OwnerB>
+						</OwnerA>
+					</UnrestoredVarLinks>
+					<UnrestoredVarLinks ImportTime="2024-07-26T20:23:17">
+						<OwnerA Name="InputDst" Prefix="TIPC^WC1^WC1 Instance" Type="1">
+							<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 5 (EK1100)^Term 12 (EL1889)">
+								<Link VarA="JIG.JIGA_Ready" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 3^JIG A READY" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="JIG.JIGA_Standby" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 2^JIG A STANDBY" Size="1" RestoreInfo="ANotFound"/>
+							</OwnerB>
+							<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 5 (EK1100)^Term 13 (EL1889)">
+								<Link VarA="JIG.JIGA_Complete" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 9^JIGA_Complete" Size="1" RestoreInfo="ANotFound"/>
+							</OwnerB>
+						</OwnerA>
+					</UnrestoredVarLinks>
+					<UnrestoredVarLinks ImportTime="2024-07-26T20:30:57">
+						<OwnerA Name="InputDst" Prefix="TIPC^WC1^WC1 Instance" Type="1">
+							<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 5 (EK1100)^Term 12 (EL1889)">
+								<Link VarA="JIG.JIGB_Standby" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 4^JIG B STANDBY" Size="1" RestoreInfo="ANotFound"/>
+							</OwnerB>
+						</OwnerA>
+					</UnrestoredVarLinks>
+					<UnrestoredVarLinks ImportTime="2024-07-26T20:51:17">
+						<OwnerA Name="InputDst" Prefix="TIPC^WC1^WC1 Instance" Type="1">
+							<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 5 (EK1100)^Term 12 (EL1889)">
+								<Link VarA="JIG.JIGB_Ready" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 5^JIG B READY" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="JIG.JIGC_Ready" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 7^JIG C READY" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="JIG.JIGC_Standby" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 6^JIG C STANDBY" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="JIG.TTorch_Complete" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 9^TT COMPLETE" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="JIG.TTorch_Standy" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 8^TT STANDBY" Size="1" RestoreInfo="ANotFound"/>
+							</OwnerB>
+							<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 5 (EK1100)^Term 13 (EL1889)">
+								<Link VarA="JIG.JIGB_Complete" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 10^JIGB_Complete" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="JIG.JIGC_Complete" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 11^JIGC_Complete" Size="1" RestoreInfo="ANotFound"/>
+							</OwnerB>
+						</OwnerA>
+						<OwnerA Name="OutputSrc" Prefix="TIPC^WC1^WC1 Instance" Type="2">
+							<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 5 (EK1100)^Term 14 (EL2889)">
+								<Link VarA="JIG.JIGA_Clamp" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 1^JIG A CLAMP" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="JIG.JIGA_Release" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 2^JIG A RELEASE" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="JIG.JIGB_Clamp" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 3^JIG B CLAMP" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="JIG.JIGB_Release" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 4^JIG B RELEASE" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="JIG.JIGC_Clamp" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 5^JIG C CLAMP" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="JIG.JIGC_Release" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 6^JIG C RELEASE" Size="1" RestoreInfo="ANotFound"/>
+							</OwnerB>
+						</OwnerA>
+					</UnrestoredVarLinks>
+					<UnrestoredVarLinks ImportTime="2024-07-26T21:00:45">
+						<OwnerA Name="InputDst" Prefix="TIPC^WC1^WC1 Instance" Type="1">
+							<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 5 (EK1100)^Term 12 (EL1889)">
+								<Link VarA="JIG.Conveyor_Full" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 14^CONVY FULL" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="JIG.Rework_Empty" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 15^REWORK EMPTY" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="JIG.VibBowl_Ready" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 13^VB READY" Size="1" RestoreInfo="ANotFound"/>
+							</OwnerB>
+						</OwnerA>
+					</UnrestoredVarLinks>
+					<UnrestoredVarLinks ImportTime="2024-07-26T21:13:48">
+						<OwnerA Name="InputDst" Prefix="TIPC^WC1^WC1 Instance" Type="1">
+							<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 5 (EK1100)^Term 12 (EL1889)">
+								<Link VarA="JIG.COSMO_NOTOK" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 12^COSMO NOTOK" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="JIG.COSMO_OK" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 11^COSMO OK" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="JIG.COSMO_Ready" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 10^COSMO READY" Size="1" RestoreInfo="ANotFound"/>
+							</OwnerB>
+						</OwnerA>
+						<OwnerA Name="OutputSrc" Prefix="TIPC^WC1^WC1 Instance" Type="2">
+							<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 5 (EK1100)^Term 14 (EL2889)">
+								<Link VarA="JIG.COSMO_Run" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 8^COSMO RUN" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="JIG.TTorch_Run" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 7^TT RUN" Size="1" RestoreInfo="ANotFound"/>
+							</OwnerB>
+						</OwnerA>
+					</UnrestoredVarLinks>
+					<UnrestoredVarLinks ImportTime="2024-11-25T14:21:26">
+						<OwnerA Name="InputDst" Prefix="TIPC^WC1^WC1 Instance" Type="1">
+							<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 5 (EK1100)^Term 17 (EL6695) KR2">
+								<Link VarA="KR2.PLC_I_D4" TypeA="USINT" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000002}" VarB="IO Inputs^Var 100" RestoreInfo="BNotFound" OldTypeA="USINT" OldGuidA="{18071995-0000-0000-0000-000000000002}" NewTypeA="DWORD" NewGuidA="{18071995-0000-0000-0000-000000000007}"/>
+								<Link VarA="KR2.PLC_I_D5" TypeA="USINT" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000002}" VarB="IO Inputs^Var 101" RestoreInfo="BNotFound" OldTypeA="USINT" OldGuidA="{18071995-0000-0000-0000-000000000002}" NewTypeA="DWORD" NewGuidA="{18071995-0000-0000-0000-000000000007}"/>
+								<Link VarA="KR2.PLC_I_D6" TypeA="USINT" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000002}" VarB="IO Inputs^Var 102" RestoreInfo="BNotFound" OldTypeA="USINT" OldGuidA="{18071995-0000-0000-0000-000000000002}" NewTypeA="DWORD" NewGuidA="{18071995-0000-0000-0000-000000000007}"/>
+								<Link VarA="KR2.PLC_I_D7" TypeA="USINT" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000002}" VarB="IO Inputs^Var 227" RestoreInfo="BNotFound" OldTypeA="USINT" OldGuidA="{18071995-0000-0000-0000-000000000002}" NewTypeA="DWORD" NewGuidA="{18071995-0000-0000-0000-000000000007}"/>
+								<Link VarA="KR2.PLC_I_D8" TypeA="USINT" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000002}" VarB="IO Inputs^Var 228" RestoreInfo="BNotFound" OldTypeA="USINT" OldGuidA="{18071995-0000-0000-0000-000000000002}" NewTypeA="DWORD" NewGuidA="{18071995-0000-0000-0000-000000000007}"/>
+							</OwnerB>
+						</OwnerA>
+					</UnrestoredVarLinks>
+					<Contexts>
+						<Context>
+							<Id>0</Id>
+							<Name>PlcTask</Name>
+							<ManualConfig>
+								<OTCID>#x02010030</OTCID>
+							</ManualConfig>
+							<Priority>6</Priority>
+							<CycleTime>10000000</CycleTime>
+						</Context>
+						<Context>
+							<Id>1</Id>
+							<Name>VISU_TASK</Name>
+							<ManualConfig>
+								<OTCID>#x02010040</OTCID>
+							</ManualConfig>
+							<Priority>8</Priority>
+							<CycleTime>100000000</CycleTime>
+						</Context>
+					</Contexts>
+					<TaskPouOids>
+						<TaskPouOid Prio="6" OTCID="#x08502001"/>
+						<TaskPouOid Prio="8" OTCID="#x08502003"/>
+					</TaskPouOids>
+				</Instance>
+			</Project>
+		</Plc>
+		<Io>
+			<Device Id="3" DevType="111" DevFlags="#x0003" AmsPort="28675" AmsNetId="169.254.168.184.4.1" RemoteName="Device 3 (EtherCAT)" InfoImageId="3">
+				<Name>Device 3 (EtherCAT)</Name>
+				<AddressInfo>
+					<Pnp>
+						<DeviceDesc>Ethernet 2 (TwinCAT-Intel PCI Ethernet Adapter (Gig</DeviceDesc>
+						<DeviceName>\DEVICE\{E7B6CE86-EB87-4A2A-8EC1-6763786B7EA8}</DeviceName>
+						<DeviceData>00010572eba0</DeviceData>
+					</Pnp>
+				</AddressInfo>
+				<Image Id="2" AddrType="9" ImageType="3">
+					<Name>Image</Name>
+				</Image>
+				<Box Id="5" BoxType="9099">
+					<Name>Term 5 (EK1100)</Name>
+					<ImageId>1000</ImageId>
+					<EtherCAT SlaveType="1" PdiType="#x0d00" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x044c2c52" RevisionNo="#x00120000" PortPhys="305" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EK1100 EtherCAT Coupler (2A E-Bus)" Desc="EK1100" PortABoxInfo="#x00ffffff"/>
+					<Box Id="12" BoxType="9099">
+						<Name>Term 12 (EL1889)</Name>
+						<ImageId>7</ImageId>
+						<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x07613052" RevisionNo="#x00130000" RepeatSupport="true" CheckRevisionNoType="3" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL1889 16Ch. Dig. Input 24V, 3ms, negative" Desc="EL1889" PortABoxInfo="#x01000005">
+							<SyncMan>001002000000010004000000000000000200001000010000</SyncMan>
+							<Fmmu>0000000000000000001000010100000002000000000000000000000000000000</Fmmu>
+							<Pdo Name="Channel 1" Index="#x1a00" Flags="#x0011" SyncMan="0">
+								<Entry Name="Estop" Index="#x6000" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 2" Index="#x1a01" Flags="#x0011" SyncMan="0">
+								<Entry Name="JIG A STANDBY" Index="#x6010" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 3" Index="#x1a02" Flags="#x0011" SyncMan="0">
+								<Entry Name="JIG A READY" Index="#x6020" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 4" Index="#x1a03" Flags="#x0011" SyncMan="0">
+								<Entry Name="JIG B STANDBY" Index="#x6030" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 5" Index="#x1a04" Flags="#x0011" SyncMan="0">
+								<Entry Name="JIG B READY" Index="#x6040" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 6" Index="#x1a05" Flags="#x0011" SyncMan="0">
+								<Entry Name="JIG C STANDBY" Index="#x6050" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 7" Index="#x1a06" Flags="#x0011" SyncMan="0">
+								<Entry Name="JIG C READY" Index="#x6060" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 8" Index="#x1a07" Flags="#x0011" SyncMan="0">
+								<Entry Name="TT STANDBY" Index="#x6070" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 9" Index="#x1a08" Flags="#x0011" SyncMan="0">
+								<Entry Name="TT COMPLETE" Index="#x6080" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 10" Index="#x1a09" Flags="#x0011" SyncMan="0">
+								<Entry Name="COSMO READY" Index="#x6090" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 11" Index="#x1a0a" Flags="#x0011" SyncMan="0">
+								<Entry Name="COSMO OK" Index="#x60a0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 12" Index="#x1a0b" Flags="#x0011" SyncMan="0">
+								<Entry Name="COSMO NOTOK" Index="#x60b0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 13" Index="#x1a0c" Flags="#x0011" SyncMan="0">
+								<Entry Name="VB READY" Index="#x60c0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 14" Index="#x1a0d" Flags="#x0011" SyncMan="0">
+								<Entry Name="CONVY FULL" Index="#x60d0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 15" Index="#x1a0e" Flags="#x0011" SyncMan="0">
+								<Entry Name="REWORK EMPTY" Index="#x60e0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 16" Index="#x1a0f" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x60f0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+						</EtherCAT>
+					</Box>
+					<Box Id="13" BoxType="9099">
+						<Name>Term 13 (EL1889)</Name>
+						<ImageId>7</ImageId>
+						<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x07613052" RevisionNo="#x00130000" RepeatSupport="true" CheckRevisionNoType="3" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL1889 16Ch. Dig. Input 24V, 3ms, negative" Desc="EL1889" PortABoxInfo="#x0100000c">
+							<SyncMan>001002000000010004000000000000000200001000010000</SyncMan>
+							<Fmmu>0000000000000000001000010100000002000000000000000000000000000000</Fmmu>
+							<Pdo Name="Channel 1" Index="#x1a00" Flags="#x0011" SyncMan="0">
+								<Entry Name="START BTN" Index="#x6000" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 2" Index="#x1a01" Flags="#x0011" SyncMan="0">
+								<Entry Name="STOP BTN" Index="#x6010" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 3" Index="#x1a02" Flags="#x0011" SyncMan="0">
+								<Entry Name="RESET BTN" Index="#x6020" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 4" Index="#x1a03" Flags="#x0011" SyncMan="0">
+								<Entry Name="GasPressure_OK" Index="#x6030" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 5" Index="#x1a04" Flags="#x0011" SyncMan="0">
+								<Entry Name="AirPressure_High" Index="#x6040" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 6" Index="#x1a05" Flags="#x0011" SyncMan="0">
+								<Entry Name="GasPressure_OK" Index="#x6050" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 7" Index="#x1a06" Flags="#x0011" SyncMan="0">
+								<Entry Name="GasPressure_High" Index="#x6060" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 8" Index="#x1a07" Flags="#x0011" SyncMan="0">
+								<Entry Name="SafetyDoor" Index="#x6070" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 9" Index="#x1a08" Flags="#x0011" SyncMan="0">
+								<Entry Name="JIGA_Complete" Index="#x6080" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 10" Index="#x1a09" Flags="#x0011" SyncMan="0">
+								<Entry Name="JIGB_Complete" Index="#x6090" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 11" Index="#x1a0a" Flags="#x0011" SyncMan="0">
+								<Entry Name="JIGC_Complete" Index="#x60a0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 12" Index="#x1a0b" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x60b0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 13" Index="#x1a0c" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x60c0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 14" Index="#x1a0d" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x60d0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 15" Index="#x1a0e" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x60e0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 16" Index="#x1a0f" Flags="#x0011" SyncMan="0">
+								<Entry Name="Input" Index="#x60f0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+						</EtherCAT>
+					</Box>
+					<Box Id="14" BoxType="9099">
+						<Name>Term 14 (EL2889)</Name>
+						<ImageId>1001</ImageId>
+						<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x0b493052" RevisionNo="#x00120000" RepeatSupport="true" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL2889 16Ch. Dig. Output 24V, 0.5A, negative" Desc="EL2889" PortABoxInfo="#x0100000d">
+							<SyncMan>000f01004400010003000000000000000100000f44090000</SyncMan>
+							<SyncMan>010f01004400010003000000000000000100010f44090000</SyncMan>
+							<Fmmu>0000000000000000000f00020100000001000000000000000000000000000000</Fmmu>
+							<Pdo Name="Channel 1" Index="#x1600" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="JIG A CLAMP" Index="#x7000" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 2" Index="#x1601" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="JIG A RELEASE" Index="#x7010" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 3" Index="#x1602" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="JIG B CLAMP" Index="#x7020" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 4" Index="#x1603" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="JIG B RELEASE" Index="#x7030" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 5" Index="#x1604" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="JIG C CLAMP" Index="#x7040" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 6" Index="#x1605" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="JIG C RELEASE" Index="#x7050" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 7" Index="#x1606" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="TT RUN" Index="#x7060" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 8" Index="#x1607" InOut="1" Flags="#x0011" SyncMan="0">
+								<Entry Name="COSMO RUN" Index="#x7070" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 9" Index="#x1608" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="TL GREEN" Index="#x7080" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 10" Index="#x1609" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="TL EMBER" Index="#x7090" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 11" Index="#x160a" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="TL RED" Index="#x70a0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 12" Index="#x160b" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="TL BUZZER" Index="#x70b0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 13" Index="#x160c" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="Output" Index="#x70c0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 14" Index="#x160d" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="Output" Index="#x70d0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 15" Index="#x160e" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="Output" Index="#x70e0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Channel 16" Index="#x160f" InOut="1" Flags="#x0011" SyncMan="1">
+								<Entry Name="Output" Index="#x70f0" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+						</EtherCAT>
+					</Box>
+					<Box Id="15" BoxType="9099">
+						<Name>Term 15 (EL9410)</Name>
+						<ImageId>1002</ImageId>
+						<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x24c23052" RevisionNo="#x00110000" RepeatSupport="true" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL9410 E-Bus Power Supplier  (Diagnostics)" Desc="EL9410" PortABoxInfo="#x0100000e">
+							<SyncMan>001001000000010004000000000000000000001000000000</SyncMan>
+							<Fmmu>0000000000000000001000010100000002000000000000000000000000000000</Fmmu>
+							<Pdo Name="Status Us" Index="#x1a00" Flags="#x0011" SyncMan="0">
+								<Entry Name="Undervoltage" Index="#x6000" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Status Up" Index="#x1a01" Flags="#x0011" SyncMan="0">
+								<Entry Name="Undervoltage" Index="#x6010" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+						</EtherCAT>
+					</Box>
+					<Box Id="16" BoxType="9099" BoxFlags="#x00000020">
+						<Name>Term 16 (EL6695) KR1(KR5)</Name>
+						<ImageId>1003</ImageId>
+						<EtherCAT SlaveType="3" AdsServerAddress="a9fe78d10411ee03" FixedAdsServerNetId="true" PdiType="#x0008" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="63" EoeType="1" FoeType="1" VendorId="#x00000002" ProductCode="#x1a273052" RevisionNo="#x00060000" InfoDataAddr="true" InfoDataNetId="true" TimeoutMailbox2="2000" GenerateOwnNetId="true" CheckRevisionNoType="3" PortPhys="51" DcTimeLoopControlOnly="true" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL6695 EtherCAT Bridge terminal (Primary)" Desc="EL6695" PortABoxInfo="#x0100000f">
+							<SyncMan>0010000426000100010000008000da050004001026010000</SyncMan>
+							<SyncMan>0016000422000100020000008000da050004001622010000</SyncMan>
+							<SyncMan>001c6c006400010003000000000000000000001c64010000</SyncMan>
+							<SyncMan>008e6e002000010004000000000000000200008e20010000</SyncMan>
+							<Fmmu>0000000000000000001c00020100000001000000000000000000000000000000</Fmmu>
+							<Fmmu>0000000000000000008e00010100000002000000000000000000000000000000</Fmmu>
+							<Fmmu>00000000000000000d0800010100000003000000000000000000000000000000</Fmmu>
+							<SwitchPortData>00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000</SwitchPortData>
+							<BootStrapData>0010140200141402</BootStrapData>
+							<DcMode>4672656552756e0000000000000000004672656552756e00000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000</DcMode>
+							<DcMode>4443000000000000000000000000000044432d53796e6368726f6e000000000000000000000000000000000000000000000000000000000000000000000020030100000000000000000000000000000000000000000000000000000000000000</DcMode>
+							<Pdo Name="SYNC Inputs" Index="#x1a01" Flags="#x0010" SyncMan="3">
+								<ExcludePdo>#x1a02</ExcludePdo>
+								<ExcludePdo>#x1a03</ExcludePdo>
+								<Entry>
+									<Type GUID="{18071995-0000-0000-0000-00200000000C}">ARRAY [0..11] OF BIT</Type>
+								</Entry>
+								<Entry Name="TxPDO toggle" Index="#x1801" Sub="#x09">
+									<Type>BIT</Type>
+									<Comment><![CDATA[Bit toggles when new data from other side received]]></Comment>
+								</Entry>
+								<Entry Name="TxPDO state" Index="#x1801" Sub="#x07">
+									<Type>BIT</Type>
+									<Comment><![CDATA[0: Other side is in OP state
+>0: Error]]></Comment>
+								</Entry>
+								<Entry>
+									<Type GUID="{18071995-0000-0000-0000-002000000001}">ARRAY [0..0] OF BIT</Type>
+								</Entry>
+								<Entry Name="External device not connected" Index="#x10f4" Sub="#x10">
+									<Type>BIT</Type>
+									<Comment><![CDATA[0: External device connected
+1: External device not connected]]></Comment>
+								</Entry>
+							</Pdo>
+							<Pdo Name="SYNC Inputs" Index="#x1a02" Flags="#x0010">
+								<ExcludePdo>#x1a01</ExcludePdo>
+								<ExcludePdo>#x1a03</ExcludePdo>
+								<Entry Name="Sync Mode" Index="#x10f4" Sub="#x02">
+									<Type>BIT2</Type>
+									<Comment><![CDATA[0: no Syncronisation
+1: Secondary side is Sync Master
+2: Primary side is Sync Master]]></Comment>
+								</Entry>
+								<Entry>
+									<Type GUID="{18071995-0000-0000-0000-00200000000A}">ARRAY [0..9] OF BIT</Type>
+								</Entry>
+								<Entry Name="TxPDO toggle" Index="#x1802" Sub="#x09">
+									<Type>BIT</Type>
+									<Comment><![CDATA[Bit toggles when new data from other side received]]></Comment>
+								</Entry>
+								<Entry Name="TxPDO state" Index="#x1802" Sub="#x07">
+									<Type>BIT</Type>
+									<Comment><![CDATA[0: Other side is in OP state
+>0: Error]]></Comment>
+								</Entry>
+								<Entry Name="Timestamp update toggle" Index="#x10f4" Sub="#x0f">
+									<Type>BIT</Type>
+									<Comment><![CDATA[Bit toggles when new timestamp data available]]></Comment>
+								</Entry>
+								<Entry Name="External device not connected" Index="#x10f4" Sub="#x10">
+									<Type>BIT</Type>
+									<Comment><![CDATA[0: External device connected
+1: External device not connected]]></Comment>
+								</Entry>
+								<Entry Name="Internal time stamp" Index="#x10f4" Sub="#x11">
+									<Type>ULINT</Type>
+								</Entry>
+								<Entry Name="External time stamp" Index="#x10f4" Sub="#x12">
+									<Type>ULINT</Type>
+								</Entry>
+								<Entry>
+									<Type>UDINT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="SYNC Inputs" Index="#x1a03" Flags="#x0010">
+								<ExcludePdo>#x1a01</ExcludePdo>
+								<ExcludePdo>#x1a02</ExcludePdo>
+								<Entry Name="Sync Mode" Index="#x10f4" Sub="#x02">
+									<Type>BIT2</Type>
+									<Comment><![CDATA[0: no Syncronisation
+1: Secondary side is Sync Master
+2: Primary side is Sync Master]]></Comment>
+								</Entry>
+								<Entry>
+									<Type GUID="{18071995-0000-0000-0000-00200000000A}">ARRAY [0..9] OF BIT</Type>
+								</Entry>
+								<Entry Name="TxPDO toggle" Index="#x1803" Sub="#x09">
+									<Type>BIT</Type>
+									<Comment><![CDATA[Bit toggles when new data from other side received]]></Comment>
+								</Entry>
+								<Entry Name="TxPDO state" Index="#x1803" Sub="#x07">
+									<Type>BIT</Type>
+									<Comment><![CDATA[0: Other side is in OP state
+>0: Error]]></Comment>
+								</Entry>
+								<Entry Name="Timestamp update toggle" Index="#x10f4" Sub="#x0f">
+									<Type>BIT</Type>
+									<Comment><![CDATA[Bit toggles when new timestamp data available]]></Comment>
+								</Entry>
+								<Entry Name="External device not connected" Index="#x10f4" Sub="#x10">
+									<Type>BIT</Type>
+									<Comment><![CDATA[0: External device connected
+1: External device not connected]]></Comment>
+								</Entry>
+								<Entry Name="Internal time stamp" Index="#x10f4" Sub="#x11">
+									<Type>UDINT</Type>
+								</Entry>
+								<Entry Name="External time stamp" Index="#x10f4" Sub="#x12">
+									<Type>UDINT</Type>
+								</Entry>
+								<Entry>
+									<Type>UDINT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="FOE Info" Index="#x1a05" Flags="#x0020">
+								<Entry Name="Data Bytes Pending" Index="#xf650" Sub="#x01">
+									<Type>UINT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="IO Inputs" Index="#x1a08" Flags="#x0020" SyncMan="3">
+								<Entry Name="Var 220" Index="#x6000" Sub="#x01">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 221" Index="#x6000" Sub="#x02">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 222" Index="#x6000" Sub="#x03">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 223" Index="#x6000" Sub="#x04">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 224" Index="#x6000" Sub="#x05">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 225" Index="#x6000" Sub="#x06">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 226" Index="#x6000" Sub="#x07">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 227" Index="#x6000" Sub="#x08">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 228" Index="#x6000" Sub="#x09">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 229" Index="#x6000" Sub="#x0a">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 230" Index="#x6000" Sub="#x0b">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 231" Index="#x6000" Sub="#x0c">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 232" Index="#x6000" Sub="#x0d">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 233" Index="#x6000" Sub="#x0e">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 234" Index="#x6000" Sub="#x0f">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 235" Index="#x6000" Sub="#x10">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 236" Index="#x6000" Sub="#x11">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 237" Index="#x6000" Sub="#x12">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 238" Index="#x6000" Sub="#x13">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 239" Index="#x6000" Sub="#x14">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 240" Index="#x6000" Sub="#x15">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 241" Index="#x6000" Sub="#x16">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 242" Index="#x6000" Sub="#x17">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 243" Index="#x6000" Sub="#x18">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 244" Index="#x6000" Sub="#x19">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 245" Index="#x6000" Sub="#x1a">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 246" Index="#x6000" Sub="#x1b">
+									<Type>DWORD</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="IO Outputs" Index="#x1608" InOut="1" Flags="#x0020" SyncMan="2">
+								<Entry Name="Var 247" Index="#x7000" Sub="#x01">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 248" Index="#x7000" Sub="#x02">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 249" Index="#x7000" Sub="#x03">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 250" Index="#x7000" Sub="#x04">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 251" Index="#x7000" Sub="#x05">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 252" Index="#x7000" Sub="#x06">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 253" Index="#x7000" Sub="#x07">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 254" Index="#x7000" Sub="#x08">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 255" Index="#x7000" Sub="#x09">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 256" Index="#x7000" Sub="#x0a">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 257" Index="#x7000" Sub="#x0b">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 258" Index="#x7000" Sub="#x0c">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 259" Index="#x7000" Sub="#x0d">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 260" Index="#x7000" Sub="#x0e">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 261" Index="#x7000" Sub="#x0f">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 262" Index="#x7000" Sub="#x10">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 263" Index="#x7000" Sub="#x11">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 264" Index="#x7000" Sub="#x12">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 265" Index="#x7000" Sub="#x13">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 266" Index="#x7000" Sub="#x14">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 267" Index="#x7000" Sub="#x15">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 268" Index="#x7000" Sub="#x16">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 269" Index="#x7000" Sub="#x17">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 270" Index="#x7000" Sub="#x18">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 271" Index="#x7000" Sub="#x19">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 272" Index="#x7000" Sub="#x1a">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 273" Index="#x7000" Sub="#x1b">
+									<Type>DWORD</Type>
+								</Entry>
+							</Pdo>
+							<CoeProfile ProfileNo="5001"/>
+						</EtherCAT>
+					</Box>
+					<Box Id="17" BoxType="9099" BoxFlags="#x00000020">
+						<Name>Term 17 (EL6695) KR2(KR3)</Name>
+						<ImageId>1003</ImageId>
+						<EtherCAT SlaveType="3" AdsServerAddress="a9fe78d10412ef03" FixedAdsServerNetId="true" PdiType="#x0008" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="63" EoeType="1" FoeType="1" VendorId="#x00000002" ProductCode="#x1a273052" RevisionNo="#x00060000" InfoDataAddr="true" InfoDataNetId="true" TimeoutMailbox2="2000" GenerateOwnNetId="true" CheckRevisionNoType="3" PortPhys="51" DcTimeLoopControlOnly="true" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL6695 EtherCAT Bridge terminal (Primary)" Desc="EL6695" PortABoxInfo="#x01000010">
+							<SyncMan>0010000426000100010000008000da050004001026010000</SyncMan>
+							<SyncMan>0016000422000100020000008000da050004001622010000</SyncMan>
+							<SyncMan>001c54006400010003000000000000000000001c64010000</SyncMan>
+							<SyncMan>008e56002000010004000000000000000200008e20010000</SyncMan>
+							<Fmmu>0000000000000000001c00020100000001000000000000000000000000000000</Fmmu>
+							<Fmmu>0000000000000000008e00010100000002000000000000000000000000000000</Fmmu>
+							<Fmmu>00000000000000000d0800010100000003000000000000000000000000000000</Fmmu>
+							<SwitchPortData>00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000</SwitchPortData>
+							<BootStrapData>0010140200141402</BootStrapData>
+							<DcMode>4672656552756e0000000000000000004672656552756e00000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000</DcMode>
+							<DcMode>4443000000000000000000000000000044432d53796e6368726f6e000000000000000000000000000000000000000000000000000000000000000000000020030100000000000000000000000000000000000000000000000000000000000000</DcMode>
+							<Pdo Name="SYNC Inputs" Index="#x1a01" Flags="#x0010" SyncMan="3">
+								<ExcludePdo>#x1a02</ExcludePdo>
+								<ExcludePdo>#x1a03</ExcludePdo>
+								<Entry>
+									<Type GUID="{18071995-0000-0000-0000-00200000000C}">ARRAY [0..11] OF BIT</Type>
+								</Entry>
+								<Entry Name="TxPDO toggle" Index="#x1801" Sub="#x09">
+									<Type>BIT</Type>
+									<Comment><![CDATA[Bit toggles when new data from other side received]]></Comment>
+								</Entry>
+								<Entry Name="TxPDO state" Index="#x1801" Sub="#x07">
+									<Type>BIT</Type>
+									<Comment><![CDATA[0: Other side is in OP state
+>0: Error]]></Comment>
+								</Entry>
+								<Entry>
+									<Type GUID="{18071995-0000-0000-0000-002000000001}">ARRAY [0..0] OF BIT</Type>
+								</Entry>
+								<Entry Name="External device not connected" Index="#x10f4" Sub="#x10">
+									<Type>BIT</Type>
+									<Comment><![CDATA[0: External device connected
+1: External device not connected]]></Comment>
+								</Entry>
+							</Pdo>
+							<Pdo Name="SYNC Inputs" Index="#x1a02" Flags="#x0010">
+								<ExcludePdo>#x1a01</ExcludePdo>
+								<ExcludePdo>#x1a03</ExcludePdo>
+								<Entry Name="Sync Mode" Index="#x10f4" Sub="#x02">
+									<Type>BIT2</Type>
+									<Comment><![CDATA[0: no Syncronisation
+1: Secondary side is Sync Master
+2: Primary side is Sync Master]]></Comment>
+								</Entry>
+								<Entry>
+									<Type GUID="{18071995-0000-0000-0000-00200000000A}">ARRAY [0..9] OF BIT</Type>
+								</Entry>
+								<Entry Name="TxPDO toggle" Index="#x1802" Sub="#x09">
+									<Type>BIT</Type>
+									<Comment><![CDATA[Bit toggles when new data from other side received]]></Comment>
+								</Entry>
+								<Entry Name="TxPDO state" Index="#x1802" Sub="#x07">
+									<Type>BIT</Type>
+									<Comment><![CDATA[0: Other side is in OP state
+>0: Error]]></Comment>
+								</Entry>
+								<Entry Name="Timestamp update toggle" Index="#x10f4" Sub="#x0f">
+									<Type>BIT</Type>
+									<Comment><![CDATA[Bit toggles when new timestamp data available]]></Comment>
+								</Entry>
+								<Entry Name="External device not connected" Index="#x10f4" Sub="#x10">
+									<Type>BIT</Type>
+									<Comment><![CDATA[0: External device connected
+1: External device not connected]]></Comment>
+								</Entry>
+								<Entry Name="Internal time stamp" Index="#x10f4" Sub="#x11">
+									<Type>ULINT</Type>
+								</Entry>
+								<Entry Name="External time stamp" Index="#x10f4" Sub="#x12">
+									<Type>ULINT</Type>
+								</Entry>
+								<Entry>
+									<Type>UDINT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="SYNC Inputs" Index="#x1a03" Flags="#x0010">
+								<ExcludePdo>#x1a01</ExcludePdo>
+								<ExcludePdo>#x1a02</ExcludePdo>
+								<Entry Name="Sync Mode" Index="#x10f4" Sub="#x02">
+									<Type>BIT2</Type>
+									<Comment><![CDATA[0: no Syncronisation
+1: Secondary side is Sync Master
+2: Primary side is Sync Master]]></Comment>
+								</Entry>
+								<Entry>
+									<Type GUID="{18071995-0000-0000-0000-00200000000A}">ARRAY [0..9] OF BIT</Type>
+								</Entry>
+								<Entry Name="TxPDO toggle" Index="#x1803" Sub="#x09">
+									<Type>BIT</Type>
+									<Comment><![CDATA[Bit toggles when new data from other side received]]></Comment>
+								</Entry>
+								<Entry Name="TxPDO state" Index="#x1803" Sub="#x07">
+									<Type>BIT</Type>
+									<Comment><![CDATA[0: Other side is in OP state
+>0: Error]]></Comment>
+								</Entry>
+								<Entry Name="Timestamp update toggle" Index="#x10f4" Sub="#x0f">
+									<Type>BIT</Type>
+									<Comment><![CDATA[Bit toggles when new timestamp data available]]></Comment>
+								</Entry>
+								<Entry Name="External device not connected" Index="#x10f4" Sub="#x10">
+									<Type>BIT</Type>
+									<Comment><![CDATA[0: External device connected
+1: External device not connected]]></Comment>
+								</Entry>
+								<Entry Name="Internal time stamp" Index="#x10f4" Sub="#x11">
+									<Type>UDINT</Type>
+								</Entry>
+								<Entry Name="External time stamp" Index="#x10f4" Sub="#x12">
+									<Type>UDINT</Type>
+								</Entry>
+								<Entry>
+									<Type>UDINT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="FOE Info" Index="#x1a05" Flags="#x0020">
+								<Entry Name="Data Bytes Pending" Index="#xf650" Sub="#x01">
+									<Type>UINT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="IO Inputs" Index="#x1a08" Flags="#x0020" SyncMan="3">
+								<Entry Name="Var 47" Index="#x6000" Sub="#x01">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 48" Index="#x6000" Sub="#x02">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 50" Index="#x6000" Sub="#x03">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 51" Index="#x6000" Sub="#x04">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 134" Index="#x6000" Sub="#x05">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 135" Index="#x6000" Sub="#x06">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 136" Index="#x6000" Sub="#x07">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 137" Index="#x6000" Sub="#x08">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 138" Index="#x6000" Sub="#x09">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 179" Index="#x6000" Sub="#x0a">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 180" Index="#x6000" Sub="#x0b">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 181" Index="#x6000" Sub="#x0c">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 182" Index="#x6000" Sub="#x0d">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 183" Index="#x6000" Sub="#x0e">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 184" Index="#x6000" Sub="#x0f">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 185" Index="#x6000" Sub="#x10">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 186" Index="#x6000" Sub="#x11">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 187" Index="#x6000" Sub="#x12">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 188" Index="#x6000" Sub="#x13">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 189" Index="#x6000" Sub="#x14">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 196" Index="#x6000" Sub="#x15">
+									<Type>DWORD</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="IO Outputs" Index="#x1608" InOut="1" Flags="#x0020" SyncMan="2">
+								<Entry Name="Var 190" Index="#x7000" Sub="#x01">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 191" Index="#x7000" Sub="#x02">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 192" Index="#x7000" Sub="#x03">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 66" Index="#x7000" Sub="#x04">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 67" Index="#x7000" Sub="#x05">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 68" Index="#x7000" Sub="#x06">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 69" Index="#x7000" Sub="#x07">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 70" Index="#x7000" Sub="#x08">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 71" Index="#x7000" Sub="#x09">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 72" Index="#x7000" Sub="#x0a">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 73" Index="#x7000" Sub="#x0b">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 304" Index="#x7000" Sub="#x0c">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 305" Index="#x7000" Sub="#x0d">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 306" Index="#x7000" Sub="#x0e">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 307" Index="#x7000" Sub="#x0f">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 308" Index="#x7000" Sub="#x10">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 309" Index="#x7000" Sub="#x11">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 310" Index="#x7000" Sub="#x12">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 311" Index="#x7000" Sub="#x13">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 312" Index="#x7000" Sub="#x14">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 313" Index="#x7000" Sub="#x15">
+									<Type>DWORD</Type>
+								</Entry>
+							</Pdo>
+							<CoeProfile ProfileNo="5001"/>
+						</EtherCAT>
+					</Box>
+					<Box Id="18" BoxType="9099" BoxFlags="#x00000020">
+						<Name>Term 18 (EL6695) KR3(KR2)</Name>
+						<ImageId>1003</ImageId>
+						<EtherCAT SlaveType="3" AdsServerAddress="a9fe78d10413f003" FixedAdsServerNetId="true" PdiType="#x0008" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="63" EoeType="1" FoeType="1" VendorId="#x00000002" ProductCode="#x1a273052" RevisionNo="#x00060000" InfoDataAddr="true" InfoDataNetId="true" TimeoutMailbox2="2000" GenerateOwnNetId="true" CheckRevisionNoType="3" PortPhys="51" DcTimeLoopControlOnly="true" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL6695 EtherCAT Bridge terminal (Primary)" Desc="EL6695" PortABoxInfo="#x01000011">
+							<SyncMan>0010000426000100010000008000da050004001026010000</SyncMan>
+							<SyncMan>0016000422000100020000008000da050004001622010000</SyncMan>
+							<SyncMan>001c50006400010003000000000000000000001c64010000</SyncMan>
+							<SyncMan>008e52002000010004000000000000000200008e20010000</SyncMan>
+							<Fmmu>0000000000000000001c00020100000001000000000000000000000000000000</Fmmu>
+							<Fmmu>0000000000000000008e00010100000002000000000000000000000000000000</Fmmu>
+							<Fmmu>00000000000000000d0800010100000003000000000000000000000000000000</Fmmu>
+							<SwitchPortData>00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000</SwitchPortData>
+							<BootStrapData>0010140200141402</BootStrapData>
+							<DcMode>4672656552756e0000000000000000004672656552756e00000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000</DcMode>
+							<DcMode>4443000000000000000000000000000044432d53796e6368726f6e000000000000000000000000000000000000000000000000000000000000000000000020030100000000000000000000000000000000000000000000000000000000000000</DcMode>
+							<Pdo Name="SYNC Inputs" Index="#x1a01" Flags="#x0010" SyncMan="3">
+								<ExcludePdo>#x1a02</ExcludePdo>
+								<ExcludePdo>#x1a03</ExcludePdo>
+								<Entry>
+									<Type GUID="{18071995-0000-0000-0000-00200000000C}">ARRAY [0..11] OF BIT</Type>
+								</Entry>
+								<Entry Name="TxPDO toggle" Index="#x1801" Sub="#x09">
+									<Type>BIT</Type>
+									<Comment><![CDATA[Bit toggles when new data from other side received]]></Comment>
+								</Entry>
+								<Entry Name="TxPDO state" Index="#x1801" Sub="#x07">
+									<Type>BIT</Type>
+									<Comment><![CDATA[0: Other side is in OP state
+>0: Error]]></Comment>
+								</Entry>
+								<Entry>
+									<Type GUID="{18071995-0000-0000-0000-002000000001}">ARRAY [0..0] OF BIT</Type>
+								</Entry>
+								<Entry Name="External device not connected" Index="#x10f4" Sub="#x10">
+									<Type>BIT</Type>
+									<Comment><![CDATA[0: External device connected
+1: External device not connected]]></Comment>
+								</Entry>
+							</Pdo>
+							<Pdo Name="SYNC Inputs" Index="#x1a02" Flags="#x0010">
+								<ExcludePdo>#x1a01</ExcludePdo>
+								<ExcludePdo>#x1a03</ExcludePdo>
+								<Entry Name="Sync Mode" Index="#x10f4" Sub="#x02">
+									<Type>BIT2</Type>
+									<Comment><![CDATA[0: no Syncronisation
+1: Secondary side is Sync Master
+2: Primary side is Sync Master]]></Comment>
+								</Entry>
+								<Entry>
+									<Type GUID="{18071995-0000-0000-0000-00200000000A}">ARRAY [0..9] OF BIT</Type>
+								</Entry>
+								<Entry Name="TxPDO toggle" Index="#x1802" Sub="#x09">
+									<Type>BIT</Type>
+									<Comment><![CDATA[Bit toggles when new data from other side received]]></Comment>
+								</Entry>
+								<Entry Name="TxPDO state" Index="#x1802" Sub="#x07">
+									<Type>BIT</Type>
+									<Comment><![CDATA[0: Other side is in OP state
+>0: Error]]></Comment>
+								</Entry>
+								<Entry Name="Timestamp update toggle" Index="#x10f4" Sub="#x0f">
+									<Type>BIT</Type>
+									<Comment><![CDATA[Bit toggles when new timestamp data available]]></Comment>
+								</Entry>
+								<Entry Name="External device not connected" Index="#x10f4" Sub="#x10">
+									<Type>BIT</Type>
+									<Comment><![CDATA[0: External device connected
+1: External device not connected]]></Comment>
+								</Entry>
+								<Entry Name="Internal time stamp" Index="#x10f4" Sub="#x11">
+									<Type>ULINT</Type>
+								</Entry>
+								<Entry Name="External time stamp" Index="#x10f4" Sub="#x12">
+									<Type>ULINT</Type>
+								</Entry>
+								<Entry>
+									<Type>UDINT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="SYNC Inputs" Index="#x1a03" Flags="#x0010">
+								<ExcludePdo>#x1a01</ExcludePdo>
+								<ExcludePdo>#x1a02</ExcludePdo>
+								<Entry Name="Sync Mode" Index="#x10f4" Sub="#x02">
+									<Type>BIT2</Type>
+									<Comment><![CDATA[0: no Syncronisation
+1: Secondary side is Sync Master
+2: Primary side is Sync Master]]></Comment>
+								</Entry>
+								<Entry>
+									<Type GUID="{18071995-0000-0000-0000-00200000000A}">ARRAY [0..9] OF BIT</Type>
+								</Entry>
+								<Entry Name="TxPDO toggle" Index="#x1803" Sub="#x09">
+									<Type>BIT</Type>
+									<Comment><![CDATA[Bit toggles when new data from other side received]]></Comment>
+								</Entry>
+								<Entry Name="TxPDO state" Index="#x1803" Sub="#x07">
+									<Type>BIT</Type>
+									<Comment><![CDATA[0: Other side is in OP state
+>0: Error]]></Comment>
+								</Entry>
+								<Entry Name="Timestamp update toggle" Index="#x10f4" Sub="#x0f">
+									<Type>BIT</Type>
+									<Comment><![CDATA[Bit toggles when new timestamp data available]]></Comment>
+								</Entry>
+								<Entry Name="External device not connected" Index="#x10f4" Sub="#x10">
+									<Type>BIT</Type>
+									<Comment><![CDATA[0: External device connected
+1: External device not connected]]></Comment>
+								</Entry>
+								<Entry Name="Internal time stamp" Index="#x10f4" Sub="#x11">
+									<Type>UDINT</Type>
+								</Entry>
+								<Entry Name="External time stamp" Index="#x10f4" Sub="#x12">
+									<Type>UDINT</Type>
+								</Entry>
+								<Entry>
+									<Type>UDINT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="FOE Info" Index="#x1a05" Flags="#x0020">
+								<Entry Name="Data Bytes Pending" Index="#xf650" Sub="#x01">
+									<Type>UINT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="IO Inputs" Index="#x1a08" Flags="#x0020" SyncMan="3">
+								<Entry Name="Var 44" Index="#x6000" Sub="#x01">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 45" Index="#x6000" Sub="#x02">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 46" Index="#x6000" Sub="#x03">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 47" Index="#x6000" Sub="#x04">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 48" Index="#x6000" Sub="#x05">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 49" Index="#x6000" Sub="#x06">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 114" Index="#x6000" Sub="#x07">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 115" Index="#x6000" Sub="#x08">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 116" Index="#x6000" Sub="#x09">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 117" Index="#x6000" Sub="#x0a">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 118" Index="#x6000" Sub="#x0b">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 119" Index="#x6000" Sub="#x0c">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 197" Index="#x6000" Sub="#x0d">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 198" Index="#x6000" Sub="#x0e">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 199" Index="#x6000" Sub="#x0f">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 200" Index="#x6000" Sub="#x10">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 201" Index="#x6000" Sub="#x11">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 202" Index="#x6000" Sub="#x12">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 203" Index="#x6000" Sub="#x13">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 204" Index="#x6000" Sub="#x14">
+									<Type>DWORD</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="IO Outputs" Index="#x1608" InOut="1" Flags="#x0020" SyncMan="2">
+								<Entry Name="Var 205" Index="#x7000" Sub="#x01">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 206" Index="#x7000" Sub="#x02">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 241" Index="#x7000" Sub="#x03">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 242" Index="#x7000" Sub="#x04">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 243" Index="#x7000" Sub="#x05">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 244" Index="#x7000" Sub="#x06">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 245" Index="#x7000" Sub="#x07">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 246" Index="#x7000" Sub="#x08">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 247" Index="#x7000" Sub="#x09">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 248" Index="#x7000" Sub="#x0a">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 249" Index="#x7000" Sub="#x0b">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 250" Index="#x7000" Sub="#x0c">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 251" Index="#x7000" Sub="#x0d">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 252" Index="#x7000" Sub="#x0e">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 253" Index="#x7000" Sub="#x0f">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 254" Index="#x7000" Sub="#x10">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 255" Index="#x7000" Sub="#x11">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 256" Index="#x7000" Sub="#x12">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 257" Index="#x7000" Sub="#x13">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 258" Index="#x7000" Sub="#x14">
+									<Type>DWORD</Type>
+								</Entry>
+							</Pdo>
+							<CoeProfile ProfileNo="5001"/>
+						</EtherCAT>
+					</Box>
+					<Box Id="19" BoxType="9099" BoxFlags="#x00000020">
+						<Name>Term 19 (EL6695) KR4</Name>
+						<ImageId>1003</ImageId>
+						<EtherCAT SlaveType="3" AdsServerAddress="a9fe78d10414f103" FixedAdsServerNetId="true" PdiType="#x0008" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="63" EoeType="1" FoeType="1" VendorId="#x00000002" ProductCode="#x1a273052" RevisionNo="#x00060000" InfoDataAddr="true" InfoDataNetId="true" TimeoutMailbox2="2000" GenerateOwnNetId="true" CheckRevisionNoType="3" PortPhys="51" DcTimeLoopControlOnly="true" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL6695 EtherCAT Bridge terminal (Primary)" Desc="EL6695" PortABoxInfo="#x01000012">
+							<SyncMan>0010000426000100010000008000da050004001026010000</SyncMan>
+							<SyncMan>0016000422000100020000008000da050004001622010000</SyncMan>
+							<SyncMan>001c50006400010003000000000000000000001c64010000</SyncMan>
+							<SyncMan>008e52002000010004000000000000000200008e20010000</SyncMan>
+							<Fmmu>0000000000000000001c00020100000001000000000000000000000000000000</Fmmu>
+							<Fmmu>0000000000000000008e00010100000002000000000000000000000000000000</Fmmu>
+							<Fmmu>00000000000000000d0800010100000003000000000000000000000000000000</Fmmu>
+							<SwitchPortData>00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000</SwitchPortData>
+							<BootStrapData>0010140200141402</BootStrapData>
+							<DcMode>4672656552756e0000000000000000004672656552756e00000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000</DcMode>
+							<DcMode>4443000000000000000000000000000044432d53796e6368726f6e000000000000000000000000000000000000000000000000000000000000000000000020030100000000000000000000000000000000000000000000000000000000000000</DcMode>
+							<Pdo Name="SYNC Inputs" Index="#x1a01" Flags="#x0010" SyncMan="3">
+								<ExcludePdo>#x1a02</ExcludePdo>
+								<ExcludePdo>#x1a03</ExcludePdo>
+								<Entry>
+									<Type GUID="{18071995-0000-0000-0000-00200000000C}">ARRAY [0..11] OF BIT</Type>
+								</Entry>
+								<Entry Name="TxPDO toggle" Index="#x1801" Sub="#x09">
+									<Type>BIT</Type>
+									<Comment><![CDATA[Bit toggles when new data from other side received]]></Comment>
+								</Entry>
+								<Entry Name="TxPDO state" Index="#x1801" Sub="#x07">
+									<Type>BIT</Type>
+									<Comment><![CDATA[0: Other side is in OP state
+>0: Error]]></Comment>
+								</Entry>
+								<Entry>
+									<Type GUID="{18071995-0000-0000-0000-002000000001}">ARRAY [0..0] OF BIT</Type>
+								</Entry>
+								<Entry Name="External device not connected" Index="#x10f4" Sub="#x10">
+									<Type>BIT</Type>
+									<Comment><![CDATA[0: External device connected
+1: External device not connected]]></Comment>
+								</Entry>
+							</Pdo>
+							<Pdo Name="SYNC Inputs" Index="#x1a02" Flags="#x0010">
+								<ExcludePdo>#x1a01</ExcludePdo>
+								<ExcludePdo>#x1a03</ExcludePdo>
+								<Entry Name="Sync Mode" Index="#x10f4" Sub="#x02">
+									<Type>BIT2</Type>
+									<Comment><![CDATA[0: no Syncronisation
+1: Secondary side is Sync Master
+2: Primary side is Sync Master]]></Comment>
+								</Entry>
+								<Entry>
+									<Type GUID="{18071995-0000-0000-0000-00200000000A}">ARRAY [0..9] OF BIT</Type>
+								</Entry>
+								<Entry Name="TxPDO toggle" Index="#x1802" Sub="#x09">
+									<Type>BIT</Type>
+									<Comment><![CDATA[Bit toggles when new data from other side received]]></Comment>
+								</Entry>
+								<Entry Name="TxPDO state" Index="#x1802" Sub="#x07">
+									<Type>BIT</Type>
+									<Comment><![CDATA[0: Other side is in OP state
+>0: Error]]></Comment>
+								</Entry>
+								<Entry Name="Timestamp update toggle" Index="#x10f4" Sub="#x0f">
+									<Type>BIT</Type>
+									<Comment><![CDATA[Bit toggles when new timestamp data available]]></Comment>
+								</Entry>
+								<Entry Name="External device not connected" Index="#x10f4" Sub="#x10">
+									<Type>BIT</Type>
+									<Comment><![CDATA[0: External device connected
+1: External device not connected]]></Comment>
+								</Entry>
+								<Entry Name="Internal time stamp" Index="#x10f4" Sub="#x11">
+									<Type>ULINT</Type>
+								</Entry>
+								<Entry Name="External time stamp" Index="#x10f4" Sub="#x12">
+									<Type>ULINT</Type>
+								</Entry>
+								<Entry>
+									<Type>UDINT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="SYNC Inputs" Index="#x1a03" Flags="#x0010">
+								<ExcludePdo>#x1a01</ExcludePdo>
+								<ExcludePdo>#x1a02</ExcludePdo>
+								<Entry Name="Sync Mode" Index="#x10f4" Sub="#x02">
+									<Type>BIT2</Type>
+									<Comment><![CDATA[0: no Syncronisation
+1: Secondary side is Sync Master
+2: Primary side is Sync Master]]></Comment>
+								</Entry>
+								<Entry>
+									<Type GUID="{18071995-0000-0000-0000-00200000000A}">ARRAY [0..9] OF BIT</Type>
+								</Entry>
+								<Entry Name="TxPDO toggle" Index="#x1803" Sub="#x09">
+									<Type>BIT</Type>
+									<Comment><![CDATA[Bit toggles when new data from other side received]]></Comment>
+								</Entry>
+								<Entry Name="TxPDO state" Index="#x1803" Sub="#x07">
+									<Type>BIT</Type>
+									<Comment><![CDATA[0: Other side is in OP state
+>0: Error]]></Comment>
+								</Entry>
+								<Entry Name="Timestamp update toggle" Index="#x10f4" Sub="#x0f">
+									<Type>BIT</Type>
+									<Comment><![CDATA[Bit toggles when new timestamp data available]]></Comment>
+								</Entry>
+								<Entry Name="External device not connected" Index="#x10f4" Sub="#x10">
+									<Type>BIT</Type>
+									<Comment><![CDATA[0: External device connected
+1: External device not connected]]></Comment>
+								</Entry>
+								<Entry Name="Internal time stamp" Index="#x10f4" Sub="#x11">
+									<Type>UDINT</Type>
+								</Entry>
+								<Entry Name="External time stamp" Index="#x10f4" Sub="#x12">
+									<Type>UDINT</Type>
+								</Entry>
+								<Entry>
+									<Type>UDINT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="FOE Info" Index="#x1a05" Flags="#x0020">
+								<Entry Name="Data Bytes Pending" Index="#xf650" Sub="#x01">
+									<Type>UINT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="IO Inputs" Index="#x1a08" Flags="#x0020" SyncMan="3">
+								<Entry Name="Var 232" Index="#x6000" Sub="#x01">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 233" Index="#x6000" Sub="#x02">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 234" Index="#x6000" Sub="#x03">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 235" Index="#x6000" Sub="#x04">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 236" Index="#x6000" Sub="#x05">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 237" Index="#x6000" Sub="#x06">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 238" Index="#x6000" Sub="#x07">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 239" Index="#x6000" Sub="#x08">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 240" Index="#x6000" Sub="#x09">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 241" Index="#x6000" Sub="#x0a">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 242" Index="#x6000" Sub="#x0b">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 243" Index="#x6000" Sub="#x0c">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 244" Index="#x6000" Sub="#x0d">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 245" Index="#x6000" Sub="#x0e">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 246" Index="#x6000" Sub="#x0f">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 247" Index="#x6000" Sub="#x10">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 248" Index="#x6000" Sub="#x11">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 249" Index="#x6000" Sub="#x12">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 250" Index="#x6000" Sub="#x13">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 251" Index="#x6000" Sub="#x14">
+									<Type>DWORD</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="IO Outputs" Index="#x1608" InOut="1" Flags="#x0020" SyncMan="2">
+								<Entry Name="Var 252" Index="#x7000" Sub="#x01">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 253" Index="#x7000" Sub="#x02">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 259" Index="#x7000" Sub="#x03">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 260" Index="#x7000" Sub="#x04">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 261" Index="#x7000" Sub="#x05">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 262" Index="#x7000" Sub="#x06">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 263" Index="#x7000" Sub="#x07">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 264" Index="#x7000" Sub="#x08">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 265" Index="#x7000" Sub="#x09">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 266" Index="#x7000" Sub="#x0a">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 267" Index="#x7000" Sub="#x0b">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 268" Index="#x7000" Sub="#x0c">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 269" Index="#x7000" Sub="#x0d">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 270" Index="#x7000" Sub="#x0e">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 271" Index="#x7000" Sub="#x0f">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 272" Index="#x7000" Sub="#x10">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 273" Index="#x7000" Sub="#x11">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 274" Index="#x7000" Sub="#x12">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 275" Index="#x7000" Sub="#x13">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 276" Index="#x7000" Sub="#x14">
+									<Type>DWORD</Type>
+								</Entry>
+							</Pdo>
+							<CoeProfile ProfileNo="5001"/>
+						</EtherCAT>
+					</Box>
+					<Box Id="20" BoxType="9099" BoxFlags="#x00000020">
+						<Name>Term 20 (EL6695) KR5(KR1)</Name>
+						<ImageId>1003</ImageId>
+						<EtherCAT SlaveType="3" AdsServerAddress="a9fe78d10415f203" FixedAdsServerNetId="true" PdiType="#x0008" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="63" EoeType="1" FoeType="1" VendorId="#x00000002" ProductCode="#x1a273052" RevisionNo="#x00060000" InfoDataAddr="true" InfoDataNetId="true" TimeoutMailbox2="2000" GenerateOwnNetId="true" CheckRevisionNoType="3" PortPhys="51" DcTimeLoopControlOnly="true" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL6695 EtherCAT Bridge terminal (Primary)" Desc="EL6695" PortABoxInfo="#x01000013">
+							<SyncMan>0010000426000100010000008000da050004001026010000</SyncMan>
+							<SyncMan>0016000422000100020000008000da050004001622010000</SyncMan>
+							<SyncMan>001c08006400010003000000000000000000001c64010000</SyncMan>
+							<SyncMan>008e52002000010004000000000000000200008e20010000</SyncMan>
+							<Fmmu>0000000000000000001c00020100000001000000000000000000000000000000</Fmmu>
+							<Fmmu>0000000000000000008e00010100000002000000000000000000000000000000</Fmmu>
+							<Fmmu>00000000000000000d0800010100000003000000000000000000000000000000</Fmmu>
+							<SwitchPortData>00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000</SwitchPortData>
+							<BootStrapData>0010140200141402</BootStrapData>
+							<DcMode>4672656552756e0000000000000000004672656552756e00000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000</DcMode>
+							<DcMode>4443000000000000000000000000000044432d53796e6368726f6e000000000000000000000000000000000000000000000000000000000000000000000020030100000000000000000000000000000000000000000000000000000000000000</DcMode>
+							<Pdo Name="SYNC Inputs" Index="#x1a01" Flags="#x0010" SyncMan="3">
+								<ExcludePdo>#x1a02</ExcludePdo>
+								<ExcludePdo>#x1a03</ExcludePdo>
+								<Entry>
+									<Type GUID="{18071995-0000-0000-0000-00200000000C}">ARRAY [0..11] OF BIT</Type>
+								</Entry>
+								<Entry Name="TxPDO toggle" Index="#x1801" Sub="#x09">
+									<Type>BIT</Type>
+									<Comment><![CDATA[Bit toggles when new data from other side received]]></Comment>
+								</Entry>
+								<Entry Name="TxPDO state" Index="#x1801" Sub="#x07">
+									<Type>BIT</Type>
+									<Comment><![CDATA[0: Other side is in OP state
+>0: Error]]></Comment>
+								</Entry>
+								<Entry>
+									<Type GUID="{18071995-0000-0000-0000-002000000001}">ARRAY [0..0] OF BIT</Type>
+								</Entry>
+								<Entry Name="External device not connected" Index="#x10f4" Sub="#x10">
+									<Type>BIT</Type>
+									<Comment><![CDATA[0: External device connected
+1: External device not connected]]></Comment>
+								</Entry>
+							</Pdo>
+							<Pdo Name="SYNC Inputs" Index="#x1a02" Flags="#x0010">
+								<ExcludePdo>#x1a01</ExcludePdo>
+								<ExcludePdo>#x1a03</ExcludePdo>
+								<Entry Name="Sync Mode" Index="#x10f4" Sub="#x02">
+									<Type>BIT2</Type>
+									<Comment><![CDATA[0: no Syncronisation
+1: Secondary side is Sync Master
+2: Primary side is Sync Master]]></Comment>
+								</Entry>
+								<Entry>
+									<Type GUID="{18071995-0000-0000-0000-00200000000A}">ARRAY [0..9] OF BIT</Type>
+								</Entry>
+								<Entry Name="TxPDO toggle" Index="#x1802" Sub="#x09">
+									<Type>BIT</Type>
+									<Comment><![CDATA[Bit toggles when new data from other side received]]></Comment>
+								</Entry>
+								<Entry Name="TxPDO state" Index="#x1802" Sub="#x07">
+									<Type>BIT</Type>
+									<Comment><![CDATA[0: Other side is in OP state
+>0: Error]]></Comment>
+								</Entry>
+								<Entry Name="Timestamp update toggle" Index="#x10f4" Sub="#x0f">
+									<Type>BIT</Type>
+									<Comment><![CDATA[Bit toggles when new timestamp data available]]></Comment>
+								</Entry>
+								<Entry Name="External device not connected" Index="#x10f4" Sub="#x10">
+									<Type>BIT</Type>
+									<Comment><![CDATA[0: External device connected
+1: External device not connected]]></Comment>
+								</Entry>
+								<Entry Name="Internal time stamp" Index="#x10f4" Sub="#x11">
+									<Type>ULINT</Type>
+								</Entry>
+								<Entry Name="External time stamp" Index="#x10f4" Sub="#x12">
+									<Type>ULINT</Type>
+								</Entry>
+								<Entry>
+									<Type>UDINT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="SYNC Inputs" Index="#x1a03" Flags="#x0010">
+								<ExcludePdo>#x1a01</ExcludePdo>
+								<ExcludePdo>#x1a02</ExcludePdo>
+								<Entry Name="Sync Mode" Index="#x10f4" Sub="#x02">
+									<Type>BIT2</Type>
+									<Comment><![CDATA[0: no Syncronisation
+1: Secondary side is Sync Master
+2: Primary side is Sync Master]]></Comment>
+								</Entry>
+								<Entry>
+									<Type GUID="{18071995-0000-0000-0000-00200000000A}">ARRAY [0..9] OF BIT</Type>
+								</Entry>
+								<Entry Name="TxPDO toggle" Index="#x1803" Sub="#x09">
+									<Type>BIT</Type>
+									<Comment><![CDATA[Bit toggles when new data from other side received]]></Comment>
+								</Entry>
+								<Entry Name="TxPDO state" Index="#x1803" Sub="#x07">
+									<Type>BIT</Type>
+									<Comment><![CDATA[0: Other side is in OP state
+>0: Error]]></Comment>
+								</Entry>
+								<Entry Name="Timestamp update toggle" Index="#x10f4" Sub="#x0f">
+									<Type>BIT</Type>
+									<Comment><![CDATA[Bit toggles when new timestamp data available]]></Comment>
+								</Entry>
+								<Entry Name="External device not connected" Index="#x10f4" Sub="#x10">
+									<Type>BIT</Type>
+									<Comment><![CDATA[0: External device connected
+1: External device not connected]]></Comment>
+								</Entry>
+								<Entry Name="Internal time stamp" Index="#x10f4" Sub="#x11">
+									<Type>UDINT</Type>
+								</Entry>
+								<Entry Name="External time stamp" Index="#x10f4" Sub="#x12">
+									<Type>UDINT</Type>
+								</Entry>
+								<Entry>
+									<Type>UDINT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="FOE Info" Index="#x1a05" Flags="#x0020">
+								<Entry Name="Data Bytes Pending" Index="#xf650" Sub="#x01">
+									<Type>UINT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="IO Inputs" Index="#x1a08" Flags="#x0020" SyncMan="3">
+								<Entry Name="Var 5" Index="#x6000" Sub="#x01">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 6" Index="#x6000" Sub="#x02">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 7" Index="#x6000" Sub="#x03">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 8" Index="#x6000" Sub="#x04">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 9" Index="#x6000" Sub="#x05">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 10" Index="#x6000" Sub="#x06">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 75" Index="#x6000" Sub="#x07">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 76" Index="#x6000" Sub="#x08">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 77" Index="#x6000" Sub="#x09">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 78" Index="#x6000" Sub="#x0a">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 79" Index="#x6000" Sub="#x0b">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 80" Index="#x6000" Sub="#x0c">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 298" Index="#x6000" Sub="#x0d">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 299" Index="#x6000" Sub="#x0e">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 300" Index="#x6000" Sub="#x0f">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 301" Index="#x6000" Sub="#x10">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 302" Index="#x6000" Sub="#x11">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 303" Index="#x6000" Sub="#x12">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 304" Index="#x6000" Sub="#x13">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 305" Index="#x6000" Sub="#x14">
+									<Type>DWORD</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="IO Outputs" Index="#x1608" InOut="1" Flags="#x0020" SyncMan="2">
+								<Entry Name="Var 306" Index="#x7000" Sub="#x01">
+									<Type>DWORD</Type>
+								</Entry>
+								<Entry Name="Var 307" Index="#x7000" Sub="#x02">
+									<Type>DWORD</Type>
+								</Entry>
+							</Pdo>
+							<CoeProfile ProfileNo="5001"/>
+						</EtherCAT>
+					</Box>
+					<Box Id="21" BoxType="9099">
+						<Name>Term 21 (EL9011)</Name>
+						<ImageId>1004</ImageId>
+						<EtherCAT CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x23333050" InfoDataState="false" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL9011 End Terminal" Desc="EL9011" PortABoxInfo="#x01000014"/>
+					</Box>
+				</Box>
+				<EtherCAT EnableVirtualSwitch="true" MaxSwitchPorts="6" MaxSwitchFrames="200"/>
+			</Device>
+		</Io>
+	</Project>
+	<Mappings>
+		<MappingInfo Identifier="{00000000-2001-0850-0020-500820000403}" Id="#x02030010"/>
+		<OwnerA Name="TIPC^WC1^WC1 Instance">
+			<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 5 (EK1100)^Term 12 (EL1889)">
+				<Link VarA="PlcTask Inputs^GVL.COSMO_NOTOK" VarB="Channel 12^COSMO NOTOK"/>
+				<Link VarA="PlcTask Inputs^GVL.COSMO_OK" VarB="Channel 11^COSMO OK"/>
+				<Link VarA="PlcTask Inputs^GVL.COSMO_Ready" VarB="Channel 10^COSMO READY"/>
+				<Link VarA="PlcTask Inputs^GVL.Conveyor_Full" VarB="Channel 14^CONVY FULL"/>
+				<Link VarA="PlcTask Inputs^GVL.JIGA_Ready" VarB="Channel 3^JIG A READY"/>
+				<Link VarA="PlcTask Inputs^GVL.JIGA_Standby" VarB="Channel 2^JIG A STANDBY"/>
+				<Link VarA="PlcTask Inputs^GVL.JIGB_Ready" VarB="Channel 5^JIG B READY"/>
+				<Link VarA="PlcTask Inputs^GVL.JIGB_Standby" VarB="Channel 4^JIG B STANDBY"/>
+				<Link VarA="PlcTask Inputs^GVL.JIGC_Ready" VarB="Channel 7^JIG C READY"/>
+				<Link VarA="PlcTask Inputs^GVL.JIGC_Standby" VarB="Channel 6^JIG C STANDBY"/>
+				<Link VarA="PlcTask Inputs^GVL.Rework_Empty" VarB="Channel 15^REWORK EMPTY"/>
+				<Link VarA="PlcTask Inputs^GVL.TTorch_Complete" VarB="Channel 9^TT COMPLETE"/>
+				<Link VarA="PlcTask Inputs^GVL.TTorch_Standy" VarB="Channel 8^TT STANDBY"/>
+				<Link VarA="PlcTask Inputs^GVL.VibBowl_Ready" VarB="Channel 13^VB READY"/>
+				<Link VarA="PlcTask Inputs^MAIN.btnEstop" VarB="Channel 1^Estop"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 5 (EK1100)^Term 13 (EL1889)">
+				<Link VarA="PlcTask Inputs^GVL.JIGA_Complete" VarB="Channel 9^JIGA_Complete"/>
+				<Link VarA="PlcTask Inputs^GVL.JIGB_Complete" VarB="Channel 10^JIGB_Complete"/>
+				<Link VarA="PlcTask Inputs^GVL.JIGC_Complete" VarB="Channel 11^JIGC_Complete"/>
+				<Link VarA="PlcTask Inputs^MAIN.btnReset" VarB="Channel 3^RESET BTN"/>
+				<Link VarA="PlcTask Inputs^MAIN.btnStart" VarB="Channel 1^START BTN"/>
+				<Link VarA="PlcTask Inputs^MAIN.btnStop" VarB="Channel 2^STOP BTN"/>
+				<Link VarA="PlcTask Inputs^SAFETY_SENSOR.SENSOR_AIR_PRESSURE_HIGH" VarB="Channel 5^AirPressure_High"/>
+				<Link VarA="PlcTask Inputs^SAFETY_SENSOR.SENSOR_AIR_PRESSURE_OK" VarB="Channel 4^GasPressure_OK"/>
+				<Link VarA="PlcTask Inputs^SAFETY_SENSOR.SENSOR_GAS_PRESSURE_HIGH" VarB="Channel 7^GasPressure_High"/>
+				<Link VarA="PlcTask Inputs^SAFETY_SENSOR.SENSOR_GAS_PRESSURE_OK" VarB="Channel 6^GasPressure_OK"/>
+				<Link VarA="PlcTask Inputs^SAFETY_SENSOR.SENSOR_SAFETY_DOOR_CLOSE" VarB="Channel 8^SafetyDoor"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 5 (EK1100)^Term 14 (EL2889)">
+				<Link VarA="PlcTask Outputs^GVL.COSMO_Run" VarB="Channel 8^COSMO RUN"/>
+				<Link VarA="PlcTask Outputs^GVL.JIGA_Clamp" VarB="Channel 1^JIG A CLAMP"/>
+				<Link VarA="PlcTask Outputs^GVL.JIGA_Release" VarB="Channel 2^JIG A RELEASE"/>
+				<Link VarA="PlcTask Outputs^GVL.JIGB_Clamp" VarB="Channel 3^JIG B CLAMP"/>
+				<Link VarA="PlcTask Outputs^GVL.JIGB_Release" VarB="Channel 4^JIG B RELEASE"/>
+				<Link VarA="PlcTask Outputs^GVL.JIGC_Clamp" VarB="Channel 5^JIG C CLAMP"/>
+				<Link VarA="PlcTask Outputs^GVL.JIGC_Release" VarB="Channel 6^JIG C RELEASE"/>
+				<Link VarA="PlcTask Outputs^GVL.TTorch_Run" VarB="Channel 7^TT RUN"/>
+				<Link VarA="PlcTask Outputs^TL.TL_Buzzer" VarB="Channel 12^TL BUZZER"/>
+				<Link VarA="PlcTask Outputs^TL.TL_Ember" VarB="Channel 10^TL EMBER"/>
+				<Link VarA="PlcTask Outputs^TL.TL_Green" VarB="Channel 9^TL GREEN"/>
+				<Link VarA="PlcTask Outputs^TL.TL_Red" VarB="Channel 11^TL RED"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 5 (EK1100)^Term 16 (EL6695) KR1(KR5)">
+				<Link VarA="PlcTask Inputs^KR1.PLC_I_AXIS[1]" VarB="IO Inputs^Var 229"/>
+				<Link VarA="PlcTask Inputs^KR1.PLC_I_AXIS[2]" VarB="IO Inputs^Var 230"/>
+				<Link VarA="PlcTask Inputs^KR1.PLC_I_AXIS[3]" VarB="IO Inputs^Var 231"/>
+				<Link VarA="PlcTask Inputs^KR1.PLC_I_AXIS[4]" VarB="IO Inputs^Var 232"/>
+				<Link VarA="PlcTask Inputs^KR1.PLC_I_AXIS[5]" VarB="IO Inputs^Var 233"/>
+				<Link VarA="PlcTask Inputs^KR1.PLC_I_AXIS[6]" VarB="IO Inputs^Var 234"/>
+				<Link VarA="PlcTask Inputs^KR1.PLC_I_CURR[1]" VarB="IO Inputs^Var 235"/>
+				<Link VarA="PlcTask Inputs^KR1.PLC_I_CURR[2]" VarB="IO Inputs^Var 236"/>
+				<Link VarA="PlcTask Inputs^KR1.PLC_I_CURR[3]" VarB="IO Inputs^Var 237"/>
+				<Link VarA="PlcTask Inputs^KR1.PLC_I_CURR[4]" VarB="IO Inputs^Var 238"/>
+				<Link VarA="PlcTask Inputs^KR1.PLC_I_CURR[5]" VarB="IO Inputs^Var 239"/>
+				<Link VarA="PlcTask Inputs^KR1.PLC_I_CURR[6]" VarB="IO Inputs^Var 240"/>
+				<Link VarA="PlcTask Inputs^KR1.PLC_I_PROG1" VarB="IO Inputs^Var 220"/>
+				<Link VarA="PlcTask Inputs^KR1.PLC_I_PROG2" VarB="IO Inputs^Var 221"/>
+				<Link VarA="PlcTask Inputs^KR1.PLC_I_PROG3" VarB="IO Inputs^Var 222"/>
+				<Link VarA="PlcTask Inputs^KR1.PLC_I_PROG4" VarB="IO Inputs^Var 223"/>
+				<Link VarA="PlcTask Inputs^KR1.PLC_I_PROG5" VarB="IO Inputs^Var 224"/>
+				<Link VarA="PlcTask Inputs^KR1.PLC_I_PROG6" VarB="IO Inputs^Var 225"/>
+				<Link VarA="PlcTask Inputs^KR1.PLC_I_PROG7" VarB="IO Inputs^Var 226"/>
+				<Link VarA="PlcTask Inputs^KR1.PLC_I_PROG8" VarB="IO Inputs^Var 227"/>
+				<Link VarA="PlcTask Inputs^KR1.PLC_I_SYS" VarB="IO Inputs^Var 228"/>
+				<Link VarA="PlcTask Inputs^KR1.PLC_I_TEMP[1]" VarB="IO Inputs^Var 241"/>
+				<Link VarA="PlcTask Inputs^KR1.PLC_I_TEMP[2]" VarB="IO Inputs^Var 242"/>
+				<Link VarA="PlcTask Inputs^KR1.PLC_I_TEMP[3]" VarB="IO Inputs^Var 243"/>
+				<Link VarA="PlcTask Inputs^KR1.PLC_I_TEMP[4]" VarB="IO Inputs^Var 244"/>
+				<Link VarA="PlcTask Inputs^KR1.PLC_I_TEMP[5]" VarB="IO Inputs^Var 245"/>
+				<Link VarA="PlcTask Inputs^KR1.PLC_I_TEMP[6]" VarB="IO Inputs^Var 246"/>
+				<Link VarA="PlcTask Outputs^KR1.PLC_O_PROG1" VarB="IO Outputs^Var 247"/>
+				<Link VarA="PlcTask Outputs^KR1.PLC_O_PROG2" VarB="IO Outputs^Var 248"/>
+				<Link VarA="PlcTask Outputs^KR1.PLC_O_PROG3" VarB="IO Outputs^Var 249"/>
+				<Link VarA="PlcTask Outputs^KR1.PLC_O_PROG4" VarB="IO Outputs^Var 250"/>
+				<Link VarA="PlcTask Outputs^KR1.PLC_O_PROG5" VarB="IO Outputs^Var 251"/>
+				<Link VarA="PlcTask Outputs^KR1.PLC_O_PROG6" VarB="IO Outputs^Var 252"/>
+				<Link VarA="PlcTask Outputs^KR1.PLC_O_PROG7" VarB="IO Outputs^Var 253"/>
+				<Link VarA="PlcTask Outputs^KR1.PLC_O_PROG8" VarB="IO Outputs^Var 254"/>
+				<Link VarA="PlcTask Outputs^KR1.PLC_O_SYS" VarB="IO Outputs^Var 255"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 5 (EK1100)^Term 17 (EL6695) KR2(KR3)">
+				<Link VarA="PlcTask Inputs^KR2.PLC_I_AXIS[1]" VarB="IO Inputs^Var 51"/>
+				<Link VarA="PlcTask Inputs^KR2.PLC_I_AXIS[2]" VarB="IO Inputs^Var 134"/>
+				<Link VarA="PlcTask Inputs^KR2.PLC_I_AXIS[3]" VarB="IO Inputs^Var 135"/>
+				<Link VarA="PlcTask Inputs^KR2.PLC_I_AXIS[4]" VarB="IO Inputs^Var 136"/>
+				<Link VarA="PlcTask Inputs^KR2.PLC_I_AXIS[5]" VarB="IO Inputs^Var 137"/>
+				<Link VarA="PlcTask Inputs^KR2.PLC_I_AXIS[6]" VarB="IO Inputs^Var 138"/>
+				<Link VarA="PlcTask Inputs^KR2.PLC_I_CURR[1]" VarB="IO Inputs^Var 179"/>
+				<Link VarA="PlcTask Inputs^KR2.PLC_I_CURR[2]" VarB="IO Inputs^Var 180"/>
+				<Link VarA="PlcTask Inputs^KR2.PLC_I_CURR[3]" VarB="IO Inputs^Var 181"/>
+				<Link VarA="PlcTask Inputs^KR2.PLC_I_CURR[4]" VarB="IO Inputs^Var 182"/>
+				<Link VarA="PlcTask Inputs^KR2.PLC_I_CURR[5]" VarB="IO Inputs^Var 183"/>
+				<Link VarA="PlcTask Inputs^KR2.PLC_I_CURR[6]" VarB="IO Inputs^Var 184"/>
+				<Link VarA="PlcTask Inputs^KR2.PLC_I_PROG1" VarB="IO Inputs^Var 47"/>
+				<Link VarA="PlcTask Inputs^KR2.PLC_I_PROG2" VarB="IO Inputs^Var 48"/>
+				<Link VarA="PlcTask Inputs^KR2.PLC_I_SYS" VarB="IO Inputs^Var 50"/>
+				<Link VarA="PlcTask Inputs^KR2.PLC_I_TEMP[1]" VarB="IO Inputs^Var 185"/>
+				<Link VarA="PlcTask Inputs^KR2.PLC_I_TEMP[2]" VarB="IO Inputs^Var 186"/>
+				<Link VarA="PlcTask Inputs^KR2.PLC_I_TEMP[3]" VarB="IO Inputs^Var 187"/>
+				<Link VarA="PlcTask Inputs^KR2.PLC_I_TEMP[4]" VarB="IO Inputs^Var 188"/>
+				<Link VarA="PlcTask Inputs^KR2.PLC_I_TEMP[5]" VarB="IO Inputs^Var 189"/>
+				<Link VarA="PlcTask Inputs^KR2.PLC_I_TEMP[6]" VarB="IO Inputs^Var 196"/>
+				<Link VarA="PlcTask Outputs^KR2.PLC_O_PROG1" VarB="IO Outputs^Var 190"/>
+				<Link VarA="PlcTask Outputs^KR2.PLC_O_PROG2" VarB="IO Outputs^Var 191"/>
+				<Link VarA="PlcTask Outputs^KR2.PLC_O_SYS" VarB="IO Outputs^Var 192"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 5 (EK1100)^Term 18 (EL6695) KR3(KR2)">
+				<Link VarA="PlcTask Inputs^KR3.PLC_I_AXIS[1]" VarB="IO Inputs^Var 46"/>
+				<Link VarA="PlcTask Inputs^KR3.PLC_I_AXIS[2]" VarB="IO Inputs^Var 47"/>
+				<Link VarA="PlcTask Inputs^KR3.PLC_I_AXIS[3]" VarB="IO Inputs^Var 48"/>
+				<Link VarA="PlcTask Inputs^KR3.PLC_I_AXIS[4]" VarB="IO Inputs^Var 49"/>
+				<Link VarA="PlcTask Inputs^KR3.PLC_I_AXIS[5]" VarB="IO Inputs^Var 114"/>
+				<Link VarA="PlcTask Inputs^KR3.PLC_I_AXIS[6]" VarB="IO Inputs^Var 115"/>
+				<Link VarA="PlcTask Inputs^KR3.PLC_I_CURR[1]" VarB="IO Inputs^Var 116"/>
+				<Link VarA="PlcTask Inputs^KR3.PLC_I_CURR[2]" VarB="IO Inputs^Var 117"/>
+				<Link VarA="PlcTask Inputs^KR3.PLC_I_CURR[3]" VarB="IO Inputs^Var 118"/>
+				<Link VarA="PlcTask Inputs^KR3.PLC_I_CURR[4]" VarB="IO Inputs^Var 119"/>
+				<Link VarA="PlcTask Inputs^KR3.PLC_I_CURR[5]" VarB="IO Inputs^Var 197"/>
+				<Link VarA="PlcTask Inputs^KR3.PLC_I_CURR[6]" VarB="IO Inputs^Var 198"/>
+				<Link VarA="PlcTask Inputs^KR3.PLC_I_PROG1" VarB="IO Inputs^Var 44"/>
+				<Link VarA="PlcTask Inputs^KR3.PLC_I_SYS" VarB="IO Inputs^Var 45"/>
+				<Link VarA="PlcTask Inputs^KR3.PLC_I_TEMP[1]" VarB="IO Inputs^Var 199"/>
+				<Link VarA="PlcTask Inputs^KR3.PLC_I_TEMP[2]" VarB="IO Inputs^Var 200"/>
+				<Link VarA="PlcTask Inputs^KR3.PLC_I_TEMP[3]" VarB="IO Inputs^Var 201"/>
+				<Link VarA="PlcTask Inputs^KR3.PLC_I_TEMP[4]" VarB="IO Inputs^Var 202"/>
+				<Link VarA="PlcTask Inputs^KR3.PLC_I_TEMP[5]" VarB="IO Inputs^Var 203"/>
+				<Link VarA="PlcTask Inputs^KR3.PLC_I_TEMP[6]" VarB="IO Inputs^Var 204"/>
+				<Link VarA="PlcTask Outputs^KR3.PLC_O_PROG1" VarB="IO Outputs^Var 205"/>
+				<Link VarA="PlcTask Outputs^KR3.PLC_O_SYS" VarB="IO Outputs^Var 206"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 5 (EK1100)^Term 19 (EL6695) KR4">
+				<Link VarA="PlcTask Inputs^KR4.PLC_I_AXIS[1]" VarB="IO Inputs^Var 234"/>
+				<Link VarA="PlcTask Inputs^KR4.PLC_I_AXIS[2]" VarB="IO Inputs^Var 235"/>
+				<Link VarA="PlcTask Inputs^KR4.PLC_I_AXIS[3]" VarB="IO Inputs^Var 236"/>
+				<Link VarA="PlcTask Inputs^KR4.PLC_I_AXIS[4]" VarB="IO Inputs^Var 237"/>
+				<Link VarA="PlcTask Inputs^KR4.PLC_I_AXIS[5]" VarB="IO Inputs^Var 238"/>
+				<Link VarA="PlcTask Inputs^KR4.PLC_I_AXIS[6]" VarB="IO Inputs^Var 239"/>
+				<Link VarA="PlcTask Inputs^KR4.PLC_I_CURR[1]" VarB="IO Inputs^Var 240"/>
+				<Link VarA="PlcTask Inputs^KR4.PLC_I_CURR[2]" VarB="IO Inputs^Var 241"/>
+				<Link VarA="PlcTask Inputs^KR4.PLC_I_CURR[3]" VarB="IO Inputs^Var 242"/>
+				<Link VarA="PlcTask Inputs^KR4.PLC_I_CURR[4]" VarB="IO Inputs^Var 243"/>
+				<Link VarA="PlcTask Inputs^KR4.PLC_I_CURR[5]" VarB="IO Inputs^Var 244"/>
+				<Link VarA="PlcTask Inputs^KR4.PLC_I_CURR[6]" VarB="IO Inputs^Var 245"/>
+				<Link VarA="PlcTask Inputs^KR4.PLC_I_PROG1" VarB="IO Inputs^Var 232"/>
+				<Link VarA="PlcTask Inputs^KR4.PLC_I_SYS" VarB="IO Inputs^Var 233"/>
+				<Link VarA="PlcTask Inputs^KR4.PLC_I_TEMP[1]" VarB="IO Inputs^Var 246"/>
+				<Link VarA="PlcTask Inputs^KR4.PLC_I_TEMP[2]" VarB="IO Inputs^Var 247"/>
+				<Link VarA="PlcTask Inputs^KR4.PLC_I_TEMP[3]" VarB="IO Inputs^Var 248"/>
+				<Link VarA="PlcTask Inputs^KR4.PLC_I_TEMP[4]" VarB="IO Inputs^Var 249"/>
+				<Link VarA="PlcTask Inputs^KR4.PLC_I_TEMP[5]" VarB="IO Inputs^Var 250"/>
+				<Link VarA="PlcTask Inputs^KR4.PLC_I_TEMP[6]" VarB="IO Inputs^Var 251"/>
+				<Link VarA="PlcTask Outputs^KR4.PLC_O_PROG1" VarB="IO Outputs^Var 252"/>
+				<Link VarA="PlcTask Outputs^KR4.PLC_O_SYS" VarB="IO Outputs^Var 253"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 5 (EK1100)^Term 20 (EL6695) KR5(KR1)">
+				<Link VarA="PlcTask Inputs^KR5.PLC_I_AXIS[1]" VarB="IO Inputs^Var 7"/>
+				<Link VarA="PlcTask Inputs^KR5.PLC_I_AXIS[2]" VarB="IO Inputs^Var 8"/>
+				<Link VarA="PlcTask Inputs^KR5.PLC_I_AXIS[3]" VarB="IO Inputs^Var 9"/>
+				<Link VarA="PlcTask Inputs^KR5.PLC_I_AXIS[4]" VarB="IO Inputs^Var 10"/>
+				<Link VarA="PlcTask Inputs^KR5.PLC_I_AXIS[5]" VarB="IO Inputs^Var 75"/>
+				<Link VarA="PlcTask Inputs^KR5.PLC_I_AXIS[6]" VarB="IO Inputs^Var 76"/>
+				<Link VarA="PlcTask Inputs^KR5.PLC_I_CURR[1]" VarB="IO Inputs^Var 77"/>
+				<Link VarA="PlcTask Inputs^KR5.PLC_I_CURR[2]" VarB="IO Inputs^Var 78"/>
+				<Link VarA="PlcTask Inputs^KR5.PLC_I_CURR[3]" VarB="IO Inputs^Var 79"/>
+				<Link VarA="PlcTask Inputs^KR5.PLC_I_CURR[4]" VarB="IO Inputs^Var 80"/>
+				<Link VarA="PlcTask Inputs^KR5.PLC_I_CURR[5]" VarB="IO Inputs^Var 298"/>
+				<Link VarA="PlcTask Inputs^KR5.PLC_I_CURR[6]" VarB="IO Inputs^Var 299"/>
+				<Link VarA="PlcTask Inputs^KR5.PLC_I_PROG1" VarB="IO Inputs^Var 5"/>
+				<Link VarA="PlcTask Inputs^KR5.PLC_I_SYS" VarB="IO Inputs^Var 6"/>
+				<Link VarA="PlcTask Inputs^KR5.PLC_I_TEMP[1]" VarB="IO Inputs^Var 300"/>
+				<Link VarA="PlcTask Inputs^KR5.PLC_I_TEMP[2]" VarB="IO Inputs^Var 301"/>
+				<Link VarA="PlcTask Inputs^KR5.PLC_I_TEMP[3]" VarB="IO Inputs^Var 302"/>
+				<Link VarA="PlcTask Inputs^KR5.PLC_I_TEMP[4]" VarB="IO Inputs^Var 303"/>
+				<Link VarA="PlcTask Inputs^KR5.PLC_I_TEMP[5]" VarB="IO Inputs^Var 304"/>
+				<Link VarA="PlcTask Inputs^KR5.PLC_I_TEMP[6]" VarB="IO Inputs^Var 305"/>
+				<Link VarA="PlcTask Outputs^KR5.PLC_O_PROG1" VarB="IO Outputs^Var 306"/>
+				<Link VarA="PlcTask Outputs^KR5.PLC_O_SYS" VarB="IO Outputs^Var 307"/>
+			</OwnerB>
+		</OwnerA>
+	</Mappings>
+</TcSmProject>

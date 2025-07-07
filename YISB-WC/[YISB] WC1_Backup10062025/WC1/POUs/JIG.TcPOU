@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="JIG" Id="{12d6e6ee-325e-4362-970c-94c78e2dc5b6}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM JIG
+VAR
+	BasketA_Plus	: BOOL;
+	BasketA_Minus	: BOOL;
+	BasketB_Plus	: BOOL;
+	BasketB_Minus	: BOOL;
+	MAX_FG_ON_BASKET : UINT := 15;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF AUTO_MODE.AutoMode THEN
+	RETURN;
+END_IF
+
+GVL.JIGA_Release := NOT GVL.JIGA_Clamp;
+GVL.JIGB_Release := NOT GVL.JIGB_Clamp;
+GVL.JIGC_Release := NOT GVL.JIGC_Clamp;
+
+IF BasketA_Plus THEN
+	GVL.Basket_A_Counter := GVL.Basket_A_Counter + 1;
+	IF GVL.Basket_A_Counter > MAX_FG_ON_BASKET THEN
+		GVL.Basket_A_Counter := 0 ;
+	END_IF
+	BasketA_Plus := FALSE;
+END_IF
+
+IF BasketA_Minus THEN
+	GVL.Basket_A_Counter := GVL.Basket_A_Counter - 1;
+	IF GVL.Basket_A_Counter < 0 THEN
+		GVL.Basket_A_Counter := MAX_FG_ON_BASKET;
+	END_IF
+	BasketA_Minus := FALSE;
+END_IF
+
+IF BasketB_Plus THEN
+	GVL.Basket_B_Counter := GVL.Basket_B_Counter + 1;
+	IF GVL.Basket_B_Counter > MAX_FG_ON_BASKET THEN
+		GVL.Basket_B_Counter := 0 ;
+	END_IF
+	BasketB_Plus := FALSE;
+END_IF
+
+IF BasketB_Minus THEN
+	GVL.Basket_B_Counter := GVL.Basket_B_Counter - 1;
+	IF GVL.Basket_B_Counter < 0 THEN
+		GVL.Basket_B_Counter := MAX_FG_ON_BASKET;
+	END_IF
+	BasketB_Minus := FALSE;
+END_IF
+]]></ST>
+    </Implementation>
+    <LineIds Name="JIG">
+      <LineId Id="110" Count="2" />
+      <LineId Id="298" Count="3" />
+      <LineId Id="163" Count="0" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="164" Count="0" />
+      <LineId Id="166" Count="2" />
+      <LineId Id="227" Count="0" />
+      <LineId Id="165" Count="0" />
+      <LineId Id="170" Count="5" />
+      <LineId Id="225" Count="0" />
+      <LineId Id="169" Count="0" />
+      <LineId Id="230" Count="14" />
+      <LineId Id="228" Count="0" />
+      <LineId Id="302" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

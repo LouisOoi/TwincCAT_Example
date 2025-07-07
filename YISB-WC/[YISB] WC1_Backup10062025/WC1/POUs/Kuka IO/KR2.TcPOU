@@ -1,0 +1,451 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="KR2" Id="{78b3a4e7-376e-4135-a1be-0070a07c8f94}" SpecialFunc="None">
+    <Declaration><![CDATA[// Programmed is linked to KR3
+PROGRAM KR2
+
+VAR_INPUT
+	PLC_O_SYS 	AT %Q* : DWORD;
+	PLC_O_PROG1 AT %Q* : DWORD;
+	PLC_O_PROG2 AT %Q* : DWORD;
+	
+	PLC_I_SYS 	AT %I* : DWORD;
+	PLC_I_PROG1 AT %I* : DWORD;
+	PLC_I_PROG2 AT %I* : DWORD;
+	PLC_I_AXIS 	AT %I* : ARRAY[1..6] OF DWORD;
+	PLC_I_CURR	AT %I* : ARRAY[1..6] OF DWORD;
+	PLC_I_TEMP	AT %I* : ARRAY[1..6] OF DWORD;
+
+	KR2_Estop	: BOOL;
+	Idle		: BOOL;
+	NoMotion	: BOOL;
+	
+	index		: USINT;
+	index1		: USINT;
+	
+	bOutBit 	: ARRAY [1..10,0..7] OF BOOL;
+	bInBit  	: ARRAY [1..10,0..7] OF BOOL;
+	
+	dAxis		: ARRAY[1..6] OF DWORD;
+	dCurr		: ARRAY[1..6] OF DWORD;
+	dTemp		: ARRAY[1..6] OF DWORD;
+END_VAR
+
+VAR
+	KROnline		: BOOL;
+	KR_ProgReady	: BOOL;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[	// =================================== If Soft EStop is pressed, turn off 1027 ~ 1034 
+	IF KR2_Estop THEN		
+		bOutBit[1,0]:=bOutBit[1,1]:=bOutBit[1,2]:=bOutBit[1,3]:=
+		bOutBit[1,4]:=bOutBit[1,5]:=bOutBit[1,6]:=bOutBit[1,7]:=FALSE;
+	END_IF
+
+	// ============================================================================= Idle
+	//Idle 	
+	IF 	PLC_I_PROG1 = 1 AND PLC_I_PROG2 = 1 THEN 
+			Idle := TRUE;
+	ELSE
+			Idle := FALSE;	
+	END_IF
+	
+	
+	// =========================================================================== Online 
+	IF bInBit[1,0] OR bInBit[1,3] THEN
+		KROnline := TRUE;
+	ELSE
+		KROnline := FALSE;
+	END_IF
+
+	// ===================================================================== Program Ready 
+	IF bInBit[1,6] AND bInBit[2,4] THEN
+		KR_ProgReady := TRUE;
+	ELSIF GVL.KR3_bypass THEN
+		KR_ProgReady := TRUE;
+	ELSE
+		KR_ProgReady := FALSE;
+	END_IF
+	
+	// ======================================================================== System IO
+	// Data In
+	FOR index := 0 TO 31 BY 1 DO
+		IF index < 8 THEN
+			bInBit[1,index] := DWORD_TO_BOOL( SHR(PLC_I_SYS,index) AND 1);
+		ELSIF index > 7 AND index < 16 THEN
+			bInBit[2,index-8] := DWORD_TO_BOOL( SHR(PLC_I_SYS,index) AND 1);
+		END_IF
+	END_FOR
+	
+	// Data Out
+	PLC_O_SYS.0 := bOutBit[1,0]; // 1027 move_enable
+	PLC_O_SYS.1 := bOutBit[1,1]; // 1028 Drive_off
+	PLC_O_SYS.2 := bOutBit[1,2]; // 1029 IO_Activate
+	PLC_O_SYS.3 := bOutBit[1,3]; // 1030 Ext_Start
+	PLC_O_SYS.4 := bOutBit[1,4]; // 1031 Conf_mess
+	PLC_O_SYS.5 := bOutBit[1,5]; // 1032 
+	PLC_O_SYS.6 := bOutBit[1,6]; // 1033 Drive_on
+	PLC_O_SYS.7 := bOutBit[1,7]; // 1034 Pgno_Fbit
+	PLC_O_SYS.8 := bOutBit[2,0]; // 1035 Pgno_Valid
+	PLC_O_SYS.9 := bOutBit[2,1]; // 1036 Pgno_Parity
+
+	// ===================================================================== Programme IO
+	FOR index := 0 TO 31 BY 1 DO
+		IF index < 8 THEN
+			bInBit[3,index] := DWORD_TO_BOOL( SHR(PLC_I_PROG1,index) AND 1);
+		ELSIF index > 7 AND index < 16 THEN
+			bInBit[4,index-8] := DWORD_TO_BOOL( SHR(PLC_I_PROG1,index) AND 1);
+		ELSIF index > 15 AND index < 24 THEN
+			bInBit[5,index-16] := DWORD_TO_BOOL( SHR(PLC_I_PROG1,index) AND 1);
+		ELSIF index > 23 THEN
+			bInBit[6,index-24] := DWORD_TO_BOOL( SHR(PLC_I_PROG1,index) AND 1);
+		END_IF
+	END_FOR
+	
+	FOR index := 0 TO 31 BY 1 DO
+		IF index < 8 THEN
+			bInBit[7,index] := DWORD_TO_BOOL( SHR(PLC_I_PROG2,index) AND 1);
+		ELSIF index > 7 AND index < 16 THEN
+			bInBit[8,index-8] := DWORD_TO_BOOL( SHR(PLC_I_PROG2,index) AND 1);
+//		ELSIF index > 15 AND index < 24 THEN
+//			bInBit[9,index-16] := DWORD_TO_BOOL( SHR(PLC_I_PROG2,index) AND 1);
+//		ELSIF index > 23 THEN
+//			bInBit[10,index-24] := DWORD_TO_BOOL( SHR(PLC_I_PROG2,index) AND 1);
+		END_IF
+	END_FOR
+	
+	
+	PLC_O_PROG1.0 := bOutBit[3,0]; // 200
+	PLC_O_PROG1.1 := bOutBit[3,1]; // 201
+	PLC_O_PROG1.2 := bOutBit[3,2]; // 202
+	PLC_O_PROG1.3 := bOutBit[3,3]; // 203
+	PLC_O_PROG1.4 := bOutBit[3,4]; // 204
+	PLC_O_PROG1.5 := bOutBit[3,5]; // 205
+	PLC_O_PROG1.6 := bOutBit[3,6]; // 206
+	PLC_O_PROG1.7 := bOutBit[3,7]; // 207
+	PLC_O_PROG1.8 := bOutBit[4,0]; // 208
+	PLC_O_PROG1.9 := bOutBit[4,1]; // 209
+	PLC_O_PROG1.10 := bOutBit[4,2]; // 210
+	PLC_O_PROG1.11 := bOutBit[4,3]; // 211
+	PLC_O_PROG1.12 := bOutBit[4,4]; // 212
+	PLC_O_PROG1.13 := bOutBit[4,5]; // 213
+	PLC_O_PROG1.14 := bOutBit[4,6]; // 214
+	PLC_O_PROG1.15 := bOutBit[4,7]; // 215
+	PLC_O_PROG1.16 := bOutBit[5,0]; // 216
+	PLC_O_PROG1.17 := bOutBit[5,1]; // 217
+	PLC_O_PROG1.18 := bOutBit[5,2]; // 218
+	PLC_O_PROG1.19 := bOutBit[5,3]; // 219
+	PLC_O_PROG1.20 := bOutBit[5,4]; // 220
+	PLC_O_PROG1.21 := bOutBit[5,5]; // 221
+	PLC_O_PROG1.22 := bOutBit[5,6]; // 222
+	PLC_O_PROG1.23 := bOutBit[5,7]; // 223
+	PLC_O_PROG1.24 := bOutBit[6,0]; // 224
+	PLC_O_PROG1.25 := bOutBit[6,1]; // 225
+	PLC_O_PROG1.26 := bOutBit[6,2]; // 226
+	PLC_O_PROG1.27 := bOutBit[6,3]; // 227
+	PLC_O_PROG1.28 := bOutBit[6,4]; // 228
+	PLC_O_PROG1.29 := bOutBit[6,5]; // 229
+	PLC_O_PROG1.30 := bOutBit[6,6]; // 230
+	PLC_O_PROG1.31 := bOutBit[6,7]; // 231
+	
+	PLC_O_PROG2.0 := bOutBit[7,0]; // 232
+	PLC_O_PROG2.1 := bOutBit[7,1]; // 233
+	PLC_O_PROG2.2 := bOutBit[7,2]; // 234
+	PLC_O_PROG2.3 := bOutBit[7,3]; // 235
+	PLC_O_PROG2.4 := bOutBit[7,4]; // 236
+	PLC_O_PROG2.5 := bOutBit[7,5]; // 237
+	PLC_O_PROG2.6 := bOutBit[7,6]; // 238
+	PLC_O_PROG2.7 := bOutBit[7,7]; // 239
+	PLC_O_PROG2.8 := bOutBit[8,0]; // 240
+	PLC_O_PROG2.9 := bOutBit[8,1]; // 241
+	PLC_O_PROG2.10 := bOutBit[8,2]; // 242
+	PLC_O_PROG2.11 := bOutBit[8,3]; // 243
+	PLC_O_PROG2.12 := bOutBit[8,4]; // 244
+	PLC_O_PROG2.13 := bOutBit[8,5]; // 245
+	PLC_O_PROG2.14 := bOutBit[8,6]; // 246
+	PLC_O_PROG2.15 := bOutBit[8,7]; // 247
+	PLC_O_PROG2.16 := bOutBit[9,0]; // 248
+	PLC_O_PROG2.17 := bOutBit[9,1]; // 249
+	PLC_O_PROG2.18 := bOutBit[9,2]; // 250
+	PLC_O_PROG2.19 := bOutBit[9,3]; // 251
+	PLC_O_PROG2.20 := bOutBit[9,4]; // 252
+	PLC_O_PROG2.21 := bOutBit[9,5]; // 253
+	PLC_O_PROG2.22 := bOutBit[9,6]; // 254
+	PLC_O_PROG2.23 := bOutBit[9,7]; // 255
+	PLC_O_PROG2.24 := bOutBit[10,0]; // 256
+	PLC_O_PROG2.25 := bOutBit[10,1]; // 257
+	PLC_O_PROG2.26 := bOutBit[10,2]; // 258
+	PLC_O_PROG2.27 := bOutBit[10,3]; // 259
+	PLC_O_PROG2.28 := bOutBit[10,4]; // 260
+	PLC_O_PROG2.29 := bOutBit[10,5]; // 261
+	PLC_O_PROG2.30 := bOutBit[10,6]; // 262
+	PLC_O_PROG2.31 := bOutBit[10,7]; // 263
+	
+	// ===================================================================== Robot Data
+	FOR index1 := 1 TO 6 BY 1 DO
+		FOR index := 0 TO 31 BY 1 DO
+			dAxis[index1] := PLC_I_AXIS[index1];
+			dCurr[index1] := PLC_I_CURR[index1];
+			dTemp[index1] := PLC_I_TEMP[index1];
+		END_FOR
+	END_FOR
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+//	bInBit[2,0] := PLC_I_PROG1.0; // 200
+//	bInBit[2,1] := PLC_I_PROG1.1; // 201
+//	bInBit[2,2] := PLC_I_PROG1.2; // 202
+//	bInBit[2,3] := PLC_I_PROG1.3; // 203
+//	bInBit[2,4] := PLC_I_PROG1.4; // 204
+//	bInBit[2,5] := PLC_I_PROG1.5; // 205
+//	bInBit[2,6] := PLC_I_PROG1.6; // 206
+//	bInBit[2,7] := PLC_I_PROG1.7; // 207
+//	bInBit[2,8] := PLC_I_PROG1.8; // 208
+//	bInBit[2,9] := PLC_I_PROG1.9; // 209
+//	bInBit[2,10] := PLC_I_PROG1.10; // 210
+//	bInBit[2,11] := PLC_I_PROG1.11; // 211
+//	bInBit[2,12] := PLC_I_PROG1.12; // 212
+//	bInBit[2,13] := PLC_I_PROG1.13; // 213
+//	bInBit[2,14] := PLC_I_PROG1.14; // 214
+//	bInBit[2,15] := PLC_I_PROG1.15; // 215
+//	bInBit[2,16] := PLC_I_PROG1.16; // 216
+//	bInBit[2,17] := PLC_I_PROG1.17; // 217
+//	bInBit[2,18] := PLC_I_PROG1.18; // 218
+//	bInBit[2,19] := PLC_I_PROG1.19; // 219
+//	bInBit[2,20] := PLC_I_PROG1.20; // 220
+//	bInBit[2,21] := PLC_I_PROG1.21; // 221
+//	bInBit[2,22] := PLC_I_PROG1.22; // 222
+//	bInBit[2,23] := PLC_I_PROG1.23; // 223
+//	bInBit[2,24] := PLC_I_PROG1.24; // 224
+//	bInBit[2,25] := PLC_I_PROG1.25; // 225
+//	bInBit[2,26] := PLC_I_PROG1.26; // 226
+//	bInBit[2,27] := PLC_I_PROG1.27; // 227
+//	bInBit[2,28] := PLC_I_PROG1.28; // 228
+//	bInBit[2,29] := PLC_I_PROG1.29; // 229
+//	bInBit[2,30] := PLC_I_PROG1.30; // 230
+//	bInBit[2,31] := PLC_I_PROG1.31; // 231
+	
+//	//================================ Function IO
+	
+//	PLC_O_D1.0 := bOutBit[1,0]; //1027 motion enable (on to start motor)
+//	PLC_O_D1.1 := bOutBit[1,1]; //1028 Drives off (inverse) (on to start motor)
+//	PLC_O_D1.2 := bOutBit[1,2]; //1029 Activate interface (on to start motor)
+//	PLC_O_D1.3 := bOutBit[1,3]; //1030 Prog Start
+//	PLC_O_D1.4 := bOutBit[1,4]; //1031 Acknowledge error msg
+//	PLC_O_D1.5 := bOutBit[1,5]; //1032 Drives on
+//	PLC_O_D1.6 := bOutBit[1,6]; //1033
+//	PLC_O_D1.7 := bOutBit[1,7]; //1034
+	
+//	PLC_O_D2.0 := bOutBit[2,0]; //1035
+//	PLC_O_D2.1 := bOutBit[2,1]; //1036
+//	PLC_O_D2.2 := bOutBit[2,2]; //1037
+//	PLC_O_D2.3 := bOutBit[2,3]; //1038
+//	PLC_O_D2.4 := bOutBit[2,4]; //1039
+//	PLC_O_D2.5 := bOutBit[2,5]; //1040
+//	PLC_O_D2.6 := bOutBit[2,6]; //1041
+//	PLC_O_D2.7 := bOutBit[2,7]; //1042
+	
+//	bInBit[1,0] := PLC_I_D1.0; //993
+//	bInBit[1,1] := PLC_I_D1.1; //994
+//	bInBit[1,2] := PLC_I_D1.2; //995
+//	bInBit[1,3] := PLC_I_D1.3; //996
+//	bInBit[1,4] := PLC_I_D1.4; //997
+//	bInBit[1,5] := PLC_I_D1.5; //998
+//	bInBit[1,6] := PLC_I_D1.6; //999
+//	bInBit[1,7] := PLC_I_D1.7; //1000
+	
+//	bInBit[2,0] := PLC_I_D2.0; //1001
+//	bInBit[2,1] := PLC_I_D2.1; //1002
+//	bInBit[2,2] := PLC_I_D2.2; //1003
+//	bInBit[2,3] := PLC_I_D2.3; //1004
+//	bInBit[2,4] := PLC_I_D2.4; //1005
+//	bInBit[2,5] := PLC_I_D2.5; //1006
+//	bInBit[2,6] := PLC_I_D2.6; //1007
+//	bInBit[2,7] := PLC_I_D2.7; //1008
+	
+//	//================================ Motion IO
+	
+//	IF NoMotion THEN
+//		RETURN;
+//	END_IF
+	
+//	PLC_O_D3.0 := bOutBit[3,0]; //200
+//	PLC_O_D3.1 := bOutBit[3,1]; //201
+//	PLC_O_D3.2 := bOutBit[3,2]; //202
+//	PLC_O_D3.3 := bOutBit[3,3]; //203
+//	PLC_O_D3.4 := bOutBit[3,4]; //204
+//	PLC_O_D3.5 := bOutBit[3,5]; //205
+//	PLC_O_D3.6 := bOutBit[3,6]; //206
+//	PLC_O_D3.7 := bOutBit[3,7]; //207
+	
+//	PLC_O_D4.0 := bOutBit[4,0]; //208
+//	PLC_O_D4.1 := bOutBit[4,1]; //209
+//	PLC_O_D4.2 := bOutBit[4,2]; //210
+//	PLC_O_D4.3 := bOutBit[4,3]; //211
+//	PLC_O_D4.4 := bOutBit[4,4]; //212
+//	PLC_O_D4.5 := bOutBit[4,5]; //213
+//	PLC_O_D4.6 := bOutBit[4,6]; //214
+//	PLC_O_D4.7 := bOutBit[4,7]; //215
+	
+//	PLC_O_D5.0 := bOutBit[5,0]; //216
+//	PLC_O_D5.1 := bOutBit[5,1]; //217
+//	PLC_O_D5.2 := bOutBit[5,2]; //218
+//	PLC_O_D5.3 := bOutBit[5,3]; //219
+//	PLC_O_D5.4 := bOutBit[5,4]; //220
+//	PLC_O_D5.5 := bOutBit[5,5]; //221
+//	PLC_O_D5.6 := bOutBit[5,6]; //222
+//	PLC_O_D5.7 := bOutBit[5,7]; //223
+
+//	PLC_O_D6.0 := bOutBit[6,0]; //224
+//	PLC_O_D6.1 := bOutBit[6,1]; //225
+//	PLC_O_D6.2 := bOutBit[6,2]; //226
+//	PLC_O_D6.3 := bOutBit[6,3]; //227
+//	PLC_O_D6.4 := bOutBit[6,4]; //228
+//	PLC_O_D6.5 := bOutBit[6,5]; //229
+//	PLC_O_D6.6 := bOutBit[6,6]; //230
+//	PLC_O_D6.7 := bOutBit[6,7]; //231
+	
+//	PLC_O_D7.0 := bOutBit[7,0]; //216
+//	PLC_O_D7.1 := bOutBit[7,1]; //217
+//	PLC_O_D7.2 := bOutBit[7,2]; //218
+//	PLC_O_D7.3 := bOutBit[7,3]; //219
+//	PLC_O_D7.4 := bOutBit[7,4]; //220
+//	PLC_O_D7.5 := bOutBit[7,5]; //221
+//	PLC_O_D7.6 := bOutBit[7,6]; //222
+//	PLC_O_D7.7 := bOutBit[7,7]; //223
+
+//	PLC_O_D8.0 := bOutBit[8,0]; //224
+//	PLC_O_D8.1 := bOutBit[8,1]; //225
+//	PLC_O_D8.2 := bOutBit[8,2]; //226
+//	PLC_O_D8.3 := bOutBit[8,3]; //227
+//	PLC_O_D8.4 := bOutBit[8,4]; //228
+//	PLC_O_D8.5 := bOutBit[8,5]; //229
+//	PLC_O_D8.6 := bOutBit[8,6]; //230
+//	PLC_O_D8.7 := bOutBit[8,7]; //231
+
+//	bInBit[3,0] := PLC_I_D3.0; //200
+//	bInBit[3,1] := PLC_I_D3.1; //201
+//	bInBit[3,2] := PLC_I_D3.2; //202
+//	bInBit[3,3] := PLC_I_D3.3; //203
+//	bInBit[3,4] := PLC_I_D3.4; //204
+//	bInBit[3,5] := PLC_I_D3.5; //205
+//	bInBit[3,6] := PLC_I_D3.6; //206
+//	bInBit[3,7] := PLC_I_D3.7; //207
+	
+//	bInBit[4,0] := PLC_I_D4.0; //208
+//	bInBit[4,1] := PLC_I_D4.1; //209
+//	bInBit[4,2] := PLC_I_D4.2; //210
+//	bInBit[4,3] := PLC_I_D4.3; //211
+//	bInBit[4,4] := PLC_I_D4.4; //212
+//	bInBit[4,5] := PLC_I_D4.5; //213
+//	bInBit[4,6] := PLC_I_D4.6; //214
+//	bInBit[4,7] := PLC_I_D4.7; //215
+	
+//	bInBit[5,0] := PLC_I_D5.0; //216
+//	bInBit[5,1] := PLC_I_D5.1; //217
+//	bInBit[5,2] := PLC_I_D5.2; //218
+//	bInBit[5,3] := PLC_I_D5.3; //219
+//	bInBit[5,4] := PLC_I_D5.4; //220
+//	bInBit[5,5] := PLC_I_D5.5; //221
+//	bInBit[5,6] := PLC_I_D5.6; //222
+//	bInBit[5,7] := PLC_I_D5.7; //223
+	
+//	bInBit[6,0] := PLC_I_D6.0; //224
+//	bInBit[6,1] := PLC_I_D6.1; //225
+//	bInBit[6,2] := PLC_I_D6.2; //226
+//	bInBit[6,3] := PLC_I_D6.3; //227
+//	bInBit[6,4] := PLC_I_D6.4; //228
+//	bInBit[6,5] := PLC_I_D6.5; //229
+//	bInBit[6,6] := PLC_I_D6.6; //230
+//	bInBit[6,7] := PLC_I_D6.7; //231
+	
+//	bInBit[7,0] := PLC_I_D7.0; //224
+//	bInBit[7,1] := PLC_I_D7.1; //225
+//	bInBit[7,2] := PLC_I_D7.2; //226
+//	bInBit[7,3] := PLC_I_D7.3; //227
+//	bInBit[7,4] := PLC_I_D7.4; //228
+//	bInBit[7,5] := PLC_I_D7.5; //229
+//	bInBit[7,6] := PLC_I_D7.6; //230
+//	bInBit[7,7] := PLC_I_D7.7; //231
+	
+//	bInBit[8,0] := PLC_I_D8.0; //224
+//	bInBit[8,1] := PLC_I_D8.1; //225
+//	bInBit[8,2] := PLC_I_D8.2; //226
+//	bInBit[8,3] := PLC_I_D8.3; //227
+//	bInBit[8,4] := PLC_I_D8.4; //228
+//	bInBit[8,5] := PLC_I_D8.5; //229
+//	bInBit[8,6] := PLC_I_D8.6; //230
+//	bInBit[8,7] := PLC_I_D8.7; //231
+]]></ST>
+    </Implementation>
+    <LineIds Name="KR2">
+      <LineId Id="333" Count="6" />
+      <LineId Id="1209" Count="1" />
+      <LineId Id="1212" Count="3" />
+      <LineId Id="344" Count="0" />
+      <LineId Id="491" Count="5" />
+      <LineId Id="523" Count="3" />
+      <LineId Id="628" Count="1" />
+      <LineId Id="527" Count="2" />
+      <LineId Id="351" Count="0" />
+      <LineId Id="661" Count="0" />
+      <LineId Id="665" Count="0" />
+      <LineId Id="774" Count="0" />
+      <LineId Id="1007" Count="3" />
+      <LineId Id="1015" Count="1" />
+      <LineId Id="783" Count="0" />
+      <LineId Id="775" Count="0" />
+      <LineId Id="856" Count="0" />
+      <LineId Id="670" Count="7" />
+      <LineId Id="667" Count="0" />
+      <LineId Id="1167" Count="0" />
+      <LineId Id="702" Count="1" />
+      <LineId Id="1045" Count="9" />
+      <LineId Id="1057" Count="0" />
+      <LineId Id="1068" Count="0" />
+      <LineId Id="1058" Count="9" />
+      <LineId Id="899" Count="0" />
+      <LineId Id="1055" Count="1" />
+      <LineId Id="704" Count="7" />
+      <LineId Id="717" Count="0" />
+      <LineId Id="726" Count="0" />
+      <LineId Id="718" Count="4" />
+      <LineId Id="1069" Count="14" />
+      <LineId Id="662" Count="0" />
+      <LineId Id="1085" Count="32" />
+      <LineId Id="1084" Count="0" />
+      <LineId Id="937" Count="0" />
+      <LineId Id="967" Count="0" />
+      <LineId Id="984" Count="0" />
+      <LineId Id="989" Count="1" />
+      <LineId Id="993" Count="1" />
+      <LineId Id="991" Count="0" />
+      <LineId Id="972" Count="0" />
+      <LineId Id="1040" Count="0" />
+      <LineId Id="1158" Count="8" />
+      <LineId Id="975" Count="0" />
+      <LineId Id="979" Count="0" />
+      <LineId Id="743" Count="6" />
+      <LineId Id="713" Count="0" />
+      <LineId Id="750" Count="0" />
+      <LineId Id="752" Count="21" />
+      <LineId Id="751" Count="0" />
+      <LineId Id="877" Count="0" />
+      <LineId Id="353" Count="77" />
+      <LineId Id="579" Count="17" />
+      <LineId Id="431" Count="35" />
+      <LineId Id="561" Count="17" />
+      <LineId Id="467" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

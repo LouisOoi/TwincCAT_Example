@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="SetBit" Id="{df8637ce-1772-4c0d-bff2-bb91078cbd62}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION SetBit : DWORD
+VAR_INPUT
+	dPLC_OUT	: DWORD;
+	iBitNum		: USINT;
+	bstate		: BOOL;
+END_VAR
+VAR
+	bCheckBit	: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+bCheckBit := DWORD_TO_BOOL(SHR(dPLC_OUT,iBitNum)AND 1);
+
+IF bstate THEN
+	dPLC_OUT := SHL(1,iBitNum) OR dPLC_OUT;
+ELSE
+	IF bCheckbit THEN
+		IF dPLC_OUT > 0 THEN
+			dPLC_OUT := dPLC_OUT - LREAL_TO_DWORD(EXPT(2,iBitNum));
+		END_IF
+	END_IF
+END_IF
+
+SetBit := dPLC_OUT;]]></ST>
+    </Implementation>
+    <LineIds Name="SetBit">
+      <LineId Id="40" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="28" Count="2" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="32" Count="1" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="ESTOP" Id="{8c6e2ec6-26d8-47bc-9dda-973d0a8ac2ef}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM ESTOP
+VAR
+	Bit1,Bit2 	: INT;
+	LogText		: STRING;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[	
+	FOR Bit1 := 1 TO 30 BY 1 DO
+		FOR Bit2 := 0 TO 7 BY 1 DO
+			KR1.bOutBit[Bit1,Bit2] := FALSE;
+		END_FOR
+	END_FOR
+	FOR Bit1 := 1 TO 8 BY 1 DO
+		FOR Bit2 := 0 TO 7 BY 1 DO
+			KR2.bOutBit[Bit1,Bit2] := FALSE;
+		END_FOR
+	END_FOR
+	FOR Bit1 := 1 TO 3 BY 1 DO
+		FOR Bit2 := 0 TO 7 BY 1 DO
+			KR3.bOutBit[Bit1,Bit2] := FALSE;
+			KR4.bOutBit[Bit1,Bit2] := FALSE;
+		END_FOR
+	END_FOR
+	FOR Bit1 := 1 TO 6 BY 1 DO
+		FOR Bit2 := 0 TO 7 BY 1 DO
+			KR5.bOutBit[Bit1,Bit2] := FALSE;
+		END_FOR
+	END_FOR
+
+	RESET_SEQ.Reset_seq	:= 0;
+	MAIN.btn_Reset	:= FALSE;
+	Main.Reset_State := FALSE;
+	AUTO_MODE.AutoMode := AUTO_MODE.next_step := FALSE;
+	
+	IF_RACK_CHECK.checkIn_A5 := IF_RACK_CHECK.checkIn_A4 := IF_RACK_CHECK.checkIn_A3 := IF_RACK_CHECK.checkIn_A2 := IF_RACK_CHECK.checkIn_A1 := 
+	IF_RACK_CHECK.checkIn_B5 := IF_RACK_CHECK.checkIn_B4 := IF_RACK_CHECK.checkIn_B3 := IF_RACK_CHECK.checkIn_B2 := IF_RACK_CHECK.checkIn_B1 := FALSE;
+	
+	SEQ_A5.A5_sequence		:= SEQ_A4.A4_sequence		:= SEQ_A3.A3_sequence	:= SEQ_A2.A2_sequence	:= SEQ_A1.A1_sequence:=
+	SEQ_B5.B5_sequence		:= SEQ_B4.B4_sequence		:= SEQ_B3.B3_sequence	:= SEQ_B2.B2_sequence	:= SEQ_B1.B1_sequence:=
+	SEQ_CR_PICK.CR_sequence	:= SEQ_COSMO.COSMO_sequence	:= SEQ_RW.RW_sequence 	:= SEQ_FG.FG_sequence	:= 0;
+	
+	AUTO_MODE.IF_PICK		:= AUTO_MODE.JIGC_PICK		:= AUTO_MODE.CR_PICK		:=
+	AUTO_MODE.JIGA_WELDING 	:= AUTO_MODE.JIGB_WELDING 	:= AUTO_MODE.JIGC_WELDING	:= AUTO_MODE.TT_WELDING   	:= 
+	AUTO_MODE.JIGA_LOAD 	:= AUTO_MODE.JIGB_LOAD  	:= AUTO_MODE.JIGC_LOAD 		:= AUTO_MODE.TT_LOAD		:=
+	GVL.JIGA_Clamp 			:= GVL.JIGB_Clamp 			:= GVL.JIGC_Clamp 			:= AUTO_MODE.CR_UNLOADING	:= 
+	AUTO_MODE.COSMO_LOAD 	:= AUTO_MODE.COSMO_RUN 	 	:= AUTO_MODE.CLEAR_COSMO  	:= AUTO_MODE.KR1_PITSTOP 	:= 
+	AUTO_MODE.FG_PACKING  	:= AUTO_MODE.RW_PACKING 	:= GVL.COSMO_Run			:= GVL.TTorch_Run 			:= FALSE;
+	
+	AUTO_MODE.JIGA_ErrorState := AUTO_MODE.JIGB_ErrorState := AUTO_MODE.JIGC_ErrorState := AUTO_MODE.TT_ErrorState := FALSE;
+]]></ST>
+    </Implementation>
+    <LineIds Name="ESTOP">
+      <LineId Id="232" Count="20" />
+      <LineId Id="188" Count="0" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="214" Count="0" />
+      <LineId Id="220" Count="0" />
+      <LineId Id="112" Count="0" />
+      <LineId Id="156" Count="5" />
+      <LineId Id="165" Count="5" />
+      <LineId Id="226" Count="0" />
+      <LineId Id="171" Count="1" />
+      <LineId Id="61" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

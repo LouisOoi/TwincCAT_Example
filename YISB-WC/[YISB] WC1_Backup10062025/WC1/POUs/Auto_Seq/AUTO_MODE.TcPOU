@@ -1,0 +1,190 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="AUTO_MODE" Id="{4d2dad52-a5ec-4c51-9cc9-5a2bb7126ee6}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM AUTO_MODE
+VAR_INPUT
+	Reset_seq_btn	: BOOL;
+	Start_time	: string;
+	
+	JIGA_WELDING: BOOL;
+	JIGB_WELDING: BOOL;
+	JIGC_WELDING: BOOL;
+	TT_WELDING	: BOOL;
+	IF_PICK		: BOOL;
+	JIGC_PICK	: BOOL;
+	VB_PICK		: BOOL;
+	
+	JIGA_LOAD	: BOOL;
+	JIGB_LOAD	: BOOL;
+	JIGC_LOAD	: BOOL;
+	TT_LOAD		: BOOL;
+	CR_PICK		: BOOL;
+	
+	AutoMode	: BOOL;
+	ManualMode	: BOOL;
+	next_step	: BOOL;
+	Halt_Production	: BOOL;
+	
+	processnameA5 : STRING[255];
+	processnameA4 : STRING[255];
+	processnameA3 : STRING[255];
+	processnameA2 : STRING[255];
+	processnameA1 : STRING[255];
+	processnameCR : STRING[255];
+	processnameRW : STRING[255];
+	processnameFG : STRING[255];
+	processnameCOSMO : STRING[255];
+	
+	COSMO_LOAD	: BOOL;
+	COSMO_RUN	: BOOL;
+	CR_UNLOADING: BOOL;
+	
+	CLEAR_COSMO	: Bool;
+	KR1_PITSTOP : BOOL;
+	FG_PACKING	: BOOL;
+	RW_PACKING	: BOOL;
+	
+	A4_Run_Flag : BOOL;
+	A3_Run_Flag : BOOL;
+	A2_Run_Flag : BOOL;
+	A1_Run_Flag : BOOL;
+	
+	Run_Next_Rack : BOOL:= TRUE;
+	Out_time	: STRING;
+	JIGA_ErrorState : BOOL;
+	JIGB_ErrorState : BOOL;
+	JIGC_ErrorState : BOOL;
+	TT_ErrorState 	: BOOL;
+END_VAR
+VAR
+	Auto_IntOn	: TON;
+	Auto_IntOff	: TON;
+	Auto_on		: BOOL;
+	Auto_laston	: BOOL;
+	
+	Bit1: INT;
+	Bit2: INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF next_step OR Automode THEN
+	IF NOT KR2.KR_ProgReady OR NOT KR3.KR_ProgReady OR NOT KR4.KR_ProgReady OR NOT KR5.KR_ProgReady THEN
+		Automode := FALSE;
+	END_IF
+	IF_RACK_CHECK();
+	SEQ_A5();
+	SEQ_A4();
+	SEQ_A3();
+	SEQ_A2();
+	SEQ_A1();
+	SEQ_B5();
+	SEQ_B4();
+	SEQ_B3();
+	SEQ_B2();
+	SEQ_B1();
+		
+	SEQ_CR_PICK();
+//	SEQ_LP_LYR0();
+	SEQ_FG_A();
+	SEQ_COSMO();
+	
+	 
+END_IF
+
+
+
+
+IF Reset_seq_btn THEN
+	
+	
+	IF_RACK_CHECK.checkIn_A5 := IF_RACK_CHECK.checkIn_A4 := IF_RACK_CHECK.checkIn_A3 := IF_RACK_CHECK.checkIn_A2 := IF_RACK_CHECK.checkIn_A1 := 
+	IF_RACK_CHECK.checkIn_B5 := IF_RACK_CHECK.checkIn_B4 := IF_RACK_CHECK.checkIn_B3 := IF_RACK_CHECK.checkIn_B2 := IF_RACK_CHECK.checkIn_B1 := FALSE;
+	
+	SEQ_A5.A5_sequence		:= SEQ_A4.A4_sequence		:= SEQ_A3.A3_sequence	:= SEQ_A2.A2_sequence	:= SEQ_A1.A1_sequence:=
+	SEQ_B5.B5_sequence		:= SEQ_B4.B4_sequence		:= SEQ_B3.B3_sequence	:= SEQ_B2.B2_sequence	:= SEQ_B1.B1_sequence:=
+	SEQ_CR_PICK.CR_sequence	:= SEQ_COSMO.COSMO_sequence	:= SEQ_RW.RW_sequence 	:= SEQ_FG_A.FG_sequence	:= SEQ_LYR_PD0.LYRPD_sequence := 0;
+	
+	processnameA5 := processnameA4 := processnameA3 := processnameA2 	:= processnameA1 :=
+	processnameCR := processnameRW := processnameFG := processnameCOSMO := '';  
+	
+	IF_PICK			:= JIGC_PICK		:= CR_PICK			:=
+	JIGA_WELDING 	:= JIGB_WELDING 	:= JIGC_WELDING		:= TT_WELDING   	:= 
+	JIGA_LOAD 	 	:= JIGB_LOAD  	 	:= JIGC_LOAD 		:= TT_LOAD			:=
+	GVL.JIGA_Clamp 	:= GVL.JIGB_Clamp 	:= GVL.JIGC_Clamp 	:= CR_UNLOADING	 	:= 
+	COSMO_LOAD 	 	:= COSMO_RUN 	 	:= CLEAR_COSMO  	:= KR1_PITSTOP 		:= 
+	FG_PACKING 	 	:= RW_PACKING 		:= GVL.COSMO_Run	:= GVL.TTorch_Run 	:= FALSE;
+	
+	JIGA_ErrorState := JIGB_ErrorState 	:= JIGC_ErrorState 	:= TT_ErrorState 	:= FALSE;
+	Automode 		:= next_step 		:= FALSE;
+	Run_Next_Rack 	:= TRUE;
+	Halt_Production := FALSE;
+	
+	GVL.Layerpad := FALSE;
+	GVL.COSMO_UNLOAD := FALSE;
+
+	FOR Bit1 := 2 TO 30 BY 1 DO
+		FOR Bit2 := 0 TO 7 BY 1 DO
+			KR1.bOutBit[Bit1,Bit2] := FALSE;
+		END_FOR
+	END_FOR
+	FOR Bit1 := 2 TO 8 BY 1 DO
+		FOR Bit2 := 0 TO 7 BY 1 DO
+			KR2.bOutBit[Bit1,Bit2] := FALSE;
+		END_FOR
+	END_FOR
+	FOR Bit1 := 2 TO 3 BY 1 DO
+		FOR Bit2 := 0 TO 7 BY 1 DO
+			KR3.bOutBit[Bit1,Bit2] := FALSE;
+			KR4.bOutBit[Bit1,Bit2] := FALSE;
+		END_FOR
+	END_FOR
+	FOR Bit1 := 2 TO 6 BY 1 DO
+		FOR Bit2 := 0 TO 7 BY 1 DO
+			KR5.bOutBit[Bit1,Bit2] := FALSE;
+		END_FOR
+	END_FOR
+	
+	Reset_seq_btn := False;
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="AUTO_MODE">
+      <LineId Id="539" Count="0" />
+      <LineId Id="1399" Count="1" />
+      <LineId Id="805" Count="0" />
+      <LineId Id="1401" Count="0" />
+      <LineId Id="806" Count="3" />
+      <LineId Id="560" Count="0" />
+      <LineId Id="563" Count="0" />
+      <LineId Id="566" Count="0" />
+      <LineId Id="569" Count="0" />
+      <LineId Id="572" Count="0" />
+      <LineId Id="575" Count="0" />
+      <LineId Id="579" Count="1" />
+      <LineId Id="1466" Count="0" />
+      <LineId Id="1327" Count="0" />
+      <LineId Id="581" Count="0" />
+      <LineId Id="1395" Count="0" />
+      <LineId Id="1394" Count="0" />
+      <LineId Id="586" Count="0" />
+      <LineId Id="1396" Count="2" />
+      <LineId Id="587" Count="1" />
+      <LineId Id="1194" Count="0" />
+      <LineId Id="1196" Count="0" />
+      <LineId Id="590" Count="0" />
+      <LineId Id="663" Count="1" />
+      <LineId Id="591" Count="12" />
+      <LineId Id="939" Count="0" />
+      <LineId Id="874" Count="0" />
+      <LineId Id="605" Count="1" />
+      <LineId Id="746" Count="0" />
+      <LineId Id="1107" Count="0" />
+      <LineId Id="1261" Count="0" />
+      <LineId Id="1326" Count="0" />
+      <LineId Id="1109" Count="20" />
+      <LineId Id="1108" Count="0" />
+      <LineId Id="1008" Count="0" />
+      <LineId Id="687" Count="0" />
+      <LineId Id="100" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

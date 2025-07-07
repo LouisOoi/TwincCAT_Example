@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="MAIN" Id="{41d800dd-6c26-40c4-8b1f-d3de318c5d3b}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+VAR
+	IPAdress		: STRING 	:= '192.168.1.132';
+	Port			: UINT		:= 5000;
+//	IPAdress		: STRING 	:= '10.0.120.173';
+//	Port			: UINT		:= 8080;
+	UpdatePeriod	: TIME		:= T#60s;
+	fbHttpProcess	: FB_IotHttpClient :=(	sHostName			:= IPAdress,
+								  			bKeepAlive			:= TRUE, 
+											tConnectionTimeout	:= T#10S);
+	fbProcessPost	: FB_EventHTTP_Post;
+	
+	HttpSend		: BOOL := FALSE;
+	
+	API_Msg			: STRING[500] := '';
+	bSuccess		: BOOL;
+	bError			: BOOL;
+	
+//	start1			AT %I* : BOOL;
+//	start2			AT %I* : BOOL;
+//	button1			AT %Q* : BOOL;
+//	button2			AT %Q* : BOOL;
+//	button3			AT %Q* : BOOL;
+//	button4			AT %Q* : BOOL;
+	
+	
+	Rise1	: R_TRIG;
+	Fall1	: F_TRIG;
+	Rise2	: R_TRIG;
+	Fall2	: F_TRIG;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//Rise1(CLK:=start1);
+//Rise2(CLK:=start2);
+//Fall1(CLK:=start1);
+//Fall2(CLK:=start2);
+
+//IF Rise1.Q THEN
+//	button1 := NOT button1;
+	API_Msg := '{"station": 1, "start_ts": "2025-01-24 13:30:00", "end_ts": "2025-01-24 13:31:00"}';
+//	HttpSend := TRUE;
+//END_IF
+//IF Rise2.Q THEN
+//	button3 := NOT button3;
+//	API_Msg := '2-On';
+//	HttpSend := TRUE;
+//END_IF
+//IF Fall1.Q THEN
+//	button2 := NOT button2;
+//	API_Msg := '1-Off';
+//	HttpSend := TRUE;
+//END_IF
+//IF Fall2.Q THEN
+//	button4 := NOT button4;
+//	API_Msg := '2-Off';
+//	HttpSend := TRUE;
+//END_IF
+
+
+
+IF NOT fbHttpProcess.bConfigured THEN 
+	fbHttpProcess.nHostPort 				:= Port;
+	//fbHttpProcess.stTLS.bNoServerCertCheck 	:= TRUE;
+END_IF
+
+
+
+
+IF fbHttpProcess.bConfigured THEN 
+	fbProcessPost( 	bSend		:= HttpSend, 
+				 	fbClient	:= fbHttpProcess, 
+//					API_URI		:= '/jtc-livecycle/1/log',
+					API_URI		:= '/WorkcellLogging',
+				 	API_Msg 	:= API_Msg,
+					bSuccess 	=> bSuccess,
+					bError		=> bError );
+					
+	IF fbProcessPost.bSuccess OR fbProcessPost.bError THEN
+		HttpSend := FALSE;
+	END_IF
+END_IF 
+fbHttpProcess.Execute();
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="MAIN">
+      <LineId Id="120" Count="0" />
+      <LineId Id="123" Count="1" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="157" Count="19" />
+      <LineId Id="125" Count="0" />
+      <LineId Id="178" Count="1" />
+      <LineId Id="177" Count="0" />
+      <LineId Id="33" Count="3" />
+      <LineId Id="180" Count="2" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="37" Count="2" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="186" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="82" Count="0" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="183" Count="0" />
+      <LineId Id="152" Count="2" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="98" Count="0" />
+      <LineId Id="155" Count="1" />
+      <LineId Id="134" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

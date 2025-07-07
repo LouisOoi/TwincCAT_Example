@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="SEQ_CR_PLACE" Id="{ca0f8682-d030-419b-8cfe-0f9c6e0bf6f3}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM SEQ_CR_PLACE
+VAR_INPUT
+	CR_Place_Rack	: UINT;
+	CR_found		: BOOL;
+END_VAR
+VAR
+	CR_place_num 	: UINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Get next CR POS
+IF NOT CR_found THEN
+//	FOR CR_place_num := GVL.CR_NextPlaceNum TO 6 BY 1 DO
+	FOR CR_place_num := 2 TO 21 BY 1 DO
+		IF GVL.CR_NextPlaceNum > 21 OR GVL.CR_NextPlaceNum < 2 THEN
+			GVL.CR_NextPlaceNum := CR_place_num := 2;
+		END_IF
+		IF GVL.CR_NextPlaceNum = 14 OR GVL.CR_NextPlaceNum = 8 OR GVL.CR_NextPlaceNum = 15 THEN
+			GVL.CR_NextPlaceNum := GVL.CR_NextPlaceNum+1;
+		ELSIF NOT COOL_RACK.CR[CR_place_num] THEN
+			CR_Place_Rack		:= CR_place_num;
+			GVL.CR_NextPlaceNum := CR_place_num +1 ;
+			CR_found 			:= TRUE;
+			RETURN;
+		END_IF
+	END_FOR
+END_IF
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="SEQ_CR_PLACE">
+      <LineId Id="34" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="70" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="19" Count="1" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="31" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

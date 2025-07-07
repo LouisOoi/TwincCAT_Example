@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Refactors>
+  <Renames>
+    <RenamedType>
+      <Type guid="89c2300c-29e4-48f0-8da1-57edd31b7e4b">MSG_KR4_BP_1__VIS</Type>
+      <From>MSG_KR4_BP_1__vis</From>
+      <To>MSG_KR5_BP__vis</To>
+    </RenamedType>
+  </Renames>
+</Refactors>

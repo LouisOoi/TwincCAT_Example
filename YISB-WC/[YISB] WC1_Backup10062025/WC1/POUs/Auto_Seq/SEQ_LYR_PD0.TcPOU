@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="SEQ_LYR_PD0" Id="{7022b423-eb1f-472f-9885-54195b3c52e8}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM SEQ_LYR_PD0
+VAR_INPUT
+	LYRPD_sequence	: UINT;
+END_VAR
+
+VAR
+	process_Y	: UINT; //FG A IN
+	process_Z	: UINT; //Place to Basket A A
+	process_G	: UINT; //KR5 Get Magnet
+	process_H	: UINT; //KR5 Remove Magnet
+	bit1		: UINT;
+	bit2		: UINT;
+	
+	Timer		: TON;
+	
+	fb_RunLayerPad	: FB_RunLayerPad;
+	MSG_Bskt	: STRING;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF GVL.LAYERPAD0 THEN
+	RETURN;
+END_IF
+
+IF GVL.Rework_Empty AND NOT AUTO_MODE.FG_PACKING THEN
+	RETURN;
+END_IF
+
+IF GVL.COSMO_UNLOAD THEN
+	RETURN;
+END_IF
+
+IF NOT AUTO_MODE.FG_PACKING THEN
+	Timer (IN:= TRUE, PT := T#5S);
+	fb_RunLayerPad(Execute := FALSE);
+	IF NOT timer.Q THEN
+		RETURN;
+	END_IF
+END_IF
+
+CASE LYRPD_sequence OF
+	// Init ------------------------------------------------------------------------------------------------------------------	
+	0:
+		AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG.ACTION_INIT);	
+		LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+		 			spLogAction	 := MSG.ACTION_INIT, 
+		 			spLogStatus	 := MSG.STATUS_DONE,
+	 	 		 	plogFlag	 := TRUE);
+		process_Y	:= 0;
+		process_Z	:= 0;
+		process_G	:= 0; // get magnet
+		process_H	:= 0;
+		AUTO_MODE.FG_PACKING := TRUE;
+		fb_RunLayerPad(Execute := FALSE);
+		Timer (IN:= FALSE);
+		LYRPD_sequence := 1;
+	
+	// Check Layer Pad insertion -------------------------------------------------------------------------------------------------------------	
+	1:	
+		IF GVL.Basket_A_Counter = 0 THEN
+			fb_RunLayerPad(Basket := 1, Layer := 0, Execute := TRUE);
+			IF fb_RunLayerPad.Complete THEN
+				fb_RunLayerPad(Execute := FALSE);
+				LYRPD_sequence := 3;
+			ELSIF fb_RunLayerPad.Error THEN
+				fb_RunLayerPad(Execute := FALSE);
+				AUTO_MODE.Halt_Production := TRUE;
+				LYRPD_sequence := 2;
+			END_IF
+		ELSE
+			GVL.LAYERPAD0 := TRUE;
+		END_IF
+	
+	3:
+		LYRPD_sequence := 0;
+		GVL.LAYERPAD0 := TRUE;
+		AUTO_MODE.next_step := FALSE;
+		AUTO_MODE.FG_PACKING := FALSE;
+		AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MAIN.fb_TimeStamp.SystemTime);
+		AUTO_MODE.processnameFG := CONCAT(AUTO_MODE.processnameFG,MSG.STATUS_END);
+		LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+					spLogAction	 := MSG.ACTION_FG_PACK, 
+					spLogStatus	 := MSG.STATUS_END,
+					plogFlag	 := TRUE);
+END_CASE
+
+		]]></ST>
+    </Implementation>
+    <LineIds Name="SEQ_LYR_PD0">
+      <LineId Id="2743" Count="3" />
+      <LineId Id="560" Count="1" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="2722" Count="0" />
+      <LineId Id="2721" Count="0" />
+      <LineId Id="2723" Count="1" />
+      <LineId Id="1220" Count="0" />
+      <LineId Id="562" Count="0" />
+      <LineId Id="1221" Count="0" />
+      <LineId Id="2668" Count="0" />
+      <LineId Id="1226" Count="2" />
+      <LineId Id="1222" Count="0" />
+      <LineId Id="1225" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="2525" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="751" Count="3" />
+      <LineId Id="684" Count="0" />
+      <LineId Id="399" Count="2" />
+      <LineId Id="2529" Count="0" />
+      <LineId Id="2671" Count="1" />
+      <LineId Id="2666" Count="0" />
+      <LineId Id="2670" Count="0" />
+      <LineId Id="836" Count="0" />
+      <LineId Id="2524" Count="0" />
+      <LineId Id="2517" Count="0" />
+      <LineId Id="2545" Count="0" />
+      <LineId Id="2548" Count="0" />
+      <LineId Id="2551" Count="0" />
+      <LineId Id="2601" Count="0" />
+      <LineId Id="2552" Count="0" />
+      <LineId Id="2598" Count="0" />
+      <LineId Id="2600" Count="0" />
+      <LineId Id="2599" Count="0" />
+      <LineId Id="2750" Count="0" />
+      <LineId Id="2553" Count="0" />
+      <LineId Id="2546" Count="0" />
+      <LineId Id="2749" Count="0" />
+      <LineId Id="2547" Count="0" />
+      <LineId Id="2596" Count="0" />
+      <LineId Id="2557" Count="0" />
+      <LineId Id="197" Count="0" />
+      <LineId Id="2751" Count="0" />
+      <LineId Id="162" Count="0" />
+      <LineId Id="930" Count="0" />
+      <LineId Id="686" Count="0" />
+      <LineId Id="699" Count="3" />
+      <LineId Id="624" Count="0" />
+      <LineId Id="32" Count="1" />
+      <LineId Id="26" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

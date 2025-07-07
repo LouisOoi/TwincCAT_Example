@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="TORCHCLEAN" Id="{8e0b119b-a45e-4f6a-9750-8aa306d1c175}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM TORCHCLEAN
+VAR_INPUT
+	KR_TC	: BOOL;
+	process_A	: INT;
+END_VAR
+VAR
+	TC_sequence	: INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+CASE TC_sequence OF
+	0:
+		IF process_A = 0 THEN
+			IF KR1.Idle AND KR2.Idle AND KR3.Idle AND KR4.Idle THEN
+				KR3.bOutBit[3,2]:= TRUE; //302
+				KR4.bOutBit[3,1] := TRUE; //301
+				KR_TC := TRUE;
+				process_A := 1;
+				RETURN;
+			END_IF
+		ELSIF process_A = 1 THEN
+			IF KR3.bInBit[3,2] AND KR4.bInBit[3,1] THEN
+				KR3.bOutBit[3,2]:= FALSE; //302
+				KR4.bOutBit[3,1] := FALSE; //301
+				process_A := 2;
+				RETURN;
+			END_IF	
+		ELSIF process_A = 2 THEN
+			IF NOT KR3.bInBit[3,2] AND NOT KR4.bInBit[3,1] THEN
+				process_A:= 3;
+				RETURN;
+			END_IF	
+		ELSIF process_A = 3 THEN
+			IF KR3.Idle AND KR4.Idle THEN
+				KR_TC := FALSE;
+				MAIN.btnTorchClean := FALSE;
+				process_A := 0;
+				TC_sequence := 0;
+			END_IF
+		END_IF
+END_CASE]]></ST>
+    </Implementation>
+    <LineIds Name="TORCHCLEAN">
+      <LineId Id="7" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="12" Count="1" />
+      <LineId Id="84" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="36" Count="2" />
+      <LineId Id="73" Count="1" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="43" Count="3" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="49" Count="4" />
+      <LineId Id="70" Count="1" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="59" Count="1" />
+      <LineId Id="8" Count="1" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

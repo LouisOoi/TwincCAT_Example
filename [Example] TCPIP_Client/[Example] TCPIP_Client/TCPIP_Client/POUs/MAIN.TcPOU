@@ -5,10 +5,10 @@
 VAR
 		
 	sSrvNetID		: T_AmsNetID	:= '';
-	bScannerEnable	: BOOL 			:= TRUE;
-	bLaserEnable	: BOOL 			:= TRUE;
+	bScannerEnable	: BOOL 			:= FALSE;
+//	bLaserEnable	: BOOL 			:= TRUE;
 	bLog			: BOOL			:= FALSE;
-	fbClient_ABC 	: FB_Client 	:= ( sRemoteHost := '127.0.0.1',
+	fbClient_ABC 	: FB_Client 	:= ( sRemoteHost := '192.168.1.177',
 										 nRemotePort := 8500,
 										 sPrefix := '' );
 										

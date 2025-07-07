@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="SAFETY_SENSOR" Id="{35dae844-3c31-42e9-b977-2b2a7a8be548}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM SAFETY_SENSOR
+VAR_INPUT
+	safety_compromised : BOOL;
+	WELDING_MODE : BOOL;
+END_VAR
+VAR
+	SENSOR_AIR_PRESSURE_OK AT %I* : BOOL;
+	SENSOR_GAS_PRESSURE_OK AT %I* : BOOL;
+	SENSOR_AIR_PRESSURE_HIGH AT %I* : BOOL;
+	SENSOR_GAS_PRESSURE_HIGH AT %I* : BOOL;
+	SENSOR_SAFETY_DOOR_CLOSE AT %I* : BOOL;
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+IF AUTO_MODE.AutoMode THEN	
+	IF	NOT SENSOR_SAFETY_DOOR_CLOSE OR
+		NOT SENSOR_AIR_PRESSURE_OK OR 
+		SENSOR_AIR_PRESSURE_HIGH THEN 
+			safety_compromised := TRUE;
+			KR1.bOutBit[1,0]:= FALSE;
+			KR2.bOutBit[1,0]:= FALSE;
+			KR3.bOutBit[1,0]:= FALSE;
+			KR4.bOutBit[1,0]:= FALSE;
+			KR5.bOutBit[1,0]:= FALSE;
+			AUTO_MODE.Halt_Production := TRUE;
+			AUTO_MODE.AutoMode := FALSE;
+	ELSIF WELDING_MODE THEN
+		IF  NOT SENSOR_AIR_PRESSURE_OK OR 
+			NOT SENSOR_GAS_PRESSURE_OK OR
+			SENSOR_AIR_PRESSURE_HIGH OR
+			SENSOR_GAS_PRESSURE_HIGH OR 
+			NOT SENSOR_SAFETY_DOOR_CLOSE THEN
+				KR1.bOutBit[1,0]:= FALSE;
+				KR2.bOutBit[1,0]:= FALSE;
+				KR3.bOutBit[1,0]:= FALSE;
+				KR4.bOutBit[1,0]:= FALSE;
+				KR5.bOutBit[1,0]:= FALSE;
+				safety_compromised := TRUE;
+				AUTO_MODE.Halt_Production := TRUE;
+				AUTO_MODE.AutoMode := FALSE;
+		ELSE
+			safety_compromised := FALSE;		
+		END_IF
+	ELSE
+		safety_compromised := FALSE;
+	END_IF
+ELSE
+	IF	NOT SENSOR_SAFETY_DOOR_CLOSE OR
+		NOT SENSOR_AIR_PRESSURE_OK OR 
+		SENSOR_AIR_PRESSURE_HIGH THEN 
+			safety_compromised := TRUE;
+	ELSIF WELDING_MODE THEN
+		IF  NOT SENSOR_AIR_PRESSURE_OK OR 
+			NOT SENSOR_GAS_PRESSURE_OK OR
+			SENSOR_AIR_PRESSURE_HIGH OR
+			SENSOR_GAS_PRESSURE_HIGH OR 
+			NOT SENSOR_SAFETY_DOOR_CLOSE THEN
+				safety_compromised := TRUE;
+		ELSE
+			safety_compromised := FALSE;		
+		END_IF
+	ELSE
+		safety_compromised := FALSE;
+	END_IF
+	
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="SAFETY_SENSOR">
+      <LineId Id="6" Count="4" />
+      <LineId Id="41" Count="4" />
+      <LineId Id="11" Count="7" />
+      <LineId Id="46" Count="4" />
+      <LineId Id="19" Count="8" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="68" Count="3" />
+      <LineId Id="79" Count="5" />
+      <LineId Id="90" Count="0" />
+      <LineId Id="93" Count="5" />
+      <LineId Id="65" Count="2" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

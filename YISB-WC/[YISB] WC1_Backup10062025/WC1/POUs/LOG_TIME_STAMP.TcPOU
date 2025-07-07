@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="LOG_TIME_STAMP" Id="{bb3c5f6f-245b-43ea-8105-1eeed363118f}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM LOG_TIME_STAMP
+VAR
+END_VAR
+VAR_INPUT
+	LocalTime: FB_LocalSystemTime;
+	Local_Date	: STRING;
+	Local_Time	: STRING;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+
+//================================ Function Block
+
+LocalTime(
+		sNetID:= , 
+		bEnable:= TRUE , 
+		dwCycle:= 1, 
+		dwOpt:= , 
+		tTimeout:= ,
+		bValid=> , 
+		systemTime=> , 
+		tzID=> );
+
+//================================ Footer System Time
+
+IF NOT LocalTime.bValid THEN
+	RETURN;
+END_IF
+		
+Local_Date := CONCAT (WORD_TO_STRING(LocalTime.systemTime.wYear),' - ');
+Local_Date := CONCAT (Local_Date, WORD_TO_STRING(LocalTime.systemTime.wMonth));
+Local_Date := CONCAT (Local_Date, ' - ');
+Local_Date := CONCAT (Local_Date, WORD_TO_STRING(LocalTime.systemTime.wDay));
+
+Local_Time := CONCAT (WORD_TO_STRING(LocalTime.systemTime.wHour),' : ');
+Local_Time := CONCAT (Local_Time, WORD_TO_STRING(LocalTime.systemTime.wMinute));
+Local_Time := CONCAT (Local_Time, ' : ');
+Local_Time := CONCAT (Local_Time, WORD_TO_STRING(LocalTime.systemTime.wSecond));
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="LOG_TIME_STAMP">
+      <LineId Id="50" Count="0" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="15" Count="7" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="52" Count="1" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="81" Count="1" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="35" Count="1" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="37" Count="4" />
+      <LineId Id="24" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

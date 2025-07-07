@@ -1,0 +1,250 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="SEQ_FG" Id="{7fc38a6f-5172-44f6-a3c8-c650875e8f1e}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM SEQ_FG
+VAR_INPUT
+	FG_sequence	: UINT;
+END_VAR
+
+VAR
+	process_Y	: UINT; //Pitstop to Basket B
+	process_Z	: UINT; //Pitstop to Basket A
+	process_G	: UINT; //KR1 GET Magnet
+	process_H	: UINT; //KR1 Remove Magnet
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+IF NOT AUTO_MODE.KR1_PITSTOP THEN
+	RETURN;
+END_IF
+
+CASE FG_sequence OF
+	0:
+		AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG.ACTION_INIT);	
+		LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+		 			spLogAction	 := MSG.ACTION_INIT, 
+		 			spLogStatus	 := MSG.STATUS_DONE,
+	 	 		 	plogFlag	 := TRUE);
+		process_Y	:= 0;
+		process_Z	:= 0;
+		process_G	:= 0;
+		process_H	:= 0;
+		AUTO_MODE.FG_PACKING := TRUE;
+		FG_sequence := 1;
+	
+	// Pitstop to Basket -------------------------------------------------------------------------------------------------------------	
+	1:
+		IF process_Z = 0 THEN
+			CASE GVL.Basket_A_Counter OF
+				0:
+//					KR1.bOutBit[2,0] := TRUE;
+//					KR1.PLC_O_D4.2 := TRUE; //208
+					KR1.bOutBit[4,2] := TRUE;
+					AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG.ACTION_FGA_POS1);
+					AUTO_MODE.processnameFG := CONCAT(AUTO_MODE.processnameFG,MSG.STATUS_RUN);
+					LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+								spLogAction	 := MSG.ACTION_FGA_POS1, 
+								spLogStatus	 := MSG.STATUS_RUN,
+								plogFlag	 := TRUE);
+					process_Z := 1;
+					RETURN;
+				1:
+//					KR1.bOutBit[2,1] := TRUE;
+//					KR1.PLC_O_D4.3 := TRUE; //209
+					KR1.bOutBit[4,3] := TRUE;
+					AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG.ACTION_FGA_POS2);
+					AUTO_MODE.processnameFG := CONCAT(AUTO_MODE.processnameFG,MSG.STATUS_RUN);
+					LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+								spLogAction	 := MSG.ACTION_FGA_POS2, 
+								spLogStatus	 := MSG.STATUS_RUN,
+								plogFlag	 := TRUE);
+					process_Z := 1;
+					RETURN;
+				2:
+//					KR1.bOutBit[2,2] := TRUE;
+//					KR1.PLC_O_D4.4 := TRUE; //210
+					KR1.bOutBit[4,4] := TRUE;
+					AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG.ACTION_FGA_POS3);
+					AUTO_MODE.processnameFG := CONCAT(AUTO_MODE.processnameFG,MSG.STATUS_RUN);
+					LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+								spLogAction	 := MSG.ACTION_FGA_POS3, 
+								spLogStatus	 := MSG.STATUS_RUN,
+								plogFlag	 := TRUE);
+					process_Z := 1;
+					RETURN;
+				3:
+//					KR1.bOutBit[2,3] := TRUE;
+//					KR1.PLC_O_D4.5 := TRUE; //211
+					KR1.bOutBit[4,5] := TRUE;
+					AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG.ACTION_FGA_POS4);
+					AUTO_MODE.processnameFG := CONCAT(AUTO_MODE.processnameFG,MSG.STATUS_RUN);
+					LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+								spLogAction	 := MSG.ACTION_FGA_POS4, 
+								spLogStatus	 := MSG.STATUS_RUN,
+								plogFlag	 := TRUE);
+					process_Z := 1;
+					RETURN;
+				4:
+//					KR1.bOutBit[2,4] := TRUE;
+//					KR1.PLC_O_D4.6 := TRUE; //212
+					KR1.bOutBit[4,6] := TRUE;
+					AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG.ACTION_FGA_POS5);
+					AUTO_MODE.processnameFG := CONCAT(AUTO_MODE.processnameFG,MSG.STATUS_RUN);
+					LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+								spLogAction	 := MSG.ACTION_FGA_POS5, 
+								spLogStatus	 := MSG.STATUS_RUN,
+								plogFlag	 := TRUE);
+					process_Z := 1;
+					RETURN;
+			END_CASE
+		ELSIF process_Z = 1 THEN
+			IF KR1.PLC_I_PROG1 <> 0 THEN
+				KR1.PLC_O_PROG1 := 0; //208-215	
+				AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG.ACTION_FGA_POS);
+				AUTO_MODE.processnameFG := CONCAT(AUTO_MODE.processnameFG,MSG.STATUS_ACK);
+				LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+							spLogAction	 := MSG.ACTION_FGA_POS, 
+							spLogStatus	 := MSG.STATUS_ACK,
+							plogFlag	 := TRUE);
+				process_Z := 2;
+				RETURN;
+			END_IF	
+		ELSIF process_Z = 2 THEN
+			IF KR1.PLC_O_PROG1 = 0 THEN
+				AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG.ACTION_FGA_POS);
+				AUTO_MODE.processnameFG := CONCAT(AUTO_MODE.processnameFG,MSG.STATUS_DONE);
+				LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+							spLogAction	 := MSG.ACTION_FGA_POS, 
+							spLogStatus	 := MSG.STATUS_DONE,
+							plogFlag	 := TRUE);
+				process_Z:= 3;
+				GVL.daily_output := GVL.daily_output+1;
+				GVL.weekly_output := GVL.weekly_output+1;
+				GVL.monthly_output := GVL.monthly_output+1;
+				IF AUTO_MODE.RW_PACKING THEN
+					GVL.Rework_Counter := GVL.Rework_Counter+1;
+				ELSE
+					GVL.Pass_Counter := GVL.Pass_Counter+1;
+				END_IF
+				
+				IF GVL.Basket_A_Counter < 4 THEN
+					GVL.Basket_A_Counter := GVL.Basket_A_Counter+1;
+				ELSE
+					GVL.Basket_A_Counter := 0;
+				END_IF
+				
+				FG_sequence := 2;
+				AUTO_MODE.next_step := FALSE;
+				AUTO_MODE.KR1_PITSTOP := FALSE;
+				AUTO_MODE.FG_PACKING := FALSE;
+				AUTO_MODE.RW_PACKING := FALSE;
+				AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG.ACTION_FGA_POS);
+				AUTO_MODE.processnameFG := CONCAT(AUTO_MODE.processnameFG,MSG.STATUS_COMP);
+				LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+							spLogAction	 := MSG.ACTION_FGA_POS, 
+							spLogStatus	 := MSG.STATUS_COMP,
+							plogFlag	 := TRUE);
+			END_IF	
+		END_IF
+		
+	2:
+		FG_sequence := 0;
+		AUTO_MODE.next_step := FALSE;
+		AUTO_MODE.KR1_PITSTOP := FALSE;
+		AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MAIN.fb_TimeStamp.SystemTime);
+		AUTO_MODE.processnameFG := CONCAT(AUTO_MODE.processnameFG,MSG.STATUS_END);
+		LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+					spLogAction	 := MSG.ACTION_FG_PACK, 
+					spLogStatus	 := MSG.STATUS_END,
+					plogFlag	 := TRUE);
+END_CASE
+
+		]]></ST>
+    </Implementation>
+    <LineIds Name="SEQ_FG">
+      <LineId Id="559" Count="2" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="562" Count="0" />
+      <LineId Id="7" Count="1" />
+      <LineId Id="751" Count="3" />
+      <LineId Id="684" Count="0" />
+      <LineId Id="399" Count="2" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="567" Count="0" />
+      <LineId Id="456" Count="0" />
+      <LineId Id="564" Count="1" />
+      <LineId Id="73" Count="0" />
+      <LineId Id="386" Count="0" />
+      <LineId Id="226" Count="0" />
+      <LineId Id="240" Count="0" />
+      <LineId Id="585" Count="0" />
+      <LineId Id="745" Count="0" />
+      <LineId Id="767" Count="0" />
+      <LineId Id="746" Count="4" />
+      <LineId Id="244" Count="0" />
+      <LineId Id="246" Count="0" />
+      <LineId Id="248" Count="1" />
+      <LineId Id="584" Count="0" />
+      <LineId Id="739" Count="0" />
+      <LineId Id="768" Count="0" />
+      <LineId Id="740" Count="4" />
+      <LineId Id="250" Count="0" />
+      <LineId Id="252" Count="2" />
+      <LineId Id="587" Count="0" />
+      <LineId Id="733" Count="0" />
+      <LineId Id="769" Count="0" />
+      <LineId Id="734" Count="4" />
+      <LineId Id="255" Count="0" />
+      <LineId Id="257" Count="2" />
+      <LineId Id="588" Count="0" />
+      <LineId Id="727" Count="0" />
+      <LineId Id="770" Count="0" />
+      <LineId Id="728" Count="4" />
+      <LineId Id="260" Count="0" />
+      <LineId Id="262" Count="2" />
+      <LineId Id="589" Count="0" />
+      <LineId Id="265" Count="0" />
+      <LineId Id="771" Count="0" />
+      <LineId Id="722" Count="4" />
+      <LineId Id="266" Count="1" />
+      <LineId Id="247" Count="0" />
+      <LineId Id="208" Count="0" />
+      <LineId Id="210" Count="1" />
+      <LineId Id="715" Count="5" />
+      <LineId Id="212" Count="4" />
+      <LineId Id="709" Count="5" />
+      <LineId Id="217" Count="0" />
+      <LineId Id="391" Count="1" />
+      <LineId Id="471" Count="0" />
+      <LineId Id="219" Count="0" />
+      <LineId Id="639" Count="0" />
+      <LineId Id="638" Count="0" />
+      <LineId Id="640" Count="0" />
+      <LineId Id="643" Count="0" />
+      <LineId Id="641" Count="0" />
+      <LineId Id="570" Count="0" />
+      <LineId Id="394" Count="0" />
+      <LineId Id="393" Count="0" />
+      <LineId Id="395" Count="2" />
+      <LineId Id="571" Count="0" />
+      <LineId Id="440" Count="0" />
+      <LineId Id="469" Count="1" />
+      <LineId Id="568" Count="0" />
+      <LineId Id="707" Count="1" />
+      <LineId Id="644" Count="0" />
+      <LineId Id="704" Count="2" />
+      <LineId Id="610" Count="0" />
+      <LineId Id="222" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="195" Count="2" />
+      <LineId Id="162" Count="0" />
+      <LineId Id="685" Count="1" />
+      <LineId Id="699" Count="3" />
+      <LineId Id="624" Count="0" />
+      <LineId Id="32" Count="1" />
+      <LineId Id="26" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

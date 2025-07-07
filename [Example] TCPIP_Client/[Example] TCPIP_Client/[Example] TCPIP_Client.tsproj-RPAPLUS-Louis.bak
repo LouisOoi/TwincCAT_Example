@@ -1,0 +1,792 @@
+<?xml version="1.0"?>
+<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4024.55">
+	<ImageDatas>
+		<ImageData Id="1000">424d360300000000000036000000280000001000000010000000010018000000000000030000120b0000120b000000000000000000005297e788b7ee82b4ee82b4ee82b4ee82b4ee82b4ee82b4ee82b4ee82b4ee82b4ee82b4ee82b4ee82b4ee87b7ee589be989b8eeffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff88b8f083b4eeffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff83b4ef88b7eef4f9fd004bd70066dd0065dd0166dd0055d9c2dbf7ffffffc5d9f61673e1005bdc005ddd005adbcfe1f88bb9f088b7eefbfcfe0060dd257fe4005fdc005fdc004cd8c9e0f8cbdaf70058db1976e20061dd1070df0042d6ffffff87b7ef88b7eefbfcfe0062de004dd8ffffffffffffffffffffffff0059db1c79e32c81e3ffffffffffffffffffffffff83b5ef88b7eefbfcfe0062de004dd8ffffffffffffffffffd8e9fa0064de0060defffffeffffffffffffffffffffffff83b4ef88b7eefbfcfe005fdd257fe4005edc005edc0054d9e4e6f9066cdf0065deffffffffffffffffffffffffffffff83b4ef88b7eefbfcfe0060dd1e7ae30e6edf086bde0061dcdfeafa056bdf0060ddffffffffffffffffffffffffffffff83b4ef88b7eefbfcfe0062de004cd8ffffffffffffffffffffffff0050d9086ce0b5d2f5ffffffffffffffffffffffff83b4ef88b7eefbfcfe0061de0662dca4c9f292bdef79aeecffffff5798e81271e10064de8dbaf0c8dff7699de9ffffff84b5ef88b7eef8fbfe0059dc1877e20469df066bdf0048d7ffffffffffff2c7de20062de086cdf0064de005bdcb9d7f68dbaf086b6eeffffff709ce97babec7babec7babec6d99e8ffffffffffffffffffc5dbf76ca1ea589ae970a6ebf4f3fc87b7ef83b4eeffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff83b4ef8ab8eeffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff89b8f04d95e788b8ee81b4ee81b4ee81b4ee81b4ee81b4ee81b4ee81b4ee81b4ee81b4ee81b4ee81b4ee81b4ee87b7ee5397e8</ImageData>
+		<ImageData Id="1001">424de6000000000000007600000028000000100000000e000000010004000000000070000000c40e0000c40e000000000000000000000000000000008000008000000080800080000000800080008080000080808000c0c0c0000000ff0000ff000024881300ff000000ff00ff00ffff0000ffffff00dddd88888888dddddddd87777778dddddddd87877878dddddddd87777778dddddddd87877878dddddddd87777778dddddddd88888888dddddddd8bbbbbb8dddddddd8bbbbbb8dddddddd8bbbbbb8dddddddd8bbbbbb8dddddddd8bbbbbb8dddddddd8bbbbbb8dddddddd88888888dddd</ImageData>
+		<ImageData Id="1002">424de6000000000000007600000028000000100000000e000000010004000000000070000000c40e0000c40e000000000000000000000000000000008000008000000080800080000000800080008080000080808000c0c0c0000000ff0000ff00001f6eff00ff000000ff00ff00ffff0000ffffff00dddd88888888dddddddd87777778dddddddd87877878dddddddd87777778dddddddd87877878dddddddd87777778dddddddd88888888dddddddd8bbbbbb8dddddddd8bbbbbb8dddddddd8bbbbbb8dddddddd8bbbbbb8dddddddd8bbbbbb8dddddddd8bbbbbb8dddddddd88888888dddd</ImageData>
+		<ImageData Id="1003">424de6000000000000007600000028000000100000000e000000010004000000000070000000c40e0000c40e000000000000000000000000000000008000008000000080800080000000800080008080000080808000c0c0c0000000ff0000ff0000d0977100ff000000ff00ff00ffff0000ffffff00dddd88888888dddddddd87777778dddddddd87877878dddddddd87777778dddddddd87877878dddddddd87777778dddddddd88888888dddddddd8bbbbbb8dddddddd8bbbbbb8dddddddd8bbbbbb8dddddddd8bbbbbb8dddddddd8bbbbbb8dddddddd8bbbbbb8dddddddd88888888dddd</ImageData>
+		<ImageData Id="1004">424de6000000000000007600000028000000100000000e000000010004000000000070000000c40e0000c40e000000000000000000000000000000008000008000000080800080000000800080008080000080808000c0c0c0000000ff0000ff0000bc476300ff000000ff00ff00ffff0000ffffff00dddd88888888dddddddd87777778dddddddd87877878dddddddd87777778dddddddd87877878dddddddd87777778dddddddd88888888dddddddd8bbbbbb8dddddddd8bbbbbb8dddddddd8bbbbbb8dddddddd8bbbbbb8dddddddd8bbbbbb8dddddddd8bbbbbb8dddddddd88888888dddd</ImageData>
+		<ImageData Id="1005">424de6000000000000007600000028000000100000000e000000010004000000000070000000c40e0000c40e000000000000000000000000000000008000008000000080800080000000800080008080000080808000c0c0c0000000ff0000ff000000ffff00ff000000ff00ff00ffff0000ffffff00dddd88888888dddddddd87777778dddddddd87877878dddddddd87777778dddddddd87877878dddddddd87777778dddddddd88888888dddddddd8bbbbbb8dddddddd8bbbbbb8dddddddd8bbbbbb8dddddddd8bbbbbb8dddddddd8bbbbbb8dddddddd8bbbbbb8dddddddd88888888dddd</ImageData>
+		<ImageData Id="1006">424de6000000000000007600000028000000100000000e000000010004000000000070000000c40e0000c40e000000000000000000000000000000008000008000000080800080000000800080008080000080808000c0c0c0000000ff0000ff0000ffffff00ff000000ff00ff00ffff0000ffffff00dddd88888888dddddddd87777778dddddddd87877878dddddddd87777778dddddddd87877878dddddddd87777778dddddddd88888888dddddddd8bbbbbb8dddddddd8bbbbbb8dddddddd8bbbbbb8dddddddd8bbbbbb8dddddddd8bbbbbb8dddddddd8bbbbbb8dddddddd88888888dddd</ImageData>
+		<ImageData Id="1007">424de6000000000000007600000028000000100000000e000000010004000000000070000000c40e0000c40e000000000000000000000000000000008000008000000080800080000000800080008080000080808000c0c0c0000000ff0000ff00000000ff00ff000000ff00ff00ffff0000ffffff00dddd88888888dddddddd87777778dddddddd87877878dddddddd87777778dddddddd87877878dddddddd87777778dddddddd88888888dddddddd8bbbbbb8dddddddd8bbbbbb8dddddddd8bbbbbb8dddddddd8bbbbbb8dddddddd8bbbbbb8dddddddd8bbbbbb8dddddddd88888888dddd</ImageData>
+	</ImageDatas>
+	<Project ProjectGUID="{C2751EF9-AC72-4D80-B51F-08AFDAA73D78}" Target64Bit="true" ShowHideConfigurations="#x6">
+		<System>
+			<Licenses>
+				<Target>
+					<ManualSelect>{3EBB9639-5FF3-42B6-8847-35C70DC013C8}</ManualSelect>
+				</Target>
+			</Licenses>
+			<Tasks>
+				<Task Id="3" Priority="20" CycleTime="100000" AmsPort="350" AdtTasks="true">
+					<Name>PlcTask</Name>
+				</Task>
+			</Tasks>
+		</System>
+		<Plc>
+			<Project GUID="{E759FE3C-4CD4-4B1A-9490-8F76588D4EE6}" Name="TCPIP_Client" PrjFilePath="TCPIP_Client\TCPIP_Client.plcproj" TmcFilePath="TCPIP_Client\TCPIP_Client.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="TCPIP_Client\TCPIP_Client.tmc" TmcHash="{C5227842-BC0C-3AD3-C449-B80BF1610773}">
+					<Name>TCPIP_Client Instance</Name>
+					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
+					<Vars VarGrpType="1">
+						<Name>PlcTask Inputs</Name>
+						<Var>
+							<Name>MAIN.PLC_I_D1</Name>
+							<Type>WORD</Type>
+						</Var>
+					</Vars>
+					<Vars VarGrpType="2" AreaNo="1">
+						<Name>PlcTask Outputs</Name>
+						<Var>
+							<Name>MAIN.PLC_O_D1</Name>
+							<Type>WORD</Type>
+						</Var>
+					</Vars>
+					<Contexts>
+						<Context>
+							<Id>0</Id>
+							<Name>PlcTask</Name>
+							<ManualConfig>
+								<OTCID>#x02010030</OTCID>
+							</ManualConfig>
+							<Priority>20</Priority>
+							<CycleTime>10000000</CycleTime>
+						</Context>
+					</Contexts>
+					<TaskPouOids>
+						<TaskPouOid Prio="20" OTCID="#x08502001"/>
+					</TaskPouOids>
+				</Instance>
+			</Project>
+		</Plc>
+		<Io>
+			<Device Id="1" DevType="111" DevFlags="#x0003" AmsPort="28673" AmsNetId="192.168.1.132.2.1" RemoteName="Device 1 (EtherCAT)" InfoImageId="2">
+				<Name>Device 1 (EtherCAT)</Name>
+				<AddressInfo>
+					<Pnp>
+						<DeviceDesc>Ethernet (Realtek USB GbE Family Controller #2)</DeviceDesc>
+						<DeviceName>\DEVICE\{CB2C3D76-AD67-43A8-8107-569B462B61D0}</DeviceName>
+						<DeviceData>00e04c680123</DeviceData>
+					</Pnp>
+				</AddressInfo>
+				<Image Id="1" AddrType="9" ImageType="3">
+					<Name>Image</Name>
+				</Image>
+				<Box Id="2" BoxType="9099" BoxFlags="#x00000020">
+					<Name>Box 2 (ARIO-C-EC)</Name>
+					<ImageId>1000</ImageId>
+					<EtherCAT SlaveType="2" PdiType="#x0006" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="19" FoeType="1" VendorId="#x00000759" ProductCode="#x00000003" RevisionNo="#x00140001" InfoDataAddr="true" CheckRevisionNoType="1" PortPhys="17" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="ARIO-C-EC" Desc="ARIO-C-EC" PortABoxInfo="#x00ffffff">
+						<SyncMan>001080003600010001000000800080008000001036010000</SyncMan>
+						<SyncMan>801080003200010002000000800080008000801032010000</SyncMan>
+						<SyncMan>001109007400010003000000000000000000001174000000</SyncMan>
+						<SyncMan>001d08003000010004000000000000000000001d30000000</SyncMan>
+						<Fmmu>0000000000000000001100020100000001000000000000000000000000000000</Fmmu>
+						<Fmmu>0000000000000000001d00010100000002000000000000000000000000000000</Fmmu>
+						<Fmmu>00000000000000000d0800010100000003000000000000000000000000000000</Fmmu>
+						<Pdo Name="Output(s)" Index="#x1600" InOut="1" Flags="#x0291" SyncMan="2">
+							<Entry Name="Byte 1" Index="#x7000" Sub="#x01" Flags="#x00001000">
+								<Type>USINT</Type>
+							</Entry>
+						</Pdo>
+						<Pdo Name="Input(s)" Index="#x1a01" Flags="#x0291" SyncMan="3">
+							<Entry Name="Analog Input Ch.1, Word" Index="#x6010" Sub="#x01" Flags="#x00001000">
+								<Type>UINT</Type>
+							</Entry>
+							<Entry Name="Analog Input Ch.2, Word" Index="#x6010" Sub="#x02" Flags="#x00001000">
+								<Type>UINT</Type>
+							</Entry>
+							<Entry Name="Analog Input Ch.3, Word" Index="#x6010" Sub="#x03" Flags="#x00001000">
+								<Type>UINT</Type>
+							</Entry>
+							<Entry Name="Analog Input Ch.4, Word" Index="#x6010" Sub="#x04" Flags="#x00001000">
+								<Type>UINT</Type>
+							</Entry>
+						</Pdo>
+						<Pdo Name="Output(s)" Index="#x1602" InOut="1" Flags="#x0291" SyncMan="2">
+							<Entry Name="Analog Output Ch.1, Word" Index="#x7020" Sub="#x01" Flags="#x00001000">
+								<Type>UINT</Type>
+							</Entry>
+							<Entry Name="Analog Output Ch.2, Word" Index="#x7020" Sub="#x02" Flags="#x00001000">
+								<Type>UINT</Type>
+							</Entry>
+							<Entry Name="Analog Output Ch.3, Word" Index="#x7020" Sub="#x03" Flags="#x00001000">
+								<Type>UINT</Type>
+							</Entry>
+							<Entry Name="Analog Output Ch.4, Word" Index="#x7020" Sub="#x04" Flags="#x00001000">
+								<Type>UINT</Type>
+							</Entry>
+						</Pdo>
+						<Slot Name="Modules">
+							<SlotData>0000010001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+							<Module Id="#x03090001" Type="ARIO-S-DO08N" Class="DO">
+								<Name>Module 1 (ARIO-S-DO08N)</Name>
+								<ImageId>1002</ImageId>
+								<ModuleData>5907000081100420010004000000000000000000000000000000000000000000</ModuleData>
+								<PdoIndex>5632</PdoIndex>
+							</Module>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+							<Module Id="#x03090002" Type="ARIO-S-AI04C2" Class="AI">
+								<Name>Module 2 (ARIO-S-AI04C2)</Name>
+								<ImageId>1003</ImageId>
+								<ModuleData>5907000002362528010004000000000000000000000000000000000000000000</ModuleData>
+								<PdoIndex>6657</PdoIndex>
+							</Module>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+							<Module Id="#x03090003" Type="ARIO-S-AO04C2" Class="AO">
+								<Name>Module 3 (ARIO-S-AO04C2)</Name>
+								<ImageId>1004</ImageId>
+								<ModuleData>5907000042302620010004000000000000000000000000000000000000000000</ModuleData>
+								<PdoIndex>5634</PdoIndex>
+							</Module>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<Slot Name="Modules">
+							<SlotData>0000000001000000010000001000000000000000000000000000000000000000</SlotData>
+							<ModuleClass Class="DI" Name="Digital Input" VendorId="1881" ImageId="1001"/>
+							<ModuleClass Class="DO" Name="Digital Output" VendorId="1881" ImageId="1002"/>
+							<ModuleClass Class="AI" Name="Analog Input" VendorId="1881" ImageId="1003"/>
+							<ModuleClass Class="AO" Name="Analog Output" VendorId="1881" ImageId="1004"/>
+							<ModuleClass Class="TI" Name="Temperature Input" VendorId="1881" ImageId="1005"/>
+							<ModuleClass Class="Special" Name="Special" VendorId="1881" ImageId="1006"/>
+							<ModuleClass Class="Power" Name="Power" VendorId="1881" ImageId="1007"/>
+						</Slot>
+						<ModulePdoGroup>00000000000000000000000000000000</ModulePdoGroup>
+						<ModulePdoGroup>00000016001a00000000000000000000</ModulePdoGroup>
+					</EtherCAT>
+				</Box>
+				<EtherCAT/>
+			</Device>
+		</Io>
+	</Project>
+	<Mappings>
+		<OwnerA Name="TIPC^TCPIP_Client^TCPIP_Client Instance">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Box 2 (ARIO-C-EC)">
+				<Link VarA="PlcTask Outputs^MAIN.PLC_O_D1" VarB="Module 3 (ARIO-S-AO04C2)^Output(s)^Analog Output Ch.1, Word"/>
+			</OwnerB>
+		</OwnerA>
+	</Mappings>
+</TcSmProject>

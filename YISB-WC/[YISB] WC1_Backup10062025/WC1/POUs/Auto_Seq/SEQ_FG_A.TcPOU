@@ -1,0 +1,1713 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="SEQ_FG_A" Id="{ccb97b0a-5a77-4f1d-8614-ef472c35c952}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM SEQ_FG_A
+VAR_INPUT
+	FG_sequence	: UINT;
+END_VAR
+
+VAR
+	process_Y	: UINT; //FG A IN
+	process_Z	: UINT; //Place to Basket A A
+	process_G	: UINT; //KR5 Get Magnet
+	process_H	: UINT; //KR5 Remove Magnet
+	bit1		: UINT;
+	bit2		: UINT;
+	
+	Timer		: TON;
+	
+	fb_RunLayerPad	: FB_RunLayerPad;
+	MSG_Bskt	: STRING;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+IF NOT GVL.LAYERPAD0 THEN
+	RETURN;
+END_IF
+
+IF GVL.Rework_Empty AND NOT AUTO_MODE.FG_PACKING THEN
+	RETURN;
+END_IF
+
+IF GVL.COSMO_UNLOAD THEN
+	RETURN;
+END_IF
+
+IF NOT AUTO_MODE.FG_PACKING THEN
+	Timer (IN:= TRUE, PT := T#5S);
+	fb_RunLayerPad(Execute := FALSE);
+	IF NOT timer.Q THEN
+		RETURN;
+	END_IF
+END_IF
+
+CASE FG_sequence OF
+	// Init ------------------------------------------------------------------------------------------------------------------	
+	0:
+		AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG.ACTION_INIT);	
+		LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+		 			spLogAction	 := MSG.ACTION_INIT, 
+		 			spLogStatus	 := MSG.STATUS_DONE,
+	 	 		 	plogFlag	 := TRUE);
+		process_Y	:= 0;
+		process_Z	:= 0;
+		process_G	:= 0; // get magnet
+		process_H	:= 0;
+		AUTO_MODE.FG_PACKING := TRUE;
+		fb_RunLayerPad(Execute := FALSE);
+		Timer (IN:= FALSE);
+		FG_sequence := 2;
+	
+	// Check Layer Pad insertion -------------------------------------------------------------------------------------------------------------	
+//	1:	
+//		IF GVL.Basket_A_Counter = 0 THEN
+//			fb_RunLayerPad(Basket := 1, Layer := 0, Execute := TRUE);
+//			IF fb_RunLayerPad.Complete THEN
+//				fb_RunLayerPad(Execute := FALSE);
+//				FG_sequence := 3;
+//			ELSIF fb_RunLayerPad.Error THEN
+//				fb_RunLayerPad(Execute := FALSE);
+//				AUTO_MODE.Halt_Production := TRUE;
+//			END_IF
+//		ELSE
+//			FG_sequence := 2;
+//		END_IF
+
+	// Get Magnet -------------------------------------------------------------------------------------------------------------	
+	2:
+		IF NOT GVL.KR1_EOAT_FILL AND NOT GVL.KR1_EOAT_SUCTION THEN
+			IF process_G = 0 THEN
+				IF KR1.Idle THEN
+//					KR1.PLC_O_D3.0 := TRUE; //200
+					KR1.bOutBit[3,0] := TRUE;
+					AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG.ACTION_GET_MAGNET);
+					AUTO_MODE.processnameFG := CONCAT(AUTO_MODE.processnameFG,MSG.STATUS_RUN);
+					LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+								spLogAction	 := MSG.ACTION_GET_MAGNET, 
+								spLogStatus	 := MSG.STATUS_RUN,
+								plogFlag	 := TRUE);
+					process_G := 1;
+					RETURN;
+				END_IF
+			ELSIF process_G = 1 THEN
+//				KR1.PLC_O_D3.0 := TRUE; //200
+				KR1.bOutBit[3,0] := TRUE;
+				IF NOT KR1.bInBit[3,0] THEN
+//					KR1.PLC_O_D3.0 := FALSE; //200	
+					KR1.bOutBit[3,0] := FALSE;
+					AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG.ACTION_GET_MAGNET);
+					AUTO_MODE.processnameFG := CONCAT(AUTO_MODE.processnameFG,MSG.STATUS_ACK);
+					LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+								spLogAction	 := MSG.ACTION_GET_MAGNET, 
+								spLogStatus	 := MSG.STATUS_ACK,
+								plogFlag	 := TRUE);
+					process_G := 2;
+					RETURN;
+				END_IF	
+			ELSIF process_G = 2 THEN
+//				KR1.PLC_O_D3.0 := FALSE; //200	
+				KR1.bOutBit[3,0] := FALSE;
+				IF KR1.bInBit[3,0] THEN
+					AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG.ACTION_GET_MAGNET);
+					AUTO_MODE.processnameFG := CONCAT(AUTO_MODE.processnameFG,MSG.STATUS_DONE);
+					LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+								spLogAction	 := MSG.ACTION_GET_MAGNET, 
+								spLogStatus	 := MSG.STATUS_DONE,
+								plogFlag	 := TRUE);
+					process_G:= 3;
+					RETURN;
+				END_IF	
+			ELSIF process_G = 3 THEN
+				IF KR1.Idle THEN
+					AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG.ACTION_GET_MAGNET);
+					AUTO_MODE.processnameFG := CONCAT(AUTO_MODE.processnameFG,MSG.STATUS_COMP);
+					LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+								spLogAction	 := MSG.ACTION_GET_MAGNET, 
+								spLogStatus	 := MSG.STATUS_COMP,
+								plogFlag	 := TRUE);
+					process_G := 4;
+					FG_sequence := 3;
+					AUTO_MODE.next_step := FALSE;
+					GVL.KR1_EOAT_FILL := TRUE;
+				END_IF
+			END_IF
+		ELSE
+			FG_sequence := 3;
+		END_IF
+		
+	// Pick Rework IN -------------------------------------------------------------------------------------------------------------	
+	3: 
+		// Decide to Pick from A Jig or B Jig
+			IF GVL.Basket_A_Counter < 8 THEN
+				bit1 := 3;
+				bit2 := 7;
+			ELSE 
+				bit1 := 3;
+				bit2 := 5;
+			END_IF
+			IF process_Y = 0 THEN
+				IF NOT GVL.Rework_Empty AND KR1.Idle AND GVL.KR1_EOAT_FILL THEN
+//					KR5.PLC_O_D3.7 := TRUE; //207
+					KR1.bOutBit[ bit1,bit2 ] := TRUE;
+					AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG.ACTION_REWORK_IN);
+					AUTO_MODE.processnameFG := CONCAT(AUTO_MODE.processnameFG,MSG.STATUS_RUN);
+					LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+								spLogAction	 := MSG.ACTION_REWORK_IN, 
+								spLogStatus	 := MSG.STATUS_RUN,
+								plogFlag	 := TRUE);
+					process_Y := 1;
+					RETURN;
+				END_IF
+			ELSIF process_Y = 1 THEN
+//				KR5.PLC_O_D3.7 := TRUE; //207
+				KR1.bOutBit[ bit1,bit2 ] := TRUE;
+				IF KR1.bInBit[ bit1,bit2 ] THEN
+					KR1.bOutBit[ bit1,bit2] := FALSE; 
+					AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG.ACTION_REWORK_IN);
+					AUTO_MODE.processnameFG := CONCAT(AUTO_MODE.processnameFG,MSG.STATUS_ACK);
+					LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+								spLogAction	 := MSG.ACTION_REWORK_IN, 
+								spLogStatus	 := MSG.STATUS_ACK,
+								plogFlag	 := TRUE);
+					process_Y := 2;
+					RETURN;
+				END_IF	
+			ELSIF process_Y = 2 THEN
+//				KR5.PLC_O_D3.7 := FALSE; //207	
+				KR1.bOutBit[ bit1,bit2] := FALSE; 
+				IF NOT KR1.bInBit[ bit1,bit2 ] THEN
+					AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG.ACTION_REWORK_IN);
+					AUTO_MODE.processnameFG := CONCAT(AUTO_MODE.processnameFG,MSG.STATUS_DONE);
+					LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+								spLogAction	 := MSG.ACTION_REWORK_IN, 
+								spLogStatus	 := MSG.STATUS_DONE,
+								plogFlag	 := TRUE);
+					process_Y:= 3;
+					RETURN;
+				END_IF
+			ELSIF process_Y = 3 THEN
+				IF KR1.Idle AND GVL.COSMO_Ready THEN
+						AUTO_MODE.COSMO_LOAD := FALSE;
+						AUTO_MODE.CR_UNLOADING := FALSE;
+						AUTO_MODE.CLEAR_COSMO := FALSE;
+						AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG.ACTION_REWORK_IN);
+						AUTO_MODE.processnameFG := CONCAT(AUTO_MODE.processnameFG,MSG.STATUS_COMP);
+						LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+									spLogAction	 := MSG.ACTION_REWORK_IN, 
+									spLogStatus	 := MSG.STATUS_COMP,
+									plogFlag	 := TRUE);
+						process_Y := 4;
+						FG_sequence := 4;
+						AUTO_MODE.next_step := FALSE;
+					END_IF
+			END_IF	
+			
+	// Place to Basket 		
+	4:
+		IF process_Z = 0 THEN
+			CASE GVL.Basket_A_Counter OF
+				0:
+					bit1 					:= 4;
+					bit2 					:= 2;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS1;
+					process_Z 				:= 1;
+				1:
+					bit1 					:= 4;
+					bit2 					:= 3;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS2;
+					process_Z 				:= 1;
+					RETURN;
+				2:
+					bit1 					:= 4;
+					bit2 					:= 4;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS3;
+					process_Z 				:= 1;
+				3:
+					bit1 					:= 4;
+					bit2 					:= 5;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS4;
+					process_Z 				:= 1;
+				4:
+					bit1 					:= 4;
+					bit2 					:= 6;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS5;
+					process_Z 				:= 1;
+				5:
+					bit1 					:= 4;
+					bit2 					:= 7;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS6;
+					process_Z 				:= 1;
+				6:
+					bit1 					:= 5;
+					bit2 					:= 0;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS7;
+					process_Z 				:= 1;
+				7:
+					bit1 					:= 5;
+					bit2 					:= 1;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS8;
+					process_Z 				:= 1;
+				8:
+					bit1 					:= 5;
+					bit2 					:= 2;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS9;
+					process_Z 				:= 1;
+				9:
+					bit1 					:= 5;
+					bit2 					:= 3;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS10;
+					process_Z 				:= 1;
+				10:
+					bit1 					:= 5;
+					bit2 					:= 4;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS11;
+					process_Z 				:= 1;
+				11:
+					bit1 					:= 5;
+					bit2 					:= 5;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS12;
+					process_Z 				:= 1;
+				12:
+					bit1 					:= 5;
+					bit2 					:= 6;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS13;
+					process_Z 				:= 1;
+				13:
+					bit1 					:= 5;
+					bit2 					:= 7;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS14;
+					process_Z 				:= 1;
+				14:
+					bit1 					:= 6;
+					bit2 					:= 0;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS15;
+					process_Z 				:= 1;
+				15:
+					bit1 					:= 6;
+					bit2 					:= 1;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS16;
+					process_Z 				:= 1;
+				16:
+					bit1 					:= 6;
+					bit2 					:= 2;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS17;
+					process_Z 				:= 1;
+				17:
+					bit1 					:= 6;
+					bit2 					:= 3;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS18;
+					process_Z 				:= 1;
+				18:
+					bit1 					:= 6;
+					bit2 					:= 4;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS19;
+					process_Z 				:= 1;
+				19:
+					bit1 					:= 6;
+					bit2 					:= 5;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS20;
+					process_Z 				:= 1;
+				20:
+					bit1 					:= 6;
+					bit2 					:= 6;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS21;
+					process_Z 				:= 1;
+				21:
+					bit1 					:= 6;
+					bit2 					:= 7;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS22;
+					process_Z 				:= 1;
+				22:
+					bit1 					:= 7;
+					bit2 					:= 0;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS23;
+					process_Z 				:= 1;
+				23:
+					bit1 					:= 7;
+					bit2 					:= 1;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS24;
+					process_Z 				:= 1;
+				24:
+					bit1 					:= 7;
+					bit2 					:= 2;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS25;
+					process_Z 				:= 1;
+				25:
+					bit1 					:= 7;
+					bit2 					:= 3;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS26;
+					process_Z 				:= 1;
+				26:
+					bit1 					:= 7;
+					bit2 					:= 4;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS27;
+					process_Z 				:= 1;
+				27:
+					bit1 					:= 7;
+					bit2 					:= 5;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS28;
+					process_Z 				:= 1;
+				28:
+					bit1 					:= 7;
+					bit2 					:= 6;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS29;
+					process_Z 				:= 1;
+				29:
+					bit1 					:= 7;
+					bit2 					:= 7;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS30;
+					process_Z 				:= 1;
+				30:
+					bit1 					:= 8;
+					bit2 					:= 0;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS31;
+					process_Z 				:= 1;
+				31:
+					bit1 					:= 8;
+					bit2 					:= 1;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS32;
+					process_Z 				:= 1;
+				32:
+					bit1 					:= 8;
+					bit2 					:= 2;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS33;
+					process_Z 				:= 1;
+				33:
+					bit1 					:= 8;
+					bit2 					:= 3;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS34;
+					process_Z 				:= 1;
+				34:
+					bit1 					:= 8;
+					bit2 					:= 4;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS35;
+					process_Z 				:= 1;
+				35:
+					bit1 					:= 8;
+					bit2 					:= 5;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS36;
+					process_Z 				:= 1;
+				36:
+					bit1 					:= 8;
+					bit2 					:= 6;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS37;
+					process_Z 				:= 1;
+				37:
+					bit1 					:= 8;
+					bit2 					:= 7;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS38;
+					process_Z 				:= 1;
+				38:
+					bit1 					:= 9;
+					bit2 					:= 0;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS39;
+					process_Z 				:= 1;
+				39:
+					bit1 					:= 9;
+					bit2 					:= 1;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS40;
+					process_Z 				:= 1;
+				40:
+					bit1 					:= 9;
+					bit2 					:= 2;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS41;
+					process_Z 				:= 1;
+				41:
+					bit1 					:= 9;
+					bit2 					:= 3;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS42;
+					process_Z 				:= 1;
+				42:
+					bit1 					:= 9;
+					bit2 					:= 4;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS43;
+					process_Z 				:= 1;
+				43:
+					bit1 					:= 9;
+					bit2 					:= 5;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS44;
+					process_Z 				:= 1;
+				44:
+					bit1 					:= 9;
+					bit2 					:= 6;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS45;
+					process_Z 				:= 1;
+				45:
+					bit1 					:= 9;
+					bit2 					:= 7;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS46;
+					process_Z 				:= 1;
+				46:
+					bit1 					:= 10;
+					bit2 					:= 0;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS47;
+					process_Z 				:= 1;
+				47:
+					bit1 					:= 10;
+					bit2 					:= 1;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS48;
+					process_Z 				:= 1;
+				48:
+					bit1 					:= 10;
+					bit2 					:= 2;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS49;
+					process_Z 				:= 1;
+				49:
+					bit1 					:= 10;
+					bit2 					:= 3;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS50;
+					process_Z 				:= 1;
+				50:
+					bit1 					:= 10;
+					bit2 					:= 4;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS51;
+					process_Z 				:= 1;
+				51:
+					bit1 					:= 10;
+					bit2 					:= 5;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS52;
+					process_Z 				:= 1;
+				52:
+					bit1 					:= 10;
+					bit2 					:= 6;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS53;
+					process_Z 				:= 1;
+				53:
+					bit1 					:= 10;
+					bit2 					:= 7;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS54;
+					process_Z 				:= 1;
+				54:
+					bit1 					:= 11;
+					bit2 					:= 0;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS55;
+					process_Z 				:= 1;
+				55:
+					bit1 					:= 11;
+					bit2 					:= 1;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS56;
+					process_Z 				:= 1;
+				56:
+					bit1 					:= 11;
+					bit2 					:= 2;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS57;
+					process_Z 				:= 1;
+				57:
+					bit1 					:= 11;
+					bit2 					:= 3;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS58;
+					process_Z 				:= 1;
+				58:
+					bit1 					:= 11;
+					bit2 					:= 4;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS59;
+					process_Z 				:= 1;
+				59:
+					bit1 					:= 11;
+					bit2 					:= 5;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS60;
+					process_Z 				:= 1;
+				60:
+					bit1 					:= 11;
+					bit2 					:= 6;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS61;
+					process_Z 				:= 1;
+				61:
+					bit1 					:= 11;
+					bit2 					:= 7;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS62;
+					process_Z 				:= 1;
+				62:
+					bit1 					:= 12;
+					bit2 					:= 0;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS63;
+					process_Z 				:= 1;
+				63:
+					bit1 					:= 12;
+					bit2 					:= 1;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS64;
+					process_Z 				:= 1;
+				64:
+					bit1 					:= 12;
+					bit2 					:= 2;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS65;
+					process_Z 				:= 1;
+				65:
+					bit1 					:= 12;
+					bit2 					:= 3;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS66;
+					process_Z 				:= 1;
+				66:
+					bit1 					:= 12;
+					bit2 					:= 4;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS67;
+					process_Z 				:= 1;
+				67:
+					bit1 					:= 12;
+					bit2 					:= 5;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS68;
+					process_Z 				:= 1;
+				68:
+					bit1 					:= 12;
+					bit2 					:= 6;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS69;
+					process_Z 				:= 1;
+				69:
+					bit1 					:= 12;
+					bit2 					:= 7;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS70;
+					process_Z 				:= 1;
+				70:
+					bit1 					:= 13;
+					bit2 					:= 0;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS71;
+					process_Z 				:= 1;
+				71:
+					bit1 					:= 13;
+					bit2 					:= 1;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS72;
+					process_Z 				:= 1;
+				72:
+					bit1 					:= 13;
+					bit2 					:= 2;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS73;
+					process_Z 				:= 1;
+				73:
+					bit1 					:= 13;
+					bit2 					:= 3;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS74;
+					process_Z 				:= 1;
+				74:
+					bit1 					:= 13;
+					bit2 					:= 4;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS75;
+					process_Z 				:= 1;
+				75:
+					bit1 					:= 13;
+					bit2 					:= 5;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS76;
+					process_Z 				:= 1;
+				76:
+					bit1 					:= 13;
+					bit2 					:= 6;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS77;
+					process_Z 				:= 1;
+				77:
+					bit1 					:= 13;
+					bit2 					:= 7;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS78;
+					process_Z 				:= 1;
+				78:
+					bit1 					:= 14;
+					bit2 					:= 0;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS79;
+					process_Z 				:= 1;
+				79:
+					bit1 					:= 14;
+					bit2 					:= 1;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS80;
+					process_Z 				:= 1;
+				80:
+					bit1 					:= 14;
+					bit2 					:= 2;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS81;
+					process_Z 				:= 1;
+				81:
+					bit1 					:= 14;
+					bit2 					:= 3;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS82;
+					process_Z 				:= 1;
+				82:
+					bit1 					:= 14;
+					bit2 					:= 4;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS83;
+					process_Z 				:= 1;
+				83:
+					bit1 					:= 14;
+					bit2 					:= 5;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS84;
+					process_Z 				:= 1;
+				84:
+					bit1 					:= 14;
+					bit2 					:= 6;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS85;
+					process_Z 				:= 1;
+				85:
+					bit1 					:= 14;
+					bit2 					:= 7;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS86;
+					process_Z 				:= 1;
+				86:
+					bit1 					:= 15;
+					bit2 					:= 0;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS87;
+					process_Z 				:= 1;
+				87:
+					bit1 					:= 15;
+					bit2 					:= 1;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS88;
+					process_Z 				:= 1;
+				88:
+					bit1 					:= 15;
+					bit2 					:= 2;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS89;
+					process_Z 				:= 1;
+				89:
+					bit1 					:= 15;
+					bit2 					:= 3;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS90;
+					process_Z 				:= 1;
+				90:
+					bit1 					:= 15;
+					bit2 					:= 4;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS91;
+					process_Z 				:= 1;
+				91:
+					bit1 					:= 15;
+					bit2 					:= 5;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS92;
+					process_Z 				:= 1;
+				92:
+					bit1 					:= 15;
+					bit2 					:= 6;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS93;
+					process_Z 				:= 1;
+				93:
+					bit1 					:= 15;
+					bit2 					:= 7;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS94;
+					process_Z 				:= 1;
+				94:
+					bit1 					:= 16;
+					bit2 					:= 0;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS95;
+					process_Z 				:= 1;
+				95:
+					bit1 					:= 16;
+					bit2 					:= 1;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS96;
+					process_Z 				:= 1;
+				96:
+					bit1 					:= 16;
+					bit2 					:= 2;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS97;
+					process_Z 				:= 1;
+				97:
+					bit1 					:= 16;
+					bit2 					:= 3;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS98;
+					process_Z 				:= 1;
+				98:
+					bit1 					:= 16;
+					bit2 					:= 4;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS99;
+					process_Z 				:= 1;
+				99:
+					bit1 					:= 16;
+					bit2 					:= 5;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS100;
+					process_Z 				:= 1;
+				100:
+					bit1 					:= 16;
+					bit2 					:= 6;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS101;
+					process_Z 				:= 1;
+				101:
+					bit1 					:= 16;
+					bit2 					:= 7;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS102;
+					process_Z 				:= 1;
+				102:
+					bit1 					:= 17;
+					bit2 					:= 0;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS103;
+					process_Z 				:= 1;
+				103:
+					bit1 					:= 17;
+					bit2 					:= 1;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS104;
+					process_Z 				:= 1;
+				104:
+					bit1 					:= 17;
+					bit2 					:= 2;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS105;
+					process_Z 				:= 1;
+				105:
+					bit1 					:= 17;
+					bit2 					:= 3;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS106;
+					process_Z 				:= 1;
+				106:
+					bit1 					:= 17;
+					bit2 					:= 4;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS107;
+					process_Z 				:= 1;
+				107:
+					bit1 					:= 17;
+					bit2 					:= 5;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS108;
+					process_Z 				:= 1;
+				108:
+					bit1 					:= 17;
+					bit2 					:= 6;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS109;
+					process_Z 				:= 1;
+				109:
+					bit1 					:= 17;
+					bit2 					:= 7;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS110;
+					process_Z 				:= 1;
+				110:
+					bit1 					:= 18;
+					bit2 					:= 0;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS111;
+					process_Z 				:= 1;
+				111:
+					bit1 					:= 18;
+					bit2 					:= 1;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS112;
+					process_Z 				:= 1;
+				112:
+					bit1 					:= 18;
+					bit2 					:= 2;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS113;
+					process_Z 				:= 1;
+				113:
+					bit1 					:= 18;
+					bit2 					:= 3;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS114;
+					process_Z 				:= 1;
+				114:
+					bit1 					:= 18;
+					bit2 					:= 4;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS115;
+					process_Z 				:= 1;
+				115:
+					bit1 					:= 18;
+					bit2 					:= 5;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS116;
+					process_Z 				:= 1;
+				116:
+					bit1 					:= 18;
+					bit2 					:= 6;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS117;
+					process_Z 				:= 1;
+				117:
+					bit1 					:= 18;
+					bit2 					:= 7;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS118;
+					process_Z 				:= 1;
+				118:
+					bit1 					:= 19;
+					bit2 					:= 0;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS119;
+					process_Z 				:= 1;
+				119:
+					bit1 					:= 19;
+					bit2 					:= 1;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS120;
+					process_Z 				:= 1;
+				120:
+					bit1 					:= 19;
+					bit2 					:= 2;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS121;
+					process_Z 				:= 1;
+				121:
+					bit1 					:= 19;
+					bit2 					:= 3;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS122;
+					process_Z 				:= 1;
+				122:
+					bit1 					:= 19;
+					bit2 					:= 4;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS123;
+					process_Z 				:= 1;
+				123:
+					bit1 					:= 19;
+					bit2 					:= 5;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS124;
+					process_Z 				:= 1;
+				124:
+					bit1 					:= 19;
+					bit2 					:= 6;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS125;
+					process_Z 				:= 1;
+				125:
+					bit1 					:= 19;
+					bit2 					:= 7;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS126;
+					process_Z 				:= 1;
+				126:
+					bit1 					:= 20;
+					bit2 					:= 0;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS127;
+					process_Z 				:= 1;
+				127:
+					bit1 					:= 20;
+					bit2 					:= 1;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS128;
+					process_Z 				:= 1;
+				128:
+					bit1 					:= 20;
+					bit2 					:= 2;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS129;
+					process_Z 				:= 1;
+				129:
+					bit1 					:= 20;
+					bit2 					:= 3;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS130;
+					process_Z 				:= 1;
+				130:
+					bit1 					:= 20;
+					bit2 					:= 4;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS131;
+					process_Z 				:= 1;
+				131:
+					bit1 					:= 20;
+					bit2 					:= 5;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS132;
+					process_Z 				:= 1;
+				132:
+					bit1 					:= 20;
+					bit2 					:= 6;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS133;
+					process_Z 				:= 1;
+				133:
+					bit1 					:= 20;
+					bit2 					:= 7;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS134;
+					process_Z 				:= 1;
+				134:
+					bit1 					:= 21;
+					bit2 					:= 0;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS135;
+					process_Z 				:= 1;
+				135:
+					bit1 					:= 21;
+					bit2 					:= 1;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS136;
+					process_Z 				:= 1;
+				136:
+					bit1 					:= 21;
+					bit2 					:= 2;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS137;
+					process_Z 				:= 1;
+				137:
+					bit1 					:= 21;
+					bit2 					:= 3;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS138;
+					process_Z 				:= 1;
+				138:
+					bit1 					:= 21;
+					bit2 					:= 4;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS139;
+					process_Z 				:= 1;
+				139:
+					bit1 					:= 21;
+					bit2 					:= 5;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS140;
+					process_Z 				:= 1;
+				140:
+					bit1 					:= 21;
+					bit2 					:= 6;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS141;
+					process_Z 				:= 1;
+				141:
+					bit1 					:= 21;
+					bit2 					:= 7;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS142;
+					process_Z 				:= 1;
+				142:
+					bit1 					:= 22;
+					bit2 					:= 0;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS143;
+					process_Z 				:= 1;
+				143:
+					bit1 					:= 22;
+					bit2 					:= 1;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS144;
+					process_Z 				:= 1;
+				144:
+					bit1 					:= 22;
+					bit2 					:= 2;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS145;
+					process_Z 				:= 1;
+				145:
+					bit1 					:= 22;
+					bit2 					:= 3;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS146;
+					process_Z 				:= 1;
+				146:
+					bit1 					:= 22;
+					bit2 					:= 4;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS147;
+					process_Z 				:= 1;
+				147:
+					bit1 					:= 22;
+					bit2 					:= 5;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS148;
+					process_Z 				:= 1;
+				148:
+					bit1 					:= 22;
+					bit2 					:= 6;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS149;
+					process_Z 				:= 1;
+				149:
+					bit1 					:= 22;
+					bit2 					:= 7;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS150;
+					process_Z 				:= 1;
+				150:
+					bit1 					:= 23;
+					bit2 					:= 0;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS151;
+					process_Z 				:= 1;
+				151:
+					bit1 					:= 23;
+					bit2 					:= 1;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS152;
+					process_Z 				:= 1;
+				152:
+					bit1 					:= 23;
+					bit2 					:= 2;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS153;
+					process_Z 				:= 1;
+				153:
+					bit1 					:= 23;
+					bit2 					:= 3;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS154;
+					process_Z 				:= 1;
+				154:
+					bit1 					:= 23;
+					bit2 					:= 4;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS155;
+					process_Z 				:= 1;
+				155:
+					bit1 					:= 23;
+					bit2 					:= 5;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS156;
+					process_Z 				:= 1;
+				156:
+					bit1 					:= 23;
+					bit2 					:= 6;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS157;
+					process_Z 				:= 1;
+				157:
+					bit1 					:= 23;
+					bit2 					:= 7;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS158;
+					process_Z 				:= 1;
+				158:
+					bit1 					:= 24;
+					bit2 					:= 0;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS159;
+					process_Z 				:= 1;
+				159:
+					bit1 					:= 24;
+					bit2 					:= 1;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS160;
+					process_Z 				:= 1;
+				160:
+					bit1 					:= 24;
+					bit2 					:= 2;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS161;
+					process_Z 				:= 1;
+				161:
+					bit1 					:= 24;
+					bit2 					:= 3;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS162;
+					process_Z 				:= 1;
+				162:
+					bit1 					:= 24;
+					bit2 					:= 4;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS163;
+					process_Z 				:= 1;
+				163:
+					bit1 					:= 24;
+					bit2 					:= 5;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS164;
+					process_Z 				:= 1;
+				164:
+					bit1 					:= 24;
+					bit2 					:= 6;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS165;
+					process_Z 				:= 1;
+				165:
+					bit1 					:= 24;
+					bit2 					:= 7;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS166;
+					process_Z 				:= 1;
+				166:
+					bit1 					:= 25;
+					bit2 					:= 0;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS167;
+					process_Z 				:= 1;
+				167:
+					bit1 					:= 25;
+					bit2 					:= 1;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS168;
+					process_Z 				:= 1;
+				168:
+					bit1 					:= 25;
+					bit2 					:= 2;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS169;
+					process_Z 				:= 1;
+				169:
+					bit1 					:= 25;
+					bit2 					:= 3;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS170;
+					process_Z 				:= 1;
+				170:
+					bit1 					:= 25;
+					bit2 					:= 4;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS171;
+					process_Z 				:= 1;
+				171:
+					bit1 					:= 25;
+					bit2 					:= 5;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS172;
+					process_Z 				:= 1;
+				172:
+					bit1 					:= 25;
+					bit2 					:= 6;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS173;
+					process_Z 				:= 1;
+				173:
+					bit1 					:= 25;
+					bit2 					:= 7;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS174;
+					process_Z 				:= 1;
+				174:
+					bit1 					:= 26;
+					bit2 					:= 0;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS175;
+					process_Z 				:= 1;
+				175:
+					bit1 					:= 26;
+					bit2 					:= 1;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS176;
+					process_Z 				:= 1;
+				176:
+					bit1 					:= 26;
+					bit2 					:= 2;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS177;
+					process_Z 				:= 1;
+				177:
+					bit1 					:= 26;
+					bit2 					:= 3;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS178;
+					process_Z 				:= 1;
+				178:
+					bit1 					:= 26;
+					bit2 					:= 4;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS179;
+					process_Z 				:= 1;
+				179:
+					bit1 					:= 26;
+					bit2 					:= 5;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS180;
+					process_Z 				:= 1;
+				180:
+					bit1 					:= 26;
+					bit2 					:= 6;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS181;
+					process_Z 				:= 1;
+				181:
+					bit1 					:= 26;
+					bit2 					:= 7;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS182;
+					process_Z 				:= 1;
+				182:
+					bit1 					:= 27;
+					bit2 					:= 0;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS183;
+					process_Z 				:= 1;
+				183:
+					bit1 					:= 27;
+					bit2 					:= 1;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS184;
+					process_Z 				:= 1;
+				184:
+					bit1 					:= 27;
+					bit2 					:= 2;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS185;
+					process_Z 				:= 1;
+				185:
+					bit1 					:= 27;
+					bit2 					:= 3;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS186;
+					process_Z 				:= 1;
+				186:
+					bit1 					:= 27;
+					bit2 					:= 4;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS187;
+					process_Z 				:= 1;
+				187:
+					bit1 					:= 27;
+					bit2 					:= 5;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS188;
+					process_Z 				:= 1;
+				188:
+					bit1 					:= 27;
+					bit2 					:= 6;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS189;
+					process_Z 				:= 1;
+				189:
+					bit1 					:= 27;
+					bit2 					:= 7;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS190;
+					process_Z 				:= 1;
+				190:
+					bit1 					:= 28;
+					bit2 					:= 0;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS191;
+					process_Z 				:= 1;
+				191:
+					bit1 					:= 28;
+					bit2 					:= 1;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS192;
+					process_Z 				:= 1;
+				192:
+					bit1 					:= 28;
+					bit2 					:= 2;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS193;
+					process_Z 				:= 1;
+				193:
+					bit1 					:= 28;
+					bit2 					:= 3;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS194;
+					process_Z 				:= 1;
+				194:
+					bit1 					:= 28;
+					bit2 					:= 4;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS195;
+					process_Z 				:= 1;
+				195:
+					bit1 					:= 28;
+					bit2 					:= 5;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS196;
+					process_Z 				:= 1;
+				196:
+					bit1 					:= 28;
+					bit2 					:= 6;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS197;
+					process_Z 				:= 1;
+				197:
+					bit1 					:= 28;
+					bit2 					:= 7;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS198;
+					process_Z 				:= 1;
+				198:
+					bit1 					:= 29;
+					bit2 					:= 0;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS199;
+					process_Z 				:= 1;
+				199:
+					bit1 					:= 29;
+					bit2 					:= 1;
+					KR1.bOutBit[ bit1,bit2] := TRUE; //210
+					MSG_Bskt				:= MSG.ACTION_FGA_POS200;
+					process_Z 				:= 1;
+			END_CASE
+			AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG_Bskt);
+			AUTO_MODE.processnameFG := CONCAT(AUTO_MODE.processnameFG,MSG.STATUS_RUN);
+			LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+						spLogAction	 := MSG_Bskt, 
+						spLogStatus	 := MSG.STATUS_RUN,
+						plogFlag	 := TRUE);
+		ELSIF process_Z = 1 THEN
+			KR1.bOutBit[ bit1,bit2] := TRUE;
+			IF KR1.bInBit[ bit1,bit2] THEN
+				KR1.bOutBit[ bit1,bit2] := FALSE;
+				AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG.ACTION_FGA_POS);
+				AUTO_MODE.processnameFG := CONCAT(AUTO_MODE.processnameFG,MSG.STATUS_ACK);
+				LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+							spLogAction	 := MSG.ACTION_FGA_POS, 
+							spLogStatus	 := MSG.STATUS_ACK,
+							plogFlag	 := TRUE);
+				process_Z := 2;
+				RETURN;
+			END_IF	
+		ELSIF process_Z = 2 THEN
+			KR1.bOutBit[ bit1,bit2] := FALSE;
+			IF NOT KR1.bInBit[ bit1,bit2] THEN
+				AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG.ACTION_FGA_POS);
+				AUTO_MODE.processnameFG := CONCAT(AUTO_MODE.processnameFG,MSG.STATUS_DONE);
+				LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+							spLogAction	 := MSG.ACTION_FGA_POS, 
+							spLogStatus	 := MSG.STATUS_DONE,
+							plogFlag	 := TRUE);
+				process_Z:= 3;
+				GVL.daily_output := GVL.daily_output+1;
+				GVL.weekly_output := GVL.weekly_output+1;
+				GVL.monthly_output := GVL.monthly_output+1;
+				
+				IF GVL.Basket_A_Counter < 15 THEN
+					GVL.Basket_A_Counter := GVL.Basket_A_Counter+1;
+				ELSE
+					GVL.Basket_A_Counter := 0;
+				END_IF
+				
+				FG_sequence := 5;
+				AUTO_MODE.next_step := FALSE;
+				AUTO_MODE.RW_PACKING := FALSE;
+				AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MSG.ACTION_FGA_POS);
+				AUTO_MODE.processnameFG := CONCAT(AUTO_MODE.processnameFG,MSG.STATUS_COMP);
+				LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+							spLogAction	 := MSG.ACTION_FGA_POS, 
+							spLogStatus	 := MSG.STATUS_COMP,
+							plogFlag	 := TRUE);
+			END_IF	
+		END_IF
+		
+	5:
+		IF GVL.Basket_A_Counter = 15 THEN
+			fb_RunLayerPad(Basket := 1, Layer := 1, Execute := TRUE);
+			IF fb_RunLayerPad.Complete THEN
+				fb_RunLayerPad(Execute := FALSE);
+				FG_sequence := 6;
+			ELSIF fb_RunLayerPad.Error THEN
+				fb_RunLayerPad(Execute := FALSE);
+				AUTO_MODE.Halt_Production := TRUE;
+				FG_sequence := 6;
+			END_IF
+		ELSIF GVL.Basket_A_Counter = 30 THEN
+			fb_RunLayerPad(Basket := 1, Layer := 2, Execute := TRUE);
+			IF fb_RunLayerPad.Complete THEN
+				fb_RunLayerPad(Execute := FALSE);
+				FG_sequence := 6;
+			ELSIF fb_RunLayerPad.Error THEN
+				fb_RunLayerPad(Execute := FALSE);
+				AUTO_MODE.Halt_Production := TRUE;
+				FG_sequence := 6;
+			END_IF
+		ELSIF GVL.Basket_A_Counter = 45 THEN
+			fb_RunLayerPad(Basket := 1, Layer := 3, Execute := TRUE);
+			IF fb_RunLayerPad.Complete THEN
+				fb_RunLayerPad(Execute := FALSE);
+				FG_sequence := 6;
+			ELSIF fb_RunLayerPad.Error THEN
+				fb_RunLayerPad(Execute := FALSE);
+				AUTO_MODE.Halt_Production := TRUE;
+				FG_sequence := 6;
+			END_IF
+		ELSIF GVL.Basket_A_Counter = 60 THEN
+			fb_RunLayerPad(Basket := 1, Layer := 4, Execute := TRUE);
+			IF fb_RunLayerPad.Complete THEN
+				fb_RunLayerPad(Execute := FALSE);
+				FG_sequence := 6;
+			ELSIF fb_RunLayerPad.Error THEN
+				fb_RunLayerPad(Execute := FALSE);
+				AUTO_MODE.Halt_Production := TRUE;
+				FG_sequence := 6;
+			END_IF
+		ELSIF GVL.Basket_A_Counter = 75 THEN
+			fb_RunLayerPad(Basket := 1, Layer := 5, Execute := TRUE);
+			IF fb_RunLayerPad.Complete THEN
+				fb_RunLayerPad(Execute := FALSE);
+				FG_sequence := 6;
+			ELSIF fb_RunLayerPad.Error THEN
+				fb_RunLayerPad(Execute := FALSE);
+				AUTO_MODE.Halt_Production := TRUE;
+				FG_sequence := 6;
+			END_IF
+		ELSIF GVL.Basket_A_Counter = 90 THEN
+			fb_RunLayerPad(Basket := 1, Layer := 6, Execute := TRUE);
+			IF fb_RunLayerPad.Complete THEN
+				fb_RunLayerPad(Execute := FALSE);
+				FG_sequence := 6;
+			ELSIF fb_RunLayerPad.Error THEN
+				fb_RunLayerPad(Execute := FALSE);
+				AUTO_MODE.Halt_Production := TRUE;
+				FG_sequence := 6;
+			END_IF
+		ELSIF GVL.Basket_A_Counter = 100 THEN
+			fb_RunLayerPad(Basket := 1, Layer := 7, Execute := TRUE);
+			IF fb_RunLayerPad.Complete THEN
+				fb_RunLayerPad(Execute := FALSE);
+				FG_sequence := 6;
+			ELSIF fb_RunLayerPad.Error THEN
+				fb_RunLayerPad(Execute := FALSE);
+				AUTO_MODE.Halt_Production := TRUE;
+			END_IF
+		ELSE
+			FG_sequence := 6;
+		END_IF
+		
+	6:
+		FG_sequence := 0;
+		AUTO_MODE.next_step := FALSE;
+		AUTO_MODE.FG_PACKING := FALSE;
+		AUTO_MODE.processnameFG := CONCAT(MSG.COMP_FG,MAIN.fb_TimeStamp.SystemTime);
+		AUTO_MODE.processnameFG := CONCAT(AUTO_MODE.processnameFG,MSG.STATUS_END);
+		LOGPROCESS( spLogComp	 := MSG.COMP_FG, 
+					spLogAction	 := MSG.ACTION_FG_PACK, 
+					spLogStatus	 := MSG.STATUS_END,
+					plogFlag	 := TRUE);
+END_CASE
+
+		]]></ST>
+    </Implementation>
+    <LineIds Name="SEQ_FG_A">
+      <LineId Id="2745" Count="3" />
+      <LineId Id="2744" Count="0" />
+      <LineId Id="560" Count="1" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="2722" Count="0" />
+      <LineId Id="2721" Count="0" />
+      <LineId Id="2723" Count="1" />
+      <LineId Id="1220" Count="0" />
+      <LineId Id="562" Count="0" />
+      <LineId Id="1221" Count="0" />
+      <LineId Id="2668" Count="0" />
+      <LineId Id="1226" Count="2" />
+      <LineId Id="1222" Count="0" />
+      <LineId Id="1225" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="2525" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="751" Count="3" />
+      <LineId Id="684" Count="0" />
+      <LineId Id="399" Count="2" />
+      <LineId Id="2529" Count="0" />
+      <LineId Id="2671" Count="1" />
+      <LineId Id="2666" Count="0" />
+      <LineId Id="2670" Count="0" />
+      <LineId Id="836" Count="0" />
+      <LineId Id="2524" Count="0" />
+      <LineId Id="2517" Count="0" />
+      <LineId Id="2545" Count="0" />
+      <LineId Id="2548" Count="0" />
+      <LineId Id="2551" Count="0" />
+      <LineId Id="2601" Count="0" />
+      <LineId Id="2552" Count="0" />
+      <LineId Id="2598" Count="0" />
+      <LineId Id="2600" Count="0" />
+      <LineId Id="2599" Count="0" />
+      <LineId Id="2553" Count="0" />
+      <LineId Id="2546" Count="0" />
+      <LineId Id="2554" Count="0" />
+      <LineId Id="2547" Count="0" />
+      <LineId Id="2743" Count="0" />
+      <LineId Id="779" Count="5" />
+      <LineId Id="2767" Count="0" />
+      <LineId Id="785" Count="6" />
+      <LineId Id="2644" Count="0" />
+      <LineId Id="793" Count="2" />
+      <LineId Id="2768" Count="0" />
+      <LineId Id="796" Count="1" />
+      <LineId Id="2769" Count="0" />
+      <LineId Id="798" Count="6" />
+      <LineId Id="2643" Count="0" />
+      <LineId Id="806" Count="2" />
+      <LineId Id="2770" Count="0" />
+      <LineId Id="809" Count="7" />
+      <LineId Id="2642" Count="0" />
+      <LineId Id="818" Count="17" />
+      <LineId Id="564" Count="1" />
+      <LineId Id="2530" Count="0" />
+      <LineId Id="2544" Count="0" />
+      <LineId Id="2531" Count="5" />
+      <LineId Id="840" Count="3" />
+      <LineId Id="940" Count="0" />
+      <LineId Id="844" Count="10" />
+      <LineId Id="941" Count="0" />
+      <LineId Id="855" Count="12" />
+      <LineId Id="943" Count="0" />
+      <LineId Id="868" Count="14" />
+      <LineId Id="884" Count="9" />
+      <LineId Id="837" Count="0" />
+      <LineId Id="894" Count="1" />
+      <LineId Id="73" Count="0" />
+      <LineId Id="386" Count="0" />
+      <LineId Id="226" Count="0" />
+      <LineId Id="240" Count="0" />
+      <LineId Id="1157" Count="1" />
+      <LineId Id="244" Count="0" />
+      <LineId Id="1254" Count="0" />
+      <LineId Id="246" Count="0" />
+      <LineId Id="1255" Count="4" />
+      <LineId Id="252" Count="1" />
+      <LineId Id="1260" Count="4" />
+      <LineId Id="258" Count="0" />
+      <LineId Id="1265" Count="4" />
+      <LineId Id="263" Count="0" />
+      <LineId Id="1270" Count="4" />
+      <LineId Id="896" Count="0" />
+      <LineId Id="1275" Count="4" />
+      <LineId Id="907" Count="0" />
+      <LineId Id="1280" Count="4" />
+      <LineId Id="918" Count="0" />
+      <LineId Id="1285" Count="4" />
+      <LineId Id="1044" Count="0" />
+      <LineId Id="1290" Count="4" />
+      <LineId Id="1055" Count="0" />
+      <LineId Id="1295" Count="4" />
+      <LineId Id="1305" Count="215" />
+      <LineId Id="1569" Count="287" />
+      <LineId Id="1858" Count="442" />
+      <LineId Id="2338" Count="0" />
+      <LineId Id="2302" Count="35" />
+      <LineId Id="2339" Count="155" />
+      <LineId Id="247" Count="0" />
+      <LineId Id="208" Count="0" />
+      <LineId Id="1247" Count="4" />
+      <LineId Id="1245" Count="0" />
+      <LineId Id="210" Count="0" />
+      <LineId Id="1219" Count="0" />
+      <LineId Id="944" Count="0" />
+      <LineId Id="1217" Count="0" />
+      <LineId Id="716" Count="4" />
+      <LineId Id="212" Count="4" />
+      <LineId Id="1218" Count="0" />
+      <LineId Id="709" Count="5" />
+      <LineId Id="217" Count="0" />
+      <LineId Id="391" Count="1" />
+      <LineId Id="471" Count="0" />
+      <LineId Id="219" Count="0" />
+      <LineId Id="570" Count="0" />
+      <LineId Id="394" Count="0" />
+      <LineId Id="393" Count="0" />
+      <LineId Id="395" Count="2" />
+      <LineId Id="571" Count="0" />
+      <LineId Id="440" Count="0" />
+      <LineId Id="469" Count="0" />
+      <LineId Id="707" Count="1" />
+      <LineId Id="644" Count="0" />
+      <LineId Id="704" Count="2" />
+      <LineId Id="610" Count="0" />
+      <LineId Id="222" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="195" Count="1" />
+      <LineId Id="2559" Count="1" />
+      <LineId Id="2637" Count="4" />
+      <LineId Id="2561" Count="1" />
+      <LineId Id="2566" Count="2" />
+      <LineId Id="2632" Count="4" />
+      <LineId Id="2569" Count="4" />
+      <LineId Id="2627" Count="4" />
+      <LineId Id="2574" Count="4" />
+      <LineId Id="2622" Count="4" />
+      <LineId Id="2579" Count="4" />
+      <LineId Id="2617" Count="4" />
+      <LineId Id="2584" Count="4" />
+      <LineId Id="2607" Count="4" />
+      <LineId Id="2589" Count="5" />
+      <LineId Id="2606" Count="0" />
+      <LineId Id="2603" Count="2" />
+      <LineId Id="2595" Count="0" />
+      <LineId Id="2563" Count="2" />
+      <LineId Id="2556" Count="0" />
+      <LineId Id="2596" Count="0" />
+      <LineId Id="2557" Count="0" />
+      <LineId Id="197" Count="0" />
+      <LineId Id="162" Count="0" />
+      <LineId Id="930" Count="0" />
+      <LineId Id="686" Count="0" />
+      <LineId Id="699" Count="3" />
+      <LineId Id="624" Count="0" />
+      <LineId Id="32" Count="1" />
+      <LineId Id="26" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

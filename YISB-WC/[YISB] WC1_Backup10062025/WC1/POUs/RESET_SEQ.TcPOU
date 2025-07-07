@@ -1,0 +1,263 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="RESET_SEQ" Id="{1966923e-a7dd-4db7-aeb8-7c797607c441}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM RESET_SEQ
+VAR_INPUT
+	Reset_seq	: INT;
+	log_reset	: STRING[255];
+END_VAR
+VAR
+	RstTON		: TON;
+	RstToff		: TON;
+	bOn			: BOOL;
+	bLastOn		: BOOL;
+	Bit1		: INT;
+	Bit2		: INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+	//Off time
+	RstTON(IN:= NOT RstTOff.Q, PT:= T#0.2S, Q=> bOn , ET=> );
+	//On time
+	RstTOff(IN:= bOn, PT:= T#0.5S, Q=> , ET=> );
+	
+	IF bOn <> bLastOn THEN
+		IF bON THEN
+			IF Reset_seq < 14 THEN
+				IF Reset_seq =2 THEN
+					IF KR1.bInBit[1,6] AND KR2.bInBit[1,6] AND KR3.bInBit[1,6] AND KR4.bInBit[1,6] AND KR5.bInBit[1,6] THEN
+						Reset_seq := Reset_seq + 1;	
+					END_IF
+				ELSE	
+					Reset_seq := Reset_seq + 1;
+				END_IF			
+			ELSE
+				Reset_seq 	:=0;
+				bOn 		:= FALSE;
+			END_IF
+		END_IF
+	END_IF
+	
+	CASE Reset_seq OF
+		0:
+			IF NOT GVL.KR1_bypass THEN
+				FOR Bit1 := 1 TO 30 BY 1 DO
+					FOR Bit2 := 0 TO 7 BY 1 DO
+						KR1.bOutBit[Bit1,Bit2] := FALSE;
+					END_FOR
+				END_FOR
+			END_IF
+			IF NOT GVL.KR2_bypass THEN
+				FOR Bit1 := 1 TO 8 BY 1 DO
+					FOR Bit2 := 0 TO 7 BY 1 DO
+						KR2.bOutBit[Bit1,Bit2] := FALSE;
+					END_FOR
+				END_FOR
+			END_IF
+			IF NOT GVL.KR3_bypass THEN
+				FOR Bit1 := 1 TO 3 BY 1 DO
+					FOR Bit2 := 0 TO 7 BY 1 DO
+						KR3.bOutBit[Bit1,Bit2] := FALSE;
+					END_FOR
+				END_FOR
+			END_IF
+			IF NOT GVL.KR4_bypass THEN
+				FOR Bit1 := 1 TO 3 BY 1 DO
+					FOR Bit2 := 0 TO 7 BY 1 DO
+						KR4.bOutBit[Bit1,Bit2] := FALSE;
+					END_FOR
+				END_FOR
+			END_IF
+			IF NOT GVL.KR5_bypass THEN
+				FOR Bit1 := 1 TO 6 BY 1 DO
+					FOR Bit2 := 0 TO 7 BY 1 DO
+						KR5.bOutBit[Bit1,Bit2] := FALSE;
+					END_FOR
+				END_FOR
+			END_IF
+		1:
+			IF NOT GVL.KR1_bypass THEN
+				KR1.bOutBit[1,0]:=KR1.bOutBit[1,1]:=KR1.bOutBit[1,2]:=TRUE;
+			END_IF
+			IF NOT GVL.KR2_bypass THEN
+				KR2.bOutBit[1,0]:=KR2.bOutBit[1,1]:=KR2.bOutBit[1,2]:=TRUE;
+			END_IF
+			IF NOT GVL.KR3_bypass THEN
+				KR3.bOutBit[1,0]:=KR3.bOutBit[1,1]:=KR3.bOutBit[1,2]:=TRUE;
+			END_IF
+			IF NOT GVL.KR4_bypass THEN
+				KR4.bOutBit[1,0]:=KR4.bOutBit[1,1]:=KR4.bOutBit[1,2]:=TRUE;
+			END_IF
+			IF NOT GVL.KR5_bypass THEN
+				KR5.bOutBit[1,0]:=KR5.bOutBit[1,1]:=KR5.bOutBit[1,2]:=TRUE;
+			END_IF
+		2:
+			IF NOT GVL.KR1_bypass THEN
+				KR1.bOutBit[1,4] := TRUE; //1031
+			END_IF
+			IF NOT GVL.KR2_bypass THEN
+				KR2.bOutBit[1,4] := TRUE; //1031
+			END_IF
+			IF NOT GVL.KR3_bypass THEN
+				KR3.bOutBit[1,4] := TRUE; //1031
+			END_IF
+			IF NOT GVL.KR4_bypass THEN
+				KR4.bOutBit[1,4] := TRUE; //1031
+			END_IF
+			IF NOT GVL.KR5_bypass THEN
+				KR5.bOutBit[1,4] := TRUE; //1031
+			END_IF
+		3:
+			IF NOT GVL.KR1_bypass THEN
+				KR1.bOutBit[1,4] := FALSE; //1031
+			END_IF
+			IF NOT GVL.KR2_bypass THEN
+				KR2.bOutBit[1,4] := FALSE; //1031
+			END_IF
+			IF NOT GVL.KR3_bypass THEN
+				KR3.bOutBit[1,4] := FALSE; //1031
+			END_IF
+			IF NOT GVL.KR4_bypass THEN
+				KR4.bOutBit[1,4] := FALSE; //1031
+			END_IF
+			IF NOT GVL.KR5_bypass THEN
+				KR5.bOutBit[1,4] := FALSE; //1031
+			END_IF
+		4:
+			KR1.bOutBit[1,5] := TRUE; //1032
+		5:
+			KR2.bOutBit[1,6] := TRUE; //1033
+		6:
+			KR3.bOutBit[1,5] := TRUE; //1032
+		7:	
+			KR4.bOutBit[1,5] := TRUE; //1032
+		8:		
+			KR5.bOutBit[1,5] := TRUE; //1032
+		9:
+			KR1.bOutBit[1,5] := FALSE; //1032
+			KR1.bOutBit[1,3] := TRUE; //1030
+		10:
+			KR2.bOutBit[1,6] := FALSE; //1033
+			KR2.bOutBit[1,3] := TRUE; //1030
+		11:
+			KR3.bOutBit[1,5] := FALSE; //1032
+			KR3.bOutBit[1,3] := TRUE; //1030
+		12:
+			KR4.bOutBit[1,5] := FALSE; //1032
+			KR4.bOutBit[1,3] := TRUE; //1030
+		13:
+			KR5.bOutBit[1,5] := FALSE; //1032
+			KR5.bOutBit[1,3] := TRUE; //1030
+		14:
+			AUTO_MODE.Halt_Production := FALSE;
+			Reset_seq :=0;
+			MAIN.Reset_State := FALSE;
+			MAIN.btn_Reset := FALSE;
+	END_CASE
+	bLastOn := bOn;
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="RESET_SEQ">
+      <LineId Id="444" Count="0" />
+      <LineId Id="22" Count="15" />
+      <LineId Id="283" Count="0" />
+      <LineId Id="543" Count="0" />
+      <LineId Id="39" Count="2" />
+      <LineId Id="249" Count="0" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="592" Count="0" />
+      <LineId Id="641" Count="0" />
+      <LineId Id="593" Count="4" />
+      <LineId Id="643" Count="0" />
+      <LineId Id="640" Count="0" />
+      <LineId Id="598" Count="3" />
+      <LineId Id="482" Count="0" />
+      <LineId Id="642" Count="0" />
+      <LineId Id="623" Count="0" />
+      <LineId Id="627" Count="2" />
+      <LineId Id="631" Count="0" />
+      <LineId Id="624" Count="0" />
+      <LineId Id="632" Count="3" />
+      <LineId Id="637" Count="2" />
+      <LineId Id="602" Count="0" />
+      <LineId Id="621" Count="0" />
+      <LineId Id="603" Count="2" />
+      <LineId Id="607" Count="0" />
+      <LineId Id="284" Count="0" />
+      <LineId Id="622" Count="0" />
+      <LineId Id="116" Count="0" />
+      <LineId Id="646" Count="0" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="647" Count="0" />
+      <LineId Id="652" Count="0" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="648" Count="0" />
+      <LineId Id="653" Count="0" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="651" Count="0" />
+      <LineId Id="654" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="650" Count="0" />
+      <LineId Id="655" Count="0" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="649" Count="0" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="666" Count="0" />
+      <LineId Id="662" Count="1" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="660" Count="1" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="658" Count="1" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="656" Count="1" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="664" Count="1" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="677" Count="0" />
+      <LineId Id="667" Count="1" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="669" Count="1" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="671" Count="1" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="673" Count="1" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="675" Count="1" />
+      <LineId Id="62" Count="1" />
+      <LineId Id="337" Count="0" />
+      <LineId Id="362" Count="0" />
+      <LineId Id="288" Count="0" />
+      <LineId Id="361" Count="0" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="360" Count="0" />
+      <LineId Id="70" Count="0" />
+      <LineId Id="359" Count="0" />
+      <LineId Id="357" Count="1" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="355" Count="0" />
+      <LineId Id="370" Count="0" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="353" Count="0" />
+      <LineId Id="369" Count="0" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="351" Count="0" />
+      <LineId Id="368" Count="0" />
+      <LineId Id="83" Count="0" />
+      <LineId Id="349" Count="0" />
+      <LineId Id="367" Count="0" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="346" Count="0" />
+      <LineId Id="515" Count="0" />
+      <LineId Id="89" Count="0" />
+      <LineId Id="557" Count="0" />
+      <LineId Id="571" Count="0" />
+      <LineId Id="90" Count="1" />
+      <LineId Id="93" Count="0" />
+      <LineId Id="98" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

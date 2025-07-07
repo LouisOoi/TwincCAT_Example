@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="TL" Id="{c43bb09c-6150-45b1-8e81-81e6b19c32bc}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM TL
+VAR_INPUT
+	TL_Green	AT %Q* : BOOL;
+	TL_Ember	AT %Q* : BOOL;
+	TL_Red		AT %Q* : BOOL;
+	TL_Buzzer	AT %Q* : BOOL;
+END_VAR
+VAR
+	tOn 	: TON;
+	tOff 	: TON;
+	bOn		: BOOL;
+	blastOn	: BOOL;
+	Buzzer_mute: BOOL := TRUE;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+TL_Ember := KR1.KR_ProgReady AND KR2.KR_ProgReady AND KR3.KR_ProgReady AND KR4.KR_ProgReady AND KR5.KR_ProgReady;
+TL_Green := AUTO_MODE.AutoMode AND NOT TL_Red;
+
+IF NOT MAIN.btnEstop OR MAIN.btnSoftEstop OR SAFETY_SENSOR.safety_compromised THEN
+	tOn(IN:= NOT tOff.Q, PT:= T#1S, Q=> bOn , ET=> );
+	tOff(IN:= bOn, PT:= T#0.5S, Q=> , ET=> );
+	
+	TL_Red := bOn;
+	IF Buzzer_mute THEN
+		TL_Buzzer := FALSE;
+	ELSE
+		TL_Buzzer := bOn;
+	END_IF
+ELSIF AUTO_MODE.AutoMode THEN
+	IF NOT KR1.KR_ProgReady OR NOT KR2.KR_ProgReady OR NOT KR3.KR_ProgReady OR NOT KR4.KR_ProgReady OR NOT KR5.KR_ProgReady OR 
+		AUTO_MODE.JIGA_ErrorState OR AUTO_MODE.JIGB_ErrorState OR AUTO_MODE.JIGC_ErrorState OR AUTO_MODE.TT_ErrorState 
+		THEN
+			tOn(IN:= NOT tOff.Q, PT:= T#0.5S, Q=> bOn , ET=> );
+			tOff(IN:= bOn, PT:= T#0.5S, Q=> , ET=> );
+		
+			TL_Red := bOn;
+			IF Buzzer_mute THEN
+				TL_Buzzer := FALSE;
+			ELSE
+				TL_Buzzer := bOn;
+			END_IF
+	ELSE
+		TL_Buzzer := TL_Red := FALSE;
+	END_IF
+ELSE
+	TL_Buzzer := TL_Red := FALSE;
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="TL">
+      <LineId Id="120" Count="0" />
+      <LineId Id="122" Count="1" />
+      <LineId Id="125" Count="12" />
+      <LineId Id="167" Count="0" />
+      <LineId Id="171" Count="0" />
+      <LineId Id="138" Count="13" />
+      <LineId Id="70" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
