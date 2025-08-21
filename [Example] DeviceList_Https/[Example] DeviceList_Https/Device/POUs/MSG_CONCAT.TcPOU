@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="MSG_CONCAT" Id="{dcfa6f3e-ed15-4c3f-afbb-ab1a1d0281a7}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION MSG_CONCAT : STRING(3500)
+VAR_INPUT
+	_DeviceState : ARRAY[1..14] OF DeviceAttr;
+	_SystemTime	 : STRING;
+END_VAR
+VAR
+	API_JSON		: ARRAY[1..14] OF STRING(255);
+	index			: INT;
+	success			: BOOL;
+	API_MSG			: STRING(3500);
+	sopenBracket	: STRING(13) := '{"dbLists":[';
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+//success := CONCAT2(pSrcString1 := ADR(_text), pSrcString2 := ADR(_SystemTime), pDstString := ADR(API_JSON), nDstSize := SIZEOF(API_JSON));
+
+FOR index:=1 TO 14 DO 
+	API_JSON[index] := CONCAT(API_JSON[index],'{"ObjectData":{"ObjectId":"');	
+	API_JSON[index] := CONCAT(API_JSON[index],_DeviceState[index].DeviceID);
+	API_JSON[index] := CONCAT(API_JSON[index],'","ActionData":[{"Key":"');
+	API_JSON[index] := CONCAT(API_JSON[index],_DeviceState[index].ActionKey);
+	API_JSON[index] := CONCAT(API_JSON[index],'","Value":"');
+	API_JSON[index] := CONCAT(API_JSON[index],USINT_TO_STRING(_DeviceState[index].ActionVal));
+	API_JSON[index] := CONCAT(API_JSON[index],'","TimeStamp":');
+	API_JSON[index] := CONCAT(API_JSON[index],_SystemTime);
+	API_JSON[index] := CONCAT(API_JSON[index],'}],"Attributes":[{"Key":"');
+	API_JSON[index] := CONCAT(API_JSON[index],_DeviceState[index].OnlineKey);
+	API_JSON[index] := CONCAT(API_JSON[index],'","Value":"');
+	API_JSON[index] := CONCAT(API_JSON[index],USINT_TO_STRING(_DeviceState[index].OnlineVal));
+	API_JSON[index] := CONCAT(API_JSON[index],'","TimeStamp":');
+	API_JSON[index] := CONCAT(API_JSON[index],_SystemTime);
+	API_JSON[index] := CONCAT(API_JSON[index],'},{"Key":"');
+	API_JSON[index] := CONCAT(API_JSON[index],_DeviceState[index].ErrorKey);
+	API_JSON[index] := CONCAT(API_JSON[index],'","Value":"');
+	API_JSON[index] := CONCAT(API_JSON[index],USINT_TO_STRING(_DeviceState[index].ErrorVal));
+	API_JSON[index] := CONCAT(API_JSON[index],'","TimeStamp":');
+	API_JSON[index] := CONCAT(API_JSON[index],_SystemTime);
+	IF index < 14 THEN
+		API_JSON[index] := CONCAT(API_JSON[index],'}]}},');
+	ELSE
+		API_JSON[index] := CONCAT(API_JSON[index],'}]}}]}');
+	END_IF
+	success := CONCAT2(pSrcString1 := ADR(API_MSG), pSrcString2 := ADR(API_JSON[index]), pDstString := ADR(API_MSG), nDstSize := SIZEOF(API_MSG));
+END_FOR
+	success := CONCAT2(pSrcString1 := ADR(sopenBracket), pSrcString2 := ADR(API_MSG), pDstString := ADR(API_MSG), nDstSize := SIZEOF(API_MSG));
+MSG_CONCAT := API_MSG;]]></ST>
+    </Implementation>
+    <LineIds Name="MSG_CONCAT">
+      <LineId Id="77" Count="0" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="89" Count="0" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="58" Count="1" />
+      <LineId Id="90" Count="1" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="92" Count="1" />
+      <LineId Id="49" Count="1" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="53" Count="1" />
+      <LineId Id="113" Count="0" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="114" Count="0" />
+      <LineId Id="117" Count="0" />
+      <LineId Id="116" Count="0" />
+      <LineId Id="97" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

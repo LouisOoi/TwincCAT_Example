@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="DIGIIOT_UPDATE" Id="{324b3139-21c9-4034-a6b1-758d44fbf6c8}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM DIGIIOT_UPDATE
+VAR_INPUT
+	SystemTime : STRING;
+END_VAR
+VAR
+	DeviceState : ARRAY[1..14] OF DeviceAttr;
+	KR_Action	: ARRAY[1..14] OF STRING;
+	KR_Error	: ARRAY[1..14] OF USINT;
+	KR_Online	: ARRAY[1..14] OF USINT;
+	
+	index : INT;
+	API_MSG : STRING(3500);
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+DeviceState[1].DeviceID := 'WC1_KR1';
+DeviceState[1].ActionKey := 'JigBToTTorch';
+DeviceState[2].DeviceID := 'WC1_KR2';
+DeviceState[2].ActionKey := 'WeldJigB';
+DeviceState[3].DeviceID := 'WC1_KR3';
+DeviceState[3].ActionKey := 'PlaceJigCTo_CR01';
+DeviceState[4].DeviceID := 'WC1_KR4';
+DeviceState[4].ActionKey := 'WeldJigC';
+DeviceState[5].DeviceID := 'WC1_KR5';
+DeviceState[5].ActionKey := 'COSMOToConveyor';
+DeviceState[6].DeviceID := 'WC1_INFEEDRACK';
+DeviceState[6].ActionKey := 'Sensor_A5';
+DeviceState[7].DeviceID := 'WC1_JIGA';
+DeviceState[7].ActionKey := 'Clamp';
+DeviceState[8].DeviceID := 'WC1_JIGB';
+DeviceState[8].ActionKey := 'Clamp';
+DeviceState[9].DeviceID := 'WC1_JIGC';
+DeviceState[9].ActionKey := 'Clamp';
+DeviceState[10].DeviceID := 'WC1_TWINTORCH';
+DeviceState[10].ActionKey := 'Run';
+DeviceState[11].DeviceID := 'WC1_COSMOS_LEAK_TESTER';
+DeviceState[11].ActionKey := 'Run';
+DeviceState[12].DeviceID := 'WC1_REWORK_JIG_Conveyor';
+DeviceState[12].ActionKey := 'ConveyorFull';
+DeviceState[13].DeviceID := 'WC1_COOLINGRACK';
+DeviceState[13].ActionKey := 'CR01';
+DeviceState[14].DeviceID := 'WC1_VibratorBowl';
+DeviceState[14].ActionKey := 'VB_Ready';
+
+FOR index:=1 TO 2 DO 
+	DeviceState[index].OnlineVal := KR_Online[index];
+	DeviceState[index].OnlineVal := KR_Error[index];
+END_FOR
+
+API_MSG := MSG_CONCAT(_DeviceState := DeviceState, _SystemTime := SystemTime);
+GVL.API_MSG := API_MSG;]]></ST>
+    </Implementation>
+    <LineIds Name="DIGIIOT_UPDATE">
+      <LineId Id="30" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="59" Count="25" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="18" Count="1" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

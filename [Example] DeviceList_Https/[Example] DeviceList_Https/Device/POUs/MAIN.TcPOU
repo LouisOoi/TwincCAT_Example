@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="MAIN" Id="{bd0bb7a6-c2a7-4d4a-a1d7-ab83a1800797}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+VAR
+	
+//	IPAdress		: STRING 	:= '192.168.1.132';
+//	Port			: UINT		:= 5000;
+	IPAdress		: STRING 	:= '10.0.110.19';
+	Port			: UINT		:= 6060;
+	UpdatePeriod	: TIME		:= T#60S;
+	Timer 			: BOOL;
+	
+	API_MSG			: STRING(3500);
+	HttpSend		: BOOL := FALSE;
+	bSuccess		: BOOL;
+	bError			: BOOL;
+	
+	fb_TimeStamp	: FB_UpdateTimeStamp;
+	fb_httppost		: FB_EventHTTP_Post;
+	fbTON 	: TON;
+	fbTOFF 	: TON;
+	Rise1	: R_TRIG;
+	
+	fbHttpProcess	: FB_IotHttpClient :=(	sHostName			:= IPAdress,
+								  			bKeepAlive			:= TRUE, 
+											tConnectionTimeout	:= T#10S);
+	enabler	: bool;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+IF NOT fbHttpProcess.bConfigured THEN 
+	fbHttpProcess.nHostPort 				:= Port;
+	fbHttpProcess.stTLS.bNoServerCertCheck 	:= FALSE;
+END_IF
+	
+fb_TimeStamp();
+IF fb_TimeStamp.timeValid THEN
+		
+//	fbTON(IN := NOT fbTOFF.Q, PT := T#0.5S);
+//	fbTOFF (IN := fbTON.Q, PT := T#0.5S);
+
+//	Rise1(CLK:=fbTON.Q);
+
+	Rise1(CLK:= enabler);
+	IF Rise1.Q THEN
+		HttpSend := TRUE;
+		DIGIIOT_UPDATE(SystemTime := fb_TimeStamp.timestampSeconds);
+	END_IF
+	
+	IF fbHttpProcess.bConfigured THEN 
+		fb_httppost( 	bSend		:= HttpSend, 
+						fbClient	:= fbHttpProcess, 
+						API_URI		:= '/upload',
+//						API_Msg 	:= '{"station": 1, "start_ts": "2025-01-24 13:30:00", "end_ts": "2025-01-24 13:31:00"}',
+						API_Msg		:= GVL.API_MSG,
+						bSuccess 	=> bSuccess,
+						bError		=> bError );
+						
+		IF fb_httppost.bSuccess OR fb_httppost.bError THEN
+			HttpSend := FALSE;
+		END_IF
+	END_IF 
+	fbHttpProcess.Execute();
+END_IF
+]]></ST>
+    </Implementation>
+    <LineIds Name="MAIN">
+      <LineId Id="103" Count="4" />
+      <LineId Id="102" Count="0" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="98" Count="0" />
+      <LineId Id="35" Count="1" />
+      <LineId Id="131" Count="0" />
+      <LineId Id="127" Count="0" />
+      <LineId Id="240" Count="0" />
+      <LineId Id="209" Count="0" />
+      <LineId Id="128" Count="0" />
+      <LineId Id="125" Count="0" />
+      <LineId Id="38" Count="1" />
+      <LineId Id="111" Count="3" />
+      <LineId Id="116" Count="1" />
+      <LineId Id="210" Count="0" />
+      <LineId Id="118" Count="5" />
+      <LineId Id="109" Count="1" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="156" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

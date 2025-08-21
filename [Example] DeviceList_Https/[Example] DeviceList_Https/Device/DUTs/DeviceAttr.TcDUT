@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="DeviceAttr" Id="{5d7b54e6-b388-4713-9587-760856e27b5f}">
+    <Declaration><![CDATA[TYPE DeviceAttr :
+STRUCT
+	DeviceID : STRING(40);
+	ActionKey : STRING(20);
+	ActionVal : USINT;
+	OnlineKey : STRING(6) := 'Online';
+	OnlineVal : USINT;
+	ErrorKey  : STRING(5) := 'Error';
+	ErrorVal  : USINT;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>
